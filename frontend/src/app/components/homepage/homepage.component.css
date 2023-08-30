@@ -1,0 +1,118 @@
+body
+{
+  height: 90vh;
+}
+
+h1
+{
+  position: absolute;
+  top: 13%;
+  left: 47%;
+  font-family: 'Oswald', sans-serif;
+  font-weight: bolder;
+  font-size: xx-large;
+}
+
+#profile-container
+{
+  position: relative;
+  top: 30%;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#profile-image
+{
+  object-fit: cover;
+  height: 300px;
+  width:  300px;
+  display: block;
+  border: solid 3px black;
+  border-radius: 50%;
+}
+
+#profile-stats
+{
+  position: relative;
+  margin-top: 10px;
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
+  padding: 17px 17px;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  z-index: 10000;
+  display: inline-block;
+  font-size: large;
+  font-family: 'Oswald', sans-serif;
+}
+
+#stats-wins
+{
+  display: inline;
+  color: green;
+}
+
+#stats-loses
+{
+  color: #d91b1b;
+  display: inline;
+}
+
+#pong-demo-container
+{
+  top: 30%;
+  left: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 600px;
+  position: absolute;
+  text-align: center;
+  display: inline;
+}
+
+#pong-gif
+{
+  object-fit: cover;
+  height: 300px;
+  width:  600px;
+  display: block;
+  border: solid 3px black;
+  border-radius: 10px;
+}
+
+#chat-demo-container
+{
+  top: 23%;
+  right: 11%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 350px;
+  position: absolute;
+  text-align: center;
+  display: inline;
+}
+
+#chat-gif
+{
+  object-fit: cover;
+  height: 450px;
+  width:  350px;
+  display: block;
+  border: solid 3px black;
+  border-radius: 10px;
+}
+
+.button {
+  box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
+  margin-top: 7px;
+  padding: 10px 17px 10px 17px;
+  font: 15px 'Oswald', sans-serif;
+  border: white 1px solid;
+  background-color: white;
+  border-radius: 7px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+}

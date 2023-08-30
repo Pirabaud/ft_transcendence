@@ -1,0 +1,190 @@
+#leaderboard-list-container
+{
+  position: absolute;
+  border: 3px solid black;
+  top: 30%;
+  left: 11%;
+  width: 300px;
+  text-align: center;
+  max-height: 43vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#match-history-list-container
+{
+  position: relative;
+  border: 3px solid black;
+  margin-top: 8%;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#profile-container
+{
+  position: absolute;
+  top: 30%;
+  right: 11%;
+  width: 300px;
+  text-align: center;
+}
+
+#match-history-list
+{
+  padding-inline-start: 0;
+}
+
+#leaderboard-list
+{
+  padding-inline-start: 0;
+}
+
+.match-history-list-elem {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
+  padding: 17px 17px;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  z-index: 10000;
+  font-size: xxx-large;
+  font-family: 'Oswald', sans-serif;
+}
+
+.leaderboard-list-elem {
+  /*a voir ce que je mets dedans, surement similaire*/
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
+  padding: 5px 5px;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  z-index: 10000;
+  font-size: x-large;
+  font-family: 'Oswald', sans-serif;
+}
+.center-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-history-small-img
+{
+  display: inline;
+  object-fit: cover;
+  height: 70px;
+  width: 70px;
+  border: solid 3px black;
+  border-radius: 50%;
+}
+
+.leaderboard-small-img
+{
+  /*a voir ce que je mets dedans, surement similaire*/
+  display: inline;
+  object-fit: cover;
+  height: 35px;
+  width: 35px;
+  border: solid 3px black;
+  border-radius: 50%;
+}
+
+.score-win
+{
+  margin: 0;
+  padding-left: 30px;
+  padding-right: 30px;
+  display: inline;
+  color: green;
+}
+
+.score-lose
+{
+  margin: 0;
+  padding-left: 30px;
+  padding-right: 30px;
+  display: inline;
+  color: red;
+}
+
+.hyphen
+{
+  margin: 0;
+  display: inline;
+}
+
+.win
+{
+  color: green;
+  margin: 0 25px;
+}
+
+.lose
+{
+  color: red;
+  margin: 0 25px 0 10px;
+}
+
+.login
+{
+  margin: 0 10px;
+  display: inline;
+}
+
+.elo
+{
+  margin: 0 30px 0 10px;
+  display: inline;
+}
+
+.rank
+{
+  margin: 0 10px;
+  display: inline;
+}
+
+#profile-pic
+{
+  object-fit: cover;
+  height: 300px;
+  width:  300px;
+  display: block;
+  border: solid 3px black;
+  border-radius: 50%;
+}
+
+#profile-stats
+{
+  position: relative;
+  margin-top: 10px;
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
+  padding: 17px 17px;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  z-index: 9999;
+  display: inline-block;
+  font-size: large;
+  font-family: 'Oswald', sans-serif;
+}
+
+#stats-wins
+{
+  display: inline;
+  color: green;
+}
+
+#stats-loses
+{
+  color: #d91b1b;
+  display: inline;
+}

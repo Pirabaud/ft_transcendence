@@ -1,0 +1,283 @@
+@keyframes portal-glow-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0.8;
+  }
+}
+
+@keyframes teleport
+{
+  0%
+  {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100%
+  {
+    transform: scale(5);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  margin: 0;
+}
+
+#field
+{
+  top: 100px;
+  aspect-ratio: 16 / 8;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  height: 40vw;
+  min-height: 20em;
+  background-color: #393E46;
+  border-radius: 0.5em;
+  border: #000000 solid 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ball
+{
+    position: relative;
+    visibility: hidden;
+    width: 2.5%;
+    height: 5%;
+    border-radius: 50%;
+    background-color: #00ADB5;
+}
+
+#mid_line
+{
+    position: absolute;
+    width: 0.8%;
+    height: 100%;
+    background-color: #EEEEEE;
+}
+
+#transparent
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    opacity: 0.5;
+    background-color: black;
+}
+
+#matchmaking_message
+{
+    position: absolute;
+    color: #00ADB5;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    line-height: 30px;
+    font-size: xx-large;
+    z-index: 10000;
+}
+
+#start_msg
+{
+    background-color: #00ADB5;
+    border: 1px solid rgba(27, 31, 35, .15);
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    line-height: 30px;
+    font-size: medium;
+    padding: 6px 16px;
+    position: absolute;
+    visibility: hidden;
+    z-index: 9999;
+}
+
+#start_msg:hover
+{
+    background-color: #087c81;
+}
+
+.paddle
+{
+    position: absolute;
+    width: 1%;
+    height: 20%;
+    background-color: #00ADB5;
+    border-radius: 0.3em;
+}
+
+#paddle1
+{
+    left: 0;
+}
+
+#paddle2
+{
+    right: 0;
+}
+
+#p1_score
+{
+    position:absolute;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    top: 15px;
+    right: 51%;
+    z-index: 9997;
+    text-align: right;
+    font-size: 45px;
+}
+
+#p2_score
+{
+    position: absolute;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    top: 15px;
+    left: 51%;
+    z-index: 9997;
+    text-align: left;
+    font-size: 45px;
+}
+
+#countdown
+{
+    position: absolute;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    z-index: 10000;
+    font-size: 25vh;
+}
+
+#p1_score_message
+{
+    position: absolute;
+    visibility: hidden;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    font-size: 8vh;
+    top: 15%;
+    z-index: 10000;
+}
+
+#p2_score_message
+{
+    position: absolute;
+    visibility: hidden;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    font-size: 8vh;
+    top: 15%;
+    z-index: 10000;
+}
+
+#p1_victory_message
+{
+    position: absolute;
+    visibility: hidden;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    font-size: 5vw;
+    top: 10%;
+    z-index: 10000;
+}
+
+#p2_victory_message
+{
+    position: absolute;
+    visibility: hidden;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    color: #00ADB5;
+    font-size: 5vw;
+    top: 10%;
+    z-index: 10000;
+}
+
+.teleport
+{
+  width: 5%;
+  height: 10%;
+  top: 0;
+  left: 0;
+  background-color: #001aff;
+  border-radius: 50%;
+  position: absolute;
+  animation: teleport 1s ease-out;
+}
+
+#portal
+{
+  width: 10%;
+  height: 20%;
+  position: absolute;
+  top: 0px;/*corriger l'offset au moment de calculer la position*/
+  left: 0px;/*idem*/
+  overflow: hidden;
+  visibility: hidden;
+  z-index: 10000;
+}
+
+#portal-inner
+{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 800px;
+}
+
+#portal-glow
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(#00e6ff 0%, #001aff 70%);
+  opacity: 0.8;
+  animation: portal-glow-animation 2s infinite;
+}
+
+#portal-overlay
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
