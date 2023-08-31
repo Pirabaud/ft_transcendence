@@ -11,7 +11,7 @@ export class NavbarComponent {
   };
 
   navToHomepage() {
-    this.router.navigate(['/homepage']);
+    this.router.navigate(['/home']);
   }
 
   navToProfile() {

@@ -7,14 +7,17 @@ import { HttpService } from './http.service';
 import { ChatComponent } from './components/chat/chat.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
+import {ProfileComponent} from "./components/profile/profile.component";
 
 const routes: Routes = [
   { path: '', component: LoginComponent, title: 'Login' },
+  { path: 'login', component: LoginComponent, title: 'Login' },
   { path: 'home', component: HomepageComponent, title: 'Home' },
   { path: 'login-handler', component: LoginHandlerComponent, title: 'Login-Handler' },
-  { path: 'lobby', component: LobbyComponent, title: 'lobby'},
-  { path: 'chat', component: ChatComponent, title: 'chat'},
-  { path: 'game/:id', component: GameComponent, title:'game'},
+  { path: 'lobby', component: LobbyComponent, title: 'Lobby'},
+  { path: 'chat', component: ChatComponent, title: 'Chat'},
+  { path: 'profile', component: ProfileComponent, title: 'Profile'},
+  { path: 'game/:id', component: GameComponent, title:'Game'},
 ];
 
 @NgModule({
