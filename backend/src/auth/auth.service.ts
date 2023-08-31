@@ -27,7 +27,6 @@ export class AuthService {
         client_secret: clientSecret,
         redirect_uri: redirectUri,
       });
-      console.log(response.data.access_token)
       return response.data.access_token;
     } catch (error) {
       return null;
@@ -36,7 +35,6 @@ export class AuthService {
 
   async login(code: string) {
   const access_token = await this.getAccessToken(code);
-  console.log(access_token)
   const headers = {
     Authorization: `Bearer ${access_token}`,
   };
@@ -51,9 +49,7 @@ export class AuthService {
       newUser.id = response.data.id;
       newUser.login = response.data.login;
       newUser.img = response.data.image.link;
-      console.log(newUser);
       await this.userService.save(newUser);
-      console.log(await this.userService.findOne(response.data.id));
       payload = {sub: newUser.id}
     }
     else

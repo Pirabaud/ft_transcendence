@@ -29,7 +29,7 @@ export class LoginHandlerComponent implements OnInit {
           window.location.href = 'home';
         } else {
           console.log('failure to obtain access token');
-          //window.location.href = '';
+          window.location.href = '';
         }
       });
     } 

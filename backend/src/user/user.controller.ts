@@ -9,7 +9,6 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     async getProfile(@Request() req) {
-        console.log("c est qui ? :", req.user.sub);
         return await this.UserService.findOne(req.user.sub);
     }
 }

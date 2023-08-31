@@ -15,6 +15,4 @@ export class User {
     @Column()
     img: string;
 
-    // @Column({nullable: true})
-    // match: Match[];
 }
