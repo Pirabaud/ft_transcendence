@@ -1,4 +1,5 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
+import { HttpService } from '../../http.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,12 +9,46 @@ import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 export class ProfileComponent {
 
   private rank: number;
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private httpBackend: HttpService) {
     this.rank = 0;
   }
 
   @ViewChild('matchHistoryList') matchHistoryListElement: ElementRef;
   @ViewChild('leaderboardList') leaderboardListElement: ElementRef;
+  @ViewChild('profilePic') profilePicElement: ElementRef;
+  @ViewChild('login') loginElement: ElementRef;
+  @ViewChild('statsWin') statsWinElement: ElementRef;
+  @ViewChild('statsLose') statsLoseElement: ElementRef;
+  @ViewChild('statsElo') statsEloElement: ElementRef;
+  ngOnInit() {
+
+    this.httpBackend.getProfile().subscribe(
+      (response: any) => {
+        if(this.statsWinElement)
+        {
+          this.statsWinElement.nativeElement.textContent = response.win;
+        }
+        if(this.statsLoseElement)
+        {
+          this.statsLoseElement.nativeElement.textContent = response.lose;
+        }
+        if(this.statsEloElement)
+        {
+          this.statsEloElement.nativeElement.textContent = response.elo;
+        }
+        if (this.loginElement) {
+          this.loginElement.nativeElement.textContent = response.login;
+        }
+        if (this.profilePicElement) {
+          this.profilePicElement.nativeElement.src = response.img;
+        }
+
+      },
+      (error) => {
+        console.error('no data', error);
+      }
+    );
+  }
   ngAfterViewInit()
   {
     this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
