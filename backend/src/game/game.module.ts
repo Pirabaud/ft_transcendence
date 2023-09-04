@@ -77,7 +77,6 @@ export class GameModule {
     const game = runningGames[index];
 
     socket.emit("recInitId", obj.clientId.toString());
-    console.log("start.game", game.user1.login);
     if (game.once === 0) {
       ++game.once;
       /*send events for the countdown every 0.7 seconds*/
@@ -119,8 +118,7 @@ export class GameModule {
   updatePaddlePos(socket: any, gameId: string, data: any, clientHeight: number) {
     let index = getGameIndex(gameId, "gameId");
     let clientId = knownClients.get(socket.id);
-    //console.log(clientId)
-    if (clientId === "0") {
+    if (clientId.clientId === "0") {
       runningGames[index].paddle1.posY = data.data.posY - (clientHeight / 2);
       runningGames[index].paddle1.posY = runningGames[index].paddle1.posY * (600 / clientHeight);
       runningGames[index].paddle1.posY += (600 / 2);
@@ -192,7 +190,7 @@ class   Game
       directionY: Math.random() < 0.5 ? -1 : 1,
       height: 60,
       width: 30,
-      speed: (field.width - field.height) / 110
+      speed: (field.width - field.height) / 120
     }
 
     this.paddle1 = {
@@ -262,7 +260,6 @@ function    addNewClient(socket: any, gameId: string)
   else {
     knownClients.set(socket.id, {gameId: gameId, clientId: "1"});
   }
-    console.log("a user joined the room " + gameId);
 }
 
 /*Get the game instance associated with a gameId*/
@@ -373,7 +370,6 @@ function spawnPortals(server: Server, gameId: string)
       game.portal.exitPosX = Math.floor(Math.random() * ((halfHeight - 200) - (-halfHeight + 200) + 1) + (-halfHeight + 200));
       game.portal.exitPosY = Math.floor(Math.random() * ((halfHeight - 200) - (-halfHeight + 200) + 1) + (-halfHeight + 200));
       game.portalOn = true;
-      console.log("portal spawned at x: " + game.portal.entryPosX + " y: " + game.portal.entryPosY);
       server.in(gameId).emit("recPortalInteraction", {portalObj: game.portal, state: "on"});
     }
     if (game.gameStatus === 0)

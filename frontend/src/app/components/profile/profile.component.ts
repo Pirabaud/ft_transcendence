@@ -98,16 +98,11 @@ export class ProfileComponent {
 
   /*meme chose que addGameToHistory*/
   /*Trier par ordre du classement des points*/
-  addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/)
+  addPlayerToLeaderboard(/*playerName, eloPoints*/)
   {
     ++this.rank;
     const newListItem = this.renderer.createElement('li');
     this.renderer.addClass(newListItem, 'leaderboard-list-elem');
-
-    // Création de l'élément img 1
-    const imgElement = this.renderer.createElement('img');
-    this.renderer.addClass(imgElement, 'leaderboard-small-img');
-    this.renderer.setAttribute(imgElement, 'src', 'assets/images/blevrel.jpeg');//playerImg a la place
 
     // Création de la div center-content 1
     const centerContentDiv = this.renderer.createElement('div');
@@ -133,7 +128,6 @@ export class ProfileComponent {
     this.renderer.appendChild(centerContentDiv, eloElement);
 
     this.renderer.appendChild(newListItem, centerContentDiv);
-    this.renderer.appendChild(newListItem, imgElement);
 
     this.renderer.appendChild(this.leaderboardListElement.nativeElement, newListItem);
     console.log(newListItem);
