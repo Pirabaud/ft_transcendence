@@ -14,6 +14,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
+import { ProfileConfigComponent } from './components/profile-config/profile-config.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { HomepageComponent } from './components/homepage/homepage.component';
     ProfileComponent,
     HomepageComponent,
     LoginComponent,
-    LoginHandlerComponent
+    LoginHandlerComponent,
+    ProfileConfigComponent,
   ],
   imports: [
     BrowserModule,
