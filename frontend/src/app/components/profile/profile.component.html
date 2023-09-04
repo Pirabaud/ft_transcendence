@@ -1,20 +1,24 @@
+<app-navbar></app-navbar>
 <body>
   <div id="leaderboard-list-container">
     <ul #leaderboardList id="leaderboard-list">
     </ul>
   </div>
   <div id="match-history-list-container">
+    <div #noMatchHistory id="no-match-history">
+      Play at least one game to view your match history
+    </div>
    <ul #matchHistoryList id="match-history-list">
 <!--     penser au cas ou le joueur n'a joue aucune partie, mettre un message genre "play a game to view your match history dans le premier emplacement de la liste"-->
    </ul>
   </div>
   <div id="profile-container">
-    <img id="profile-pic" src="assets/images/blevrel.jpeg">
+    <img #profilePic id="profile-pic" src="">
     <div id="profile-stats">
-      <div id="login">LOGIN</div> <!-- verifier avant qu'il n'est pas trop long-->
-      <div id="stats-wins">100W </div>
-      <div id="stats-loses">2L </div>
-      <div id="stats-elo">100 ELO</div>
+      <div #login id="login">LOGIN</div> <!-- verifier avant qu'il n'est pas trop long-->
+      <div #statsWin id="stats-wins">100W </div>
+      <div #statsLose id="stats-loses">2L </div>
+      <div #statsElo id="stats-elo">100 ELO</div>
     </div>
   </div>
 </body>

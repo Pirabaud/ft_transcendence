@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
+    "@nestjs/common": "^10.2.3",
     "ngx-socket-io": "^4.5.1",
     "require": "^0.4.4",
     "rxjs": "~7.8.0",
@@ -30,8 +31,8 @@
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.0.5",
-    "@angular/cli": "^16.1.4",
+    "@angular-devkit/build-angular": "^16.2.1",
+    "@angular/cli": "^16.2.1",
     "@angular/compiler-cli": "^16.0.0",
     "@types/jasmine": "~4.3.0",
     "@types/node": "^20.4.0",

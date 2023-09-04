@@ -15,9 +15,11 @@ h1
 
 #profile-container
 {
+  display: flex;
+  flex-wrap: wrap;
   position: relative;
   top: 30%;
-  width: 300px;
+  width: 15vw;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -26,8 +28,8 @@ h1
 #profile-image
 {
   object-fit: cover;
-  height: 300px;
-  width:  300px;
+  height: 15vw;
+  width:  15vw;
   display: block;
   border: solid 3px black;
   border-radius: 50%;
@@ -37,10 +39,12 @@ h1
 {
   position: relative;
   margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
   background-color: white;
   border: solid 1px white;
   border-radius: 14px;
-  padding: 17px 17px;
+  padding: 1vw 1vw;
   box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
   z-index: 10000;
   display: inline-block;
@@ -66,7 +70,7 @@ h1
   left: 5%;
   margin-left: auto;
   margin-right: auto;
-  width: 600px;
+  width: 30vw;
   position: absolute;
   text-align: center;
   display: inline;
@@ -75,8 +79,8 @@ h1
 #pong-gif
 {
   object-fit: cover;
-  height: 300px;
-  width:  600px;
+  height: 15vw;
+  width:  30vw;
   display: block;
   border: solid 3px black;
   border-radius: 10px;
@@ -88,7 +92,7 @@ h1
   right: 11%;
   margin-left: auto;
   margin-right: auto;
-  width: 350px;
+  width: 20vw;
   position: absolute;
   text-align: center;
   display: inline;
@@ -97,8 +101,8 @@ h1
 #chat-gif
 {
   object-fit: cover;
-  height: 450px;
-  width:  350px;
+  height: 25vw;
+  width:  20vw;
   display: block;
   border: solid 3px black;
   border-radius: 10px;

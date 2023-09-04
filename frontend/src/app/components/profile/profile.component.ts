@@ -1,4 +1,5 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
+import { HttpService } from '../../http.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,12 +9,46 @@ import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 export class ProfileComponent {
 
   private rank: number;
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private httpBackend: HttpService) {
     this.rank = 0;
   }
 
   @ViewChild('matchHistoryList') matchHistoryListElement: ElementRef;
   @ViewChild('leaderboardList') leaderboardListElement: ElementRef;
+  @ViewChild('profilePic') profilePicElement: ElementRef;
+  @ViewChild('login') loginElement: ElementRef;
+  @ViewChild('statsWin') statsWinElement: ElementRef;
+  @ViewChild('statsLose') statsLoseElement: ElementRef;
+  @ViewChild('statsElo') statsEloElement: ElementRef;
+  ngOnInit() {
+
+    this.httpBackend.getProfile().subscribe(
+      (response: any) => {
+        if(this.statsWinElement)
+        {
+          this.statsWinElement.nativeElement.textContent = response.win;
+        }
+        if(this.statsLoseElement)
+        {
+          this.statsLoseElement.nativeElement.textContent = response.lose;
+        }
+        if(this.statsEloElement)
+        {
+          this.statsEloElement.nativeElement.textContent = response.elo;
+        }
+        if (this.loginElement) {
+          this.loginElement.nativeElement.textContent = response.login;
+        }
+        if (this.profilePicElement) {
+          this.profilePicElement.nativeElement.src = response.img;
+        }
+
+      },
+      (error) => {
+        console.error('no data', error);
+      }
+    );
+  }
   ngAfterViewInit()
   {
     this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
@@ -98,16 +133,11 @@ export class ProfileComponent {
 
   /*meme chose que addGameToHistory*/
   /*Trier par ordre du classement des points*/
-  addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/)
+  addPlayerToLeaderboard(/*playerName, eloPoints*/)
   {
     ++this.rank;
     const newListItem = this.renderer.createElement('li');
     this.renderer.addClass(newListItem, 'leaderboard-list-elem');
-
-    // Création de l'élément img 1
-    const imgElement = this.renderer.createElement('img');
-    this.renderer.addClass(imgElement, 'leaderboard-small-img');
-    this.renderer.setAttribute(imgElement, 'src', 'assets/images/blevrel.jpeg');//playerImg a la place
 
     // Création de la div center-content 1
     const centerContentDiv = this.renderer.createElement('div');
@@ -133,7 +163,6 @@ export class ProfileComponent {
     this.renderer.appendChild(centerContentDiv, eloElement);
 
     this.renderer.appendChild(newListItem, centerContentDiv);
-    this.renderer.appendChild(newListItem, imgElement);
 
     this.renderer.appendChild(this.leaderboardListElement.nativeElement, newListItem);
     console.log(newListItem);
