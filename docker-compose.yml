@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+
+  backend:
+    container_name: nestJS
+    image: backend
+    build: ./backend
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    ports:
+      - 3000:3000
+    
+  frontend:
+    container_name: angularJs
+    image: frontend
+    build: ./frontend
+    restart: always
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    ports:
+      - 4200:4200
+
+  postgres:
+    container_name: postgres
+    image: "postgres:latest"
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database
+    ports:
+      - 5432:5432
+
+    # Pour entrer dans la base de donnes
+    # CMD: psql -U user -h localhost -p 5432 -d database
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_USER: luserbu
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
