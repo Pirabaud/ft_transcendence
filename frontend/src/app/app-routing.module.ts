@@ -8,6 +8,8 @@ import { ChatComponent } from './components/chat/chat.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
 import {ProfileComponent} from "./components/profile/profile.component";
+import { TwoFactorComponent } from './components/two-factor/two-factor.component';
+import { GoogleAuthenticatorComponent } from './components/google-authenticator/google-authenticator.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, title: 'Login' },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'chat', component: ChatComponent, title: 'Chat'},
   { path: 'profile', component: ProfileComponent, title: 'Profile'},
   { path: 'game/:id', component: GameComponent, title:'Game'},
+  { path: 'two-factor', component: TwoFactorComponent, title: 'Two-Factor' },
+  { path: 'google', component: GoogleAuthenticatorComponent, title: 'Google Authenticator' },
 ];
 
 @NgModule({

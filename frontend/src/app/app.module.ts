@@ -14,6 +14,8 @@ import { ChatComponent } from './components/chat/chat.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
+import { TwoFactorComponent } from './components/two-factor/two-factor.component';
+import { GoogleAuthenticatorComponent } from './components/google-authenticator/google-authenticator.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { HomepageComponent } from './components/homepage/homepage.component';
     ProfileComponent,
     HomepageComponent,
     LoginComponent,
-    LoginHandlerComponent
+    LoginHandlerComponent,
+    TwoFactorComponent,
+    GoogleAuthenticatorComponent
   ],
   imports: [
     BrowserModule,

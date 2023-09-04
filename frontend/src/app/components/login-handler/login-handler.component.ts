@@ -26,7 +26,7 @@ export class LoginHandlerComponent implements OnInit {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
           localStorage.setItem(this.key, response.jwt_token);
-          window.location.href = 'home';
+          window.location.href = 'two-factor';
         } else {
           console.log('failure to obtain access token');
           window.location.href = '';
