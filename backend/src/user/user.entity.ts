@@ -14,5 +14,4 @@ export class User {
 
     @Column()
     img: string;
-
 }

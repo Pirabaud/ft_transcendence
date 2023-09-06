@@ -1,9 +1,13 @@
-export interface Game
+import { User } from "src/user/user.entity";
+
+export interface GameId
 {
   gameMode: number;
   multiGameId: string;
   gameStatus: number;
   once: number;
+  user1: User;
+  user2: User;
   p1SocketId: string;
   p2SocketId: any;
   portalOn: boolean;

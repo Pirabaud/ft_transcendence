@@ -14,9 +14,7 @@ export class JwtAuthGuard implements CanActivate {
   
       if (token) {
         try {
-          // this.logger.debug(`Received token: ${token}`);
           const decoded = await this.jwtService.verifyAsync(token);
-          // this.logger.debug('Decoded user data:', decoded);
           request.user = decoded;
           return true;
         } catch (err) {
@@ -24,7 +22,6 @@ export class JwtAuthGuard implements CanActivate {
           return false;
         }
       }
-  
       this.logger.warn('No token found in headers');
       return false;
     }
