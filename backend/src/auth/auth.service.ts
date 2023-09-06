@@ -6,21 +6,21 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-
   constructor(
-     private jwtService: JwtService,
-     private userService: UserService
+    private jwtService: JwtService,
+    private userService: UserService,
   ) {}
 
-  
   async getAccessToken(code: string): Promise<string> {
     const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
-    const clientId = 'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
-    const clientSecret = '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';
+    const clientId =
+      'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
+    const clientSecret =
+      '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';
     const redirectUri = 'http://localhost:4200/login-handler';
 
     try {
-        const response = await axios.post(tokenEndpoint, {
+      const response = await axios.post(tokenEndpoint, {
         grant_type: 'authorization_code',
         code: code,
         client_id: clientId,
@@ -34,52 +34,44 @@ export class AuthService {
   }
 
   async login(code: string) {
-  const access_token = await this.getAccessToken(code);
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-  };
-  const apiUrl = 'https://api.intra.42.fr/v2/me';
-  
-
-  try {
-     let payload = {};
-    const response = await axios.get(apiUrl, { headers });
-    if (await this.userService.findOne(response.data.id) === null) {
-      const newUser: User = new User();
-      newUser.id = response.data.id;
-      newUser.login = response.data.login;
-      newUser.img = response.data.image.link;
-      await this.userService.save(newUser);
-      payload = {sub: newUser.id}
-    }
-    else
-    {
-      payload = {sub: response.data.id}
-    }
-    return {
-      jwt_token: await this.jwtService.signAsync(payload)
+    const access_token = await this.getAccessToken(code);
+    const headers = {
+      Authorization: `Bearer ${access_token}`,
     };
-  }
-   catch (error) {
-    return null;
-  }
-}
+    const apiUrl = 'https://api.intra.42.fr/v2/me';
 
-async verifyJwt(jwt: string) {
-  try {
-  {
-    return this.jwtService.verifyAsync(
-     jwt,
-     {
-       secret: 'prout',
-       ignoreExpiration: true,
-     },
-   );
+    try {
+      let payload: NonNullable<unknown>;
+      const response = await axios.get(apiUrl, { headers });
+      if ((await this.userService.findOne(response.data.id)) === null) {
+        const newUser: User = new User();
+        newUser.id = response.data.id;
+        newUser.login = response.data.login;
+        newUser.img = response.data.image.link;
+        await this.userService.saveUser(newUser);
+        payload = { sub: newUser.id };
+      } else {
+        payload = { sub: response.data.id };
+      }
+      return {
+        jwt_token: await this.jwtService.signAsync(payload),
+      };
+    } catch (error) {
+      return null;
+    }
   }
-  }
-  catch (error) {
+
+  async verifyJwt(jwt: string) {
+    try {
+      {
+        return this.jwtService.verifyAsync(jwt, {
+          secret: 'prout',
+          ignoreExpiration: true,
+        });
+      }
+    } catch (error) {
       console.log(error);
-     return null;
-  }
+      return null;
+    }
   }
 }
