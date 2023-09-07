@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Subscription } from 'rxjs';
 import { HttpService } from '../../http.service';
 
 @Component({
@@ -12,12 +9,11 @@ import { HttpService } from '../../http.service';
 export class LoginHandlerComponent implements OnInit {
     private readonly key = 'jwt';
 
-  constructor( 
+  constructor(
      private httpBackend: HttpService,
-     private http: HttpClient,
   ) {}
 
-  
+
   ngOnInit() {
     const url = window.location.href;
     const code = getParamFromUrl(url, "code");
@@ -26,13 +22,13 @@ export class LoginHandlerComponent implements OnInit {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
           localStorage.setItem(this.key, response.jwt_token);
-          window.location.href = 'home';
+          window.location.href = 'profileConfig';
         } else {
           console.log('failure to obtain access token');
           window.location.href = '';
         }
       });
-    } 
+    }
     else {
       console.log('access denied');
       window.location.href = '';

@@ -1,0 +1,54 @@
+h1
+{
+  position: relative;
+  text-align: center;
+  margin-top: 10vh;
+  font-family: 'Oswald', sans-serif;
+  font-weight: bolder;
+  font-size: xx-large;
+}
+
+#image-container
+{
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  margin-top: 100px;
+  width: 15vw;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+#image-container:hover
+{
+  border-radius: 50%;
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+#profile-image
+{
+  object-fit: cover;
+  height: 15vw;
+  width:  15vw;
+  display: block;
+  border: solid 3px black;
+  border-radius: 50%;
+}
+
+#login
+{
+  display: flex;
+  flex-wrap: wrap;
+  width: 10vw;
+  text-align: center;
+  position: relative;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#file-input
+{
+  visibility: hidden;
+}

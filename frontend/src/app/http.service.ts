@@ -15,4 +15,20 @@ export class HttpService {
     getProfile(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/profile");
     }
+    uploadFile(file: FormData): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/database/fileUpload", file);
+    }
+
+    saveNewUsername(username: string): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/user/saveUsername", { username })
+    }
+    /*return the list of all the profiles in the database*/
+    checkDoubleUsername(username: string): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/database/doubleUsername", { username });
+    }
+    fetchDbUsers(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/database/users");
+    }
 }
