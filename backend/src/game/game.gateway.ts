@@ -3,14 +3,23 @@ import { Server, Socket} from "socket.io"
 import { GameModule } from "./game.module";
 import { UserService } from 'src/user/user.service';
 import { AuthService } from 'src/auth/auth.service';
+import { GameService } from './game.service';
+import { UserWaiting } from './interfaces/userWaiting.interface';
+import { GamesUtileService } from './gameUtiles.service';
+import { GamePortal } from './gamePortal.service';
+import { GameCalculation } from './gameCalculation';
 
 @WebSocketGateway({ cors: { origin: ["http://localhost:4200"] } })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
   @WebSocketServer()
   private server: Server;
-  private readonly gameModule: GameModule;
-  constructor(private userService: UserService, private authService: AuthService) {
-    this.gameModule = new GameModule();
+  private readonly gameModule: GameService;
+  constructor(private userService: UserService, 
+    private authService: AuthService, 
+    private gameUtile: GamesUtileService,
+    private gamePortal: GamePortal,
+    private gameCalculation: GameCalculation) {
+    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal);
   }
   async handleConnection(socket: Socket) {
     //console.log("handleConnection jwt: ", socket.handshake.headers.authorization);
@@ -26,10 +35,15 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
   @SubscribeMessage("createGame")
   async handleCreateGame(socket: Socket, gameData: any)
   {
+    
     const decodedToken = await this.authService.verifyJwt(socket.handshake.headers.authorization);
     const user = await this.userService.findOne(decodedToken.sub);
-    console.log("user :", user);
-    socket.emit("recCreateGame", this.gameModule.checkGameAvailability(this.server, socket, gameData.gameId, gameData.gameMode, user));
+    const userWaiting: UserWaiting = {
+      socket: socket,
+      gameId: gameData.gameId,
+      user: user,
+    } 
+    socket.emit("recCreateGame", this.gameModule.checkGameAvailability(this.server, gameData.gameMode, userWaiting));
   }
 
   @SubscribeMessage("startGame")
