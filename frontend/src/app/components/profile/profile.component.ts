@@ -38,7 +38,7 @@ export class ProfileComponent {
           this.statsEloElement.nativeElement.textContent = response.elo;
         }
         if (this.loginElement) {
-          this.loginElement.nativeElement.textContent = response.login;
+          this.loginElement.nativeElement.textContent = response.username;
         }
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;
