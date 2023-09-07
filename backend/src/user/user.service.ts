@@ -28,9 +28,19 @@ export class UserService {
   async updateAvatar(id: number, imagePathObject: any) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     userToUpdate.img = imagePathObject.path;
+    userToUpdate.login = userToUpdate.login;
+    userToUpdate.username = userToUpdate.username;
     await this.userRepository.save(userToUpdate);
     return imagePathObject;
   }
+
+  async updateHistory(id: number, gameid: string) 
+  {
+    const user = await this.userRepository.findOneBy({ id });
+    user.matchHistory.push(gameid);
+    await this.userRepository.save(user);
+  }
+
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }

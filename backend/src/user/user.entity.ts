@@ -5,13 +5,16 @@ export class User {
   @PrimaryColumn()
   id: number;
 
-  @Column()
+  @Column("text", { nullable: true})
   login: string;
 
-  @Column({ nullable: true })
+  @Column("text", { nullable: true })
   username?: string;
 
-  @Column()
+  @Column("text", { nullable: true})
   img: string;
+
+  @Column("text", {array: true, nullable: true})
+  matchHistory: string[];
 
 }

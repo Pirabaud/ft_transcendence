@@ -7,13 +7,15 @@ import { UserWaiting } from './interfaces/userWaiting.interface';
 import { Socket } from "socket.io";
 import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
+import { GameDatabase } from './gameDatabase.service';
 
 @Injectable()
 export class GameService {
 constructor(private gameUtile: GamesUtileService, 
   private gameCalculation: GameCalculation,
-   private gamePortal: GamePortal) {
-    this.gameCalculation = new GameCalculation(gameUtile, gamePortal);
+   private gamePortal: GamePortal,
+   private gameDatabase: GameDatabase) {
+    this.gameCalculation = new GameCalculation(gameUtile, gamePortal, gameDatabase);
    }
 /*Where all the data about players waiting and ingame is stored*/
 waitRoomNormal: Array<UserWaiting> = [];
@@ -154,6 +156,7 @@ createGame(multiGameId: string, gameMode: number, firstPlayer: UserWaiting, seco
         const user2: User = this.waitRoomNormal[0].user;
         //this.runningGames.push(new Game(res, gameMode, this.waitRoomNormal[0].socket, socket.id, user, user2));
         this.runningGames.push(this.createGame(res, gameMode, this.waitRoomNormal[0], userWaiting))
+        console.log("create game: ", this.runningGames);
         this.waitRoomNormal = [];
       }
       else

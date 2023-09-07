@@ -3,12 +3,14 @@ import { GamePortal } from "./gamePortal.service";
 import { GamesUtileService } from "./gameUtiles.service";
 import { GameId } from "./interfaces/game.interface";
 import { Ball } from "./interfaces/ball.interface";
+import { GameDatabase } from "./gameDatabase.service";
+import { GameHistory } from "./game.entity";
 
 export class GameCalculation {
     constructor(private gameUtileService: GamesUtileService, 
-    private gamePortal: GamePortal) {
+    private gamePortal: GamePortal,
+    private gameDatabase: GameDatabase) {
     }
-    
     ballMovement(server: Server, gameId: string, runningGames: Array<GameId>)
     {
         let index = this.gameUtileService.getGameIndex(gameId, "gameId", runningGames);
@@ -24,6 +26,15 @@ export class GameCalculation {
             server.in(gameId).emit("recGoalScored", game.score);
             if (game.score.p1_score === 1) {
             game.gameStatus = 0;
+            const gameHistory: GameHistory = {
+                id: game.multiGameId,
+                winner: game.user1.login,
+                loser: game.user2.login,
+                winnerScore: game.score.p1_score,
+                loserScore: game.score.p2_score,
+            };
+            this.gameDatabase.saveGame(gameHistory);
+            console.log(gameHistory, this.gameDatabase.findAll());
             server.in(gameId).emit("recStopGame", game.user1.login);
             return 0;
             }
@@ -34,6 +45,16 @@ export class GameCalculation {
             server.in(gameId).emit("recGoalScored", game.score);
             if (game.score.p2_score === 1) {
             game.gameStatus = 0;
+            const gameHistory: GameHistory = {
+                id: game.multiGameId,
+                winner: game.user1.login,
+                loser: game.user2.login,
+                winnerScore: game.score.p1_score,
+                loserScore: game.score.p2_score,
+            };
+            this.gameDatabase.saveGame(gameHistory);
+            console.log(gameHistory, this.gameDatabase.findAll());
+
             server.in(gameId).emit("recStopGame", game.user2.login);
             return 0;
             }
