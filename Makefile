@@ -1,5 +1,5 @@
 start:
-	sudo docker-compose -f docker-compose.yml up
+	sudo docker-compose -f docker-compose.yml up --build
 
 stop:
 	docker compose -f docker-compose.yml stop

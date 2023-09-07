@@ -4,11 +4,8 @@ import {
   Controller,
   Get,
   Post,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from '../user/user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -17,12 +14,8 @@ export class DatabaseController {
   constructor(private userService: UserService) {}
   @UseGuards(JwtAuthGuard)
   @Post('fileUpload')
-  @UseInterceptors(
-    FileInterceptor('files', { dest: '../frontend/src/assets/images' }),
-  )
-  uploadSingle(@UploadedFile() file: any, @Request() req) {
-    const path = 'assets/images/' + file.filename;
-    return this.userService.updateAvatar(req.user.sub, { path });
+  uploadSingle(@Body() fileNameObject: any, @Request() req) {
+    return this.userService.updateAvatar(req.user.sub, fileNameObject);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -31,7 +24,7 @@ export class DatabaseController {
     const users = await this.userService.findAll();
     for (let i = 0; i < users.length; ++i)
     {
-      if (users[i].login === usernameObject.username)
+      if (users[i].username === usernameObject.username)
         return false;
     }
     return true;

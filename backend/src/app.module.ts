@@ -15,7 +15,7 @@ import { DatabaseModule } from './database/database.module';
       type: 'postgres',
       host: 'postgres',
       username: 'user',
-      password:  'password',
+      password: 'password',
       database: 'database',
       entities: [User],
       synchronize: true,
