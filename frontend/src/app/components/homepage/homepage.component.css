@@ -7,7 +7,9 @@ h1
 {
   position: absolute;
   top: 13%;
-  left: 47%;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
   font-family: 'Oswald', sans-serif;
   font-weight: bolder;
   font-size: xx-large;

@@ -1,4 +1,5 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
+import { Router } from '@angular/router'
 import { HttpService } from '../../http.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { HttpService } from '../../http.service';
 export class ProfileComponent {
 
   private rank: number;
-  constructor(private renderer: Renderer2, private httpBackend: HttpService) {
+  constructor(private router: Router, private renderer: Renderer2, private httpBackend: HttpService) {
     this.rank = 0;
   }
 
@@ -166,5 +167,9 @@ export class ProfileComponent {
 
     this.renderer.appendChild(this.leaderboardListElement.nativeElement, newListItem);
     console.log(newListItem);
+  }
+
+  navToProfileConfig() {
+    this.router.navigate(['/profileConfig']);
   }
 }

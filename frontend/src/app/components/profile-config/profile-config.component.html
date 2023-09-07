@@ -1,0 +1,9 @@
+<app-navbar></app-navbar>
+<h1>
+  Change your nickname/profile picture
+</h1>
+<div id="image-container">
+  <input type="file" id="file-input" (change)="onFileSelected($event)" #fileUpload accept="image/gif, image/png, image/jpeg, image/jpg">
+  <img #profilePic id="profile-image" (click)="fileUpload.click()" alt="ProfilePicture" src="">
+</div>
+<input #login id="login" value="" (keydown)="sendUsernameData($event)">
