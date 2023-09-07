@@ -1,13 +1,13 @@
 start:
-	docker compose -f docker-compose.yml up --build
+	docker-compose up --build
 
 stop:
-	docker compose -f docker-compose.yml stop
+	docker-compose stop
 
 restart: stop start
 
 build:
-	docker compose -f docker-compose.yml build
+	docker-compose build
 
 clean: stop
 	docker system prune -af

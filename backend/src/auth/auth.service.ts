@@ -39,12 +39,13 @@ export class AuthService {
     Authorization: `Bearer ${access_token}`,
   };
   const apiUrl = 'https://api.intra.42.fr/v2/me';
-  
+  let first_co = false;
 
   try {
      let payload = {};
     const response = await axios.get(apiUrl, { headers });
     if (await this.userService.findOne(response.data.id) === null) {
+      first_co = true;
       const newUser: User = new User();
       newUser.id = response.data.id;
       newUser.login = response.data.login;
@@ -54,11 +55,10 @@ export class AuthService {
     }
     else
     {
+      first_co = false;
       payload = {sub: response.data.id}
     }
-    return {
-      jwt_token: await this.jwtService.signAsync(payload)
-    };
+    return { jwt_token: await this.jwtService.signAsync(payload), first_connection: first_co };
   }
    catch (error) {
     return null;

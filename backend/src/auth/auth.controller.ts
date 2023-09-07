@@ -9,7 +9,7 @@ export class AuthController {
   private data: any = null;
 
   @Post('login')
-  async getData(@Body() code: { code: string}): Promise<any> {
+  async getData(@Body() code: { code: string }): Promise<any> {
     return await this.appService.login(code.code);
   }
 
