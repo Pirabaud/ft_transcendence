@@ -18,6 +18,15 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  async findOneByUsername(username: any): Promise<User | null> {
+    const usersList = await this.findAll();
+    for (let i = 0; i < usersList.length; ++i) {
+      if (username.username === usersList[i].username)
+        return usersList[i];
+    }
+    return null;
+  }
+
   async updateUsername(id: number, usernameObject: any) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     userToUpdate.username = usernameObject.username;
@@ -30,6 +39,17 @@ export class UserService {
     userToUpdate.img = imagePathObject.fileName;
     await this.userRepository.save(userToUpdate);
     return imagePathObject;
+  }
+  async updateFriendRequests(username: string, action: string) {
+    const userToUpdate = await this.findOneByUsername(username);
+    console.log(userToUpdate)
+    if (userToUpdate === null)
+      return ;
+    if (action === 'add')
+      userToUpdate.friendRequests++;
+    else
+      userToUpdate.friendRequests--;
+    await this.userRepository.save(userToUpdate);
   }
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);

@@ -27,7 +27,12 @@ export class HttpService {
     {
       return this.http.post<any>("http://localhost:3000/database/doubleUsername", { username });
     }
-    fetchDbUsers(): Observable<any> {
-      return this.http.get<any>("http://localhost:3000/database/users");
+    checkUserExists(username: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/database/userExists", { username });
+    }
+    createFriendRequest(username: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/database/createFR", { username });
     }
 }

@@ -1,11 +1,4 @@
-import {
-  Body,
-  Request,
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Request, Controller, Post, UseGuards } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -30,8 +23,19 @@ export class DatabaseController {
     return true;
   }
   @UseGuards(JwtAuthGuard)
-  @Get('users')
-  async getUsers() {
-    return await this.userService.findAll();
+  @Post('userExists')
+  async checkUserExists(@Body() usernameObject: any) {
+    const users = await this.userService.findAll();
+    for (let i = 0; i < users.length; ++i)
+    {
+      if (users[i].username === usernameObject.username)
+        return true;
+    }
+    return false;
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('createFR')
+  createFriendRequest(@Body() usernameObject: any) {
+    this.userService.updateFriendRequests(usernameObject, 'add');
   }
 }

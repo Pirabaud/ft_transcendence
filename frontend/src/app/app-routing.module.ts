@@ -9,6 +9,7 @@ import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
 import {ProfileComponent} from "./components/profile/profile.component";
 import {ProfileConfigComponent} from "./components/profile-config/profile-config.component";
+import {FriendsMenuTemporaryComponent} from "./components/friends-menu-temporary/friends-menu-temporary.component";
 
 const routes: Routes = [
   { path: '', component: LoginComponent, title: 'Login' },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, title: 'Profile'},
   { path: 'game/:id', component: GameComponent, title:'Game'},
   { path: 'profileConfig', component: ProfileConfigComponent, title:'Configure your profile'},
+  { path: 'dsa', component: FriendsMenuTemporaryComponent, title:'temp'},
 ];
 
 @NgModule({

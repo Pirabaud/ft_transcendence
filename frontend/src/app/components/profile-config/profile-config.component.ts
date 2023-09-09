@@ -20,7 +20,7 @@ export class ProfileConfigComponent {
       const url = this.fileNameElement.nativeElement.value.trim();
 
       if (!url) {
-        alert("Enter a valid link1");
+        alert("Enter a valid link");
         return;
       }
 

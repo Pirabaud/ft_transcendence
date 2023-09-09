@@ -5,9 +5,12 @@ export class User {
   @PrimaryColumn()
   id: number;
 
-  @Column({ nullable: true })
-  username?: string;
+  @Column()
+  username: string;
 
   @Column()
   img: string;
+
+  @Column({ nullable: true })
+  friendRequests: number;
 }

@@ -48,6 +48,7 @@ export class AuthService {
         newUser.id = response.data.id;
         newUser.username = response.data.login;
         newUser.img = response.data.image.link;
+        newUser.friendRequests = 0;
         await this.userService.saveUser(newUser);
         payload = { sub: newUser.id };
       } else {
