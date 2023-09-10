@@ -86,7 +86,7 @@ export class GameCalculation {
         }
         return game
     }
-    detectPaddleCollision(ballObj: Ball, game: any): number {
+    detectPaddleCollision(ballObj: Ball, game: GameId): number {
   if (game.ball.posX < 0) {
     const paddleLeft = -field.width / 2;
     const paddleRight = -field.width / 2 + game.paddle1.width;
@@ -120,7 +120,6 @@ export class GameCalculation {
     let paddleRight = field.width / 2;
     let paddleTop = game.paddle2.posY - (game.paddle2.height / 2);
     let paddleBottom = game.paddle2.posY + (game.paddle2.height / 2);
-
     if (
           ballObj.left < paddleRight && 
           ballObj.right > paddleLeft && 

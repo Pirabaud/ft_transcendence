@@ -5,12 +5,12 @@ export class User {
   @PrimaryColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true})
   login: string;
 
   @Column({ nullable: true })
   username?: string;
 
-   @Column()
+   @Column({ nullable: true})
    img: string;
 }

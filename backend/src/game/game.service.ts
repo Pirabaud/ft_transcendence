@@ -218,8 +218,7 @@ createGame(multiGameId: string, gameMode: number, firstPlayer: UserWaiting, seco
   updatePaddlePos(socket: Socket, gameId: string, data: any, clientHeight: number) {
     let index = this.gameUtile.getGameIndex(gameId, "gameId", this.runningGames);
     let clientId = this.knownClients.get(socket.id);
-    //console.log(clientId)
-    if (clientId === "0") {
+    if (clientId.clientId === "0") {
       this.runningGames[index].paddle1.posY = data.data.posY - (clientHeight / 2);
       this.runningGames[index].paddle1.posY = this.runningGames[index].paddle1.posY * (600 / clientHeight);
       this.runningGames[index].paddle1.posY += (600 / 2);
