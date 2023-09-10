@@ -15,8 +15,11 @@ export class HttpService {
     getProfile(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/profile");
     }
-    uploadFile(fileName: string): Observable<any> {
-      return this.http.post<any>("http://localhost:3000/database/fileUpload", { fileName });
+    getFriendRequests(): Observable<any> {
+        return this.http.get<any>("http://localhost:3000/friendRequest/friendRequests");
+    }
+    uploadFile(url: string): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/user/changePic", { url });
     }
     saveNewUsername(username: string): Observable<any>
     {
@@ -25,14 +28,18 @@ export class HttpService {
     /*return the list of all the profiles in the database*/
     checkDoubleUsername(username: string): Observable<any>
     {
-      return this.http.post<any>("http://localhost:3000/database/doubleUsername", { username });
+      return this.http.post<any>("http://localhost:3000/user/doubleUsername", { username });
     }
     checkUserExists(username: string): Observable<any>
     {
-     return this.http.post<any>("http://localhost:3000/database/userExists", { username });
+     return this.http.post<any>("http://localhost:3000/user/userExists", { username });
     }
     createFriendRequest(username: string): Observable<any>
     {
-     return this.http.post<any>("http://localhost:3000/database/createFR", { username });
+     return this.http.post<any>("http://localhost:3000/friendRequest/createFR", { username });
+    }
+    getUsernameWithId(id: number): Observable<any>
+    {
+        return this.http.post<any>("http://localhost:3000/friendRequest/usernameWithId", { id })
     }
 }

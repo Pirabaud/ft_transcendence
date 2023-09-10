@@ -6,7 +6,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
-import { DatabaseModule } from './database/database.module';
+import { FriendRequestModule } from './friendRequest/friendRequestModule';
+import { FriendRequest } from './friendRequest/friendRequest.entity';
 
 @Module({
   imports: [
@@ -17,12 +18,12 @@ import { DatabaseModule } from './database/database.module';
       username: 'user',
       password: 'password',
       database: 'database',
-      entities: [User],
+      entities: [User, FriendRequest],
       synchronize: true,
     }),
     UserModule,
     GameModule,
-    DatabaseModule,
+    FriendRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

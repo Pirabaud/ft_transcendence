@@ -11,6 +11,9 @@ export class User {
   @Column()
   img: string;
 
+  @Column()
+  friendRequestsNb: number;
+
   @Column({ nullable: true })
-  friendRequests: number;
+  friendList: string;
 }

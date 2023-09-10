@@ -11,16 +11,43 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private UserService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('saveUsername')
   saveUsername(@Request() req, @Body() username: string) {
-    return this.UserService.updateUsername(req.user.sub, username);
+    return this.userService.updateUsername(req.user.sub, username);
   }
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    return await this.UserService.findOne(req.user.sub);
+    return await this.userService.findById(req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('changePic')
+  changePic(@Body() urlObject: any, @Request() req) {
+    return this.userService.updateAvatar(req.user.sub, urlObject);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('doubleUsername')
+  async checkDoubleUsername(@Body() usernameObject: any) {
+    const users = await this.userService.findAll();
+    for (let i = 0; i < users.length; ++i)
+    {
+      if (users[i].username === usernameObject.username)
+        return false;
+    }
+    return true;
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('userExists')
+  async checkUserExists(@Body() usernameObject: any) {
+    const users = await this.userService.findAll();
+    for (let i = 0; i < users.length; ++i)
+    {
+      if (users[i].username === usernameObject.username)
+        return true;
+    }
+    return false;
   }
 }
