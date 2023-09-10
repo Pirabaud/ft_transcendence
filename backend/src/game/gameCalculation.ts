@@ -89,68 +89,61 @@ export class GameCalculation {
         });
       }
     }
-    return game;
+    detectPaddleCollision(ballObj: Ball, game: GameId): number {
+  if (game.ball.posX < 0) {
+    const paddleLeft = -field.width / 2;
+    const paddleRight = -field.width / 2 + game.paddle1.width;
+    const paddleTop = game.paddle1.posY - (game.paddle1.height / 2);
+    const paddleBottom = game.paddle1.posY + (game.paddle1.height / 2);
+        if (
+        ballObj.left < paddleRight &&
+        ballObj.right > paddleLeft &&
+        ballObj.top < paddleBottom &&
+        ballObj.bottom > paddleTop
+    ) {
+      let paddleOffset = (game.ball.posY - game.paddle1.posY) / (game.paddle1.height / 2);
+      let maxBounceAngle = Math.PI / 4;
+      let bounceAngle = paddleOffset * maxBounceAngle;
+      let ballSpeed = Math.sqrt(game.ball.directionX * game.ball.directionX + game.ball.directionY * game.ball.directionY); // Calculate current speed
+
+      /*Speed cap*/
+      if (ballSpeed < 2.7)
+        ballSpeed += 0.1;
+      game.ball.directionX = Math.cos(bounceAngle);
+      game.ball.directionY = Math.sin(bounceAngle);
+      game.ball.directionX *= ballSpeed;
+      game.ball.directionY *= ballSpeed;
+
+      return 1;
+    }
   }
-  detectPaddleCollision(ballObj: Ball, game: any): number {
-    if (game.ball.posX < 0) {
-      const paddleLeft = -field.width / 2;
-      const paddleRight = -field.width / 2 + game.paddle1.width;
-      const paddleTop = game.paddle1.posY - game.paddle1.height / 2;
-      const paddleBottom = game.paddle1.posY + game.paddle1.height / 2;
-      if (
-        ballObj.left < paddleRight &&
-        ballObj.right > paddleLeft &&
-        ballObj.top < paddleBottom &&
-        ballObj.bottom > paddleTop
-      ) {
-        const paddleOffset =
-          (game.ball.posY - game.paddle1.posY) / (game.paddle1.height / 2);
-        const maxBounceAngle = Math.PI / 4;
-        const bounceAngle = paddleOffset * maxBounceAngle;
-        let ballSpeed = Math.sqrt(
-          game.ball.directionX * game.ball.directionX +
-            game.ball.directionY * game.ball.directionY,
-        ); // Calculate current speed
+  else if (game.ball.posX > 0)
+  {
+    let paddleLeft = field.width / 2 - game.paddle2.width;
+    let paddleRight = field.width / 2;
+    let paddleTop = game.paddle2.posY - (game.paddle2.height / 2);
+    let paddleBottom = game.paddle2.posY + (game.paddle2.height / 2);
+    if (
+          ballObj.left < paddleRight && 
+          ballObj.right > paddleLeft && 
+          ballObj.top < paddleBottom &&
+          ballObj.bottom > paddleTop
+    ) {
+      let paddleOffset = (game.ball.posY - game.paddle2.posY) / (game.paddle2.height / 2);
+      let maxBounceAngle = Math.PI / 4;
+      let bounceAngle = paddleOffset * maxBounceAngle;
+      let ballSpeed = Math.sqrt(game.ball.directionX * game.ball.directionX + game.ball.directionY * game.ball.directionY); // Calculate current speed
 
-        /*Speed cap*/
-        if (ballSpeed < 2.7) ballSpeed += 0.1;
-        game.ball.directionX = Math.cos(bounceAngle);
-        game.ball.directionY = Math.sin(bounceAngle);
-        game.ball.directionX *= ballSpeed;
-        game.ball.directionY *= ballSpeed;
+      /*Speed cap*/
+      if (ballSpeed < 2.7)
+        ballSpeed += 0.1;
+      game.ball.directionX = Math.cos(bounceAngle) * -1;
+      game.ball.directionY = Math.sin(bounceAngle);
+      game.ball.directionX *= ballSpeed;
+      game.ball.directionY *= ballSpeed;
 
-        return 1;
-      }
-    } else if (game.ball.posX > 0) {
-      const paddleLeft = field.width / 2 - game.paddle2.width;
-      const paddleRight = field.width / 2;
-      const paddleTop = game.paddle2.posY - game.paddle2.height / 2;
-      const paddleBottom = game.paddle2.posY + game.paddle2.height / 2;
+      return 2;
 
-      if (
-        ballObj.left < paddleRight &&
-        ballObj.right > paddleLeft &&
-        ballObj.top < paddleBottom &&
-        ballObj.bottom > paddleTop
-      ) {
-        const paddleOffset =
-          (game.ball.posY - game.paddle2.posY) / (game.paddle2.height / 2);
-        const maxBounceAngle = Math.PI / 4;
-        const bounceAngle = paddleOffset * maxBounceAngle;
-        let ballSpeed = Math.sqrt(
-          game.ball.directionX * game.ball.directionX +
-            game.ball.directionY * game.ball.directionY,
-        ); // Calculate current speed
-
-        /*Speed cap*/
-        if (ballSpeed < 2.7) ballSpeed += 0.1;
-        game.ball.directionX = Math.cos(bounceAngle) * -1;
-        game.ball.directionY = Math.sin(bounceAngle);
-        game.ball.directionX *= ballSpeed;
-        game.ball.directionY *= ballSpeed;
-
-        return 2;
-      }
     }
     return 0;
   }

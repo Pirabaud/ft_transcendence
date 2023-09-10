@@ -4,10 +4,13 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 export class User {
   @PrimaryColumn()
   id: number;
+  
+  @Column({ nullable: true})
+  login: string;
 
   @Column({ nullable: true })
   username?: string;
 
-  @Column()
-  img: string;
+   @Column({ nullable: true})
+   img: string;
 }
