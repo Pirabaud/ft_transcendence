@@ -8,14 +8,17 @@ import { Socket } from "socket.io";
 import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
 import { GameDatabase } from './gameDatabase.service';
+import { MatchesService } from 'src/matches/matches.service';
 
 @Injectable()
 export class GameService {
 constructor(private gameUtile: GamesUtileService, 
   private gameCalculation: GameCalculation,
    private gamePortal: GamePortal,
-   private gameDatabase: GameDatabase) {
-    this.gameCalculation = new GameCalculation(gameUtile, gamePortal, gameDatabase);
+   private gameDatabase: GameDatabase,
+   private MatchesService: MatchesService,
+   ) {
+    this.gameCalculation = new GameCalculation(gameUtile, gamePortal, gameDatabase, MatchesService);
    }
 /*Where all the data about players waiting and ingame is stored*/
 waitRoomNormal: Array<UserWaiting> = [];

@@ -12,6 +12,7 @@ import { GameCalculation } from './gameCalculation';
 import { GamePortal } from './gamePortal.service';
 import { GameDatabase } from './gameDatabase.service';
 import { GameHistory } from './game.entity';
+import { MatchesService } from 'src/matches/matches.service';
 
 @Module({
   imports: [GameModule, AuthModule, UserModule, TypeOrmModule.forFeature([User, GameHistory])],
@@ -23,6 +24,7 @@ import { GameHistory } from './game.entity';
     GamePortal, 
     GameCalculation,
     GameDatabase,
+    MatchesService,
   ]
 })
 export class GameModule {}

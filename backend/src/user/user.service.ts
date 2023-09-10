@@ -18,6 +18,11 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  async findMatchesid(id: number): Promise<string[]> {
+    const User = await this.userRepository.findOneBy({ id });
+    return User.matchHistory;
+  }
+
   async updateUsername(id: number, usernameObject: any) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     userToUpdate.username = usernameObject.username;
@@ -35,6 +40,10 @@ export class UserService {
   async updateHistory(id: number, gameid: string) 
   {
     const user = await this.userRepository.findOneBy({ id });
+    if (user.matchHistory == null)
+    {
+      user.matchHistory = [gameid];
+    }
     user.matchHistory.push(gameid);
     await this.userRepository.save(user);
   }

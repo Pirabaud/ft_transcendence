@@ -14,7 +14,7 @@ export class User {
   @Column({ nullable: true})
    img: string;
 
-  @Column({array: true, nullable: true})
+  @Column("simple-array", {nullable: true})
   matchHistory: string[];
 
 }

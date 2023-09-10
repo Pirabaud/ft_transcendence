@@ -23,6 +23,11 @@ export class ProfileComponent {
   @ViewChild('statsElo') statsEloElement: ElementRef;
   ngOnInit() {
 
+    this.httpBackend.getMatchesHistory().subscribe(
+      (response: any) => {
+        console.log(response);
+      },
+    );
     this.httpBackend.getProfile().subscribe(
       (response: any) => {
         if(this.statsWinElement)

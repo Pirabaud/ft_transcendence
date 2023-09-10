@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { DatabaseModule } from './database/database.module';
 import { GameHistory } from './game/game.entity';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
@@ -18,12 +19,13 @@ import { GameHistory } from './game/game.entity';
       username: 'user',
       password: 'password',
       database: 'database',
-      entities: [User],
+      entities: [User, GameHistory],
       synchronize: true,
     }),
     UserModule,
     GameModule,
     DatabaseModule,
+    MatchesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

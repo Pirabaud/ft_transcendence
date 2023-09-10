@@ -9,6 +9,7 @@ import { GamesUtileService } from './gameUtiles.service';
 import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
 import { GameDatabase } from './gameDatabase.service';
+import { MatchesService } from 'src/matches/matches.service';
 
 @WebSocketGateway({ cors: { origin: ["http://localhost:4200"] } })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
@@ -20,8 +21,9 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
     private gameUtile: GamesUtileService,
     private gamePortal: GamePortal,
     private gameCalculation: GameCalculation,
-    private gameDatabase: GameDatabase) {
-    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal, gameDatabase);
+    private gameDatabase: GameDatabase,
+    private matchesService: MatchesService) {
+    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal, gameDatabase, matchesService);
   }
   async handleConnection(socket: Socket) {
   }
@@ -38,7 +40,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
     
     const decodedToken = await this.authService.verifyJwt(socket.handshake.headers.authorization);
     const user = await this.userService.findOne(decodedToken.sub);
-    console.log(await this.userService.findAll());
     const userWaiting: UserWaiting = {
       socket: socket,
       gameId: gameData.gameId,

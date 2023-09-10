@@ -17,4 +17,5 @@ export class GameDatabase {
     async saveGame(Game: GameHistory){
         await this.gameRepository.save(Game);
     }
+
 }
