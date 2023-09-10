@@ -9,8 +9,13 @@ export class User {
   login: string;
 
   @Column({ nullable: true })
-  username?: string;
+  username: string;
 
-   @Column({ nullable: true})
+  @Column({ nullable: true})
    img: string;
+
+  @Column({array: true, nullable: true})
+  matchHistory: string[];
+
 }
+

@@ -63,8 +63,10 @@ export class GameCalculation {
 
     let checkCollision = this.detectPaddleCollision(ball, game);
     if (checkCollision === 1 || checkCollision === 2) {
-      if (checkCollision === 1) game.ball.posX += 10;
-      else game.ball.posX -= 10;
+      if (checkCollision === 1)
+        game.ball.posX += 10;
+      else 
+        game.ball.posX -= 10;
     }
     if (game.gameMode === 1 && game.portalOn == true) {
       checkCollision = this.gamePortal.detectPortalCollision(ball, game);

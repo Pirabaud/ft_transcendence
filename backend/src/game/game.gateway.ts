@@ -8,6 +8,7 @@ import { UserWaiting } from './interfaces/userWaiting.interface';
 import { GamesUtileService } from './gameUtiles.service';
 import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
+import { GameDatabase } from './gameDatabase.service';
 
 @WebSocketGateway({ cors: { origin: ["http://localhost:4200"] } })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
@@ -18,11 +19,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
     private authService: AuthService, 
     private gameUtile: GamesUtileService,
     private gamePortal: GamePortal,
-    private gameCalculation: GameCalculation) {
-    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal);
+    private gameCalculation: GameCalculation,
+    private gameDatabase: GameDatabase) {
+    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal, gameDatabase);
   }
   async handleConnection(socket: Socket) {
-    //console.log("handleConnection jwt: ", socket.handshake.headers.authorization);
   }
   handleDisconnect(client: any): any {
     console.log(client.id + " disconnected");
@@ -30,7 +31,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
   @SubscribeMessage("accessGame")
   handleAccessGame(socket: Socket)
   {
-    // socket.emit("recAccessGame", this.gameModule.accessGame());
   }
   @SubscribeMessage("createGame")
   async handleCreateGame(socket: Socket, gameData: any)
@@ -38,6 +38,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
     
     const decodedToken = await this.authService.verifyJwt(socket.handshake.headers.authorization);
     const user = await this.userService.findOne(decodedToken.sub);
+    console.log(await this.userService.findAll());
     const userWaiting: UserWaiting = {
       socket: socket,
       gameId: gameData.gameId,
