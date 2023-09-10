@@ -10,24 +10,33 @@ export class ProfileConfigComponent {
 
   @ViewChild('profilePic') profilePicElement: ElementRef;
   @ViewChild('login') loginElement: ElementRef;
+  @ViewChild('fileName') fileNameElement: ElementRef;
 
   constructor(private httpBackend:HttpService) {};
-  onFileSelected(event: any)
+  onFileSelected(keycode: KeyboardEvent)
   {
-     const file: File = event.target.files[0];
+    if (keycode.code === 'Enter' || keycode.code === 'NumpadEnter')
+    {
+      const url = this.fileNameElement.nativeElement.value.trim();
 
-     if (file)
-     {
-       const formData = new FormData();
+      if (!url) {
+        alert("Enter a valid link1");
+        return;
+      }
 
-       formData.append("files", file);
-       this.httpBackend.uploadFile(formData).subscribe(
-         (response: any) =>
-         {
-           this.profilePicElement.nativeElement.src = response.path;
-         }
-       );
-     }
+      this.checkUrlValidity(url).then((isValid) => {
+        if (isValid) {
+          const filenameValue: string = url;
+          this.httpBackend.uploadFile(filenameValue).subscribe(
+            (response: any) => {
+              this.profilePicElement.nativeElement.src = response.fileName;
+            }
+          );
+        } else {
+          alert("The URL does not lead to a valid resource.");
+        }
+      });
+    }
   }
   sendUsernameData(keycode: KeyboardEvent)
   {
@@ -58,12 +67,22 @@ export class ProfileConfigComponent {
       }
     }
   }
+
+  async checkUrlValidity(url: string): Promise<boolean> {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
   ngOnInit() {
 
     this.httpBackend.getProfile().subscribe(
+
       (response: any) => {
         if (this.loginElement) {
-          this.loginElement.nativeElement.value = response.login;
+          this.loginElement.nativeElement.value = response.username;
         }
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;

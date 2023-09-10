@@ -20,16 +20,14 @@ export class UserService {
 
   async updateUsername(id: number, usernameObject: any) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
-    userToUpdate.login = usernameObject.username;
+    userToUpdate.username = usernameObject.username;
     await this.userRepository.save(userToUpdate);
     return usernameObject;
   }
 
   async updateAvatar(id: number, imagePathObject: any) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
-    userToUpdate.img = imagePathObject.path;
-    userToUpdate.login = userToUpdate.login;
-    userToUpdate.username = userToUpdate.username;
+    userToUpdate.img = imagePathObject.fileName;
     await this.userRepository.save(userToUpdate);
     return imagePathObject;
   }
