@@ -89,6 +89,8 @@ export class GameCalculation {
         });
       }
     }
+    return game;
+  }
     detectPaddleCollision(ballObj: Ball, game: GameId): number {
   if (game.ball.posX < 0) {
     const paddleLeft = -field.width / 2;
@@ -147,6 +149,7 @@ export class GameCalculation {
     }
     return 0;
   }
+}
 
   resetBall(
     side: string,
@@ -183,6 +186,7 @@ export class GameCalculation {
     }, 800);
   }
 }
+
 
 /*The backend board template used to make all the calculations*/
 let field: { width: number; height: number };
