@@ -12,9 +12,9 @@ export class HomepageComponent {
   constructor(private router: Router, private httpBackend:HttpService) {};
 
   ngOnInit() {
-    
+
     this.httpBackend.getProfile().subscribe(
-      (response: any) => { 
+      (response: any) => {
         const profileImageElement: HTMLImageElement | null = document.getElementById("profile-image") as HTMLImageElement;
         const profileUsernameElement: HTMLElement | null = document.getElementById("profile-username");
         const winElement: HTMLElement | null = document.getElementById("stats-win");
@@ -33,7 +33,7 @@ export class HomepageComponent {
           eloElement.textContent = response.elo;
         }
         if (profileUsernameElement) {
-           profileUsernameElement.textContent = response.login;
+           profileUsernameElement.textContent = response.username;
          }
          if (profileImageElement) {
           profileImageElement.src = response.img;

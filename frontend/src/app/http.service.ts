@@ -15,10 +15,9 @@ export class HttpService {
     getProfile(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/profile");
     }
-    uploadFile(file: FormData): Observable<any> {
-      return this.http.post<any>("http://localhost:3000/database/fileUpload", file);
+    uploadFile(fileName: string): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/database/fileUpload", { fileName });
     }
-
     saveNewUsername(username: string): Observable<any>
     {
       return this.http.post<any>("http://localhost:3000/user/saveUsername", { username })
