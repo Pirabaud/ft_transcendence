@@ -4,13 +4,15 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly appService: AuthService) {}
-  private accessToken: any = null;
-  private data: any = null;
+  constructor(private appService: AuthService) {}
 
   @Post('login')
   async getData(@Body() code: { code: string }): Promise<any> {
     return await this.appService.login(code.code);
   }
 
+  @Get('generatetfa')
+  async generateTwoFactorAuth() {
+    return await this.appService.generateQRcode();
+  }
 }

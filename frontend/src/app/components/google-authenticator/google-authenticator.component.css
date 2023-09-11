@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
+button {
+    background-color: #333;
+    color: white;
+    width: 180px;
+    padding: 20px;
+    margin: 15px auto;
+    border-radius: 10px;
+    box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.4);
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Oswald', sans-serif;
+  }

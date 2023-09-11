@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-google-authenticator',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./google-authenticator.component.css']
 })
 export class GoogleAuthenticatorComponent {
+  
+  constructor (
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
+  redirectionToHome() {
+    window.location.href = 'home';
+  }
 }

@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,6 +29,45 @@ export class UserService {
     catch (error) {
       console.error('error for save' , error);
     }
+  }
+
+  async turnOnTfa(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    
+    await this.userRepository.delete(id);
+    user.tfa = true;
+    await this.userRepository.save(user);
+    return true;
+  }
+
+  async turnOffTfa(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    
+    await this.userRepository.delete(id);
+    user.tfa = false;
+    await this.userRepository.save(user);
+    return true;
+  }
+
+  async getTfaStatus(id: number): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return user.tfa;
   }
 
 }

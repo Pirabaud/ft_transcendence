@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpService } from '../../http.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-two-factor',
@@ -10,14 +13,28 @@ export class TwoFactorComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private httpBackend: HttpService,
+    private http: HttpClient,
   ) {}
-
+  
   redirectionToGoogle() {
-    window.location.href = 'google';
+    this.httpBackend.setTfaTrue().subscribe((response1: any) => {
+      if (response1) {
+          this.httpBackend.generate2fa().subscribe((response2: any) => {
+            console.log(response2);
+        });
+      } else
+        window.location.href = '';
+    });
   }
 
   redirectionToHome() {
-    window.location.href = 'home';
+    this.httpBackend.setTfaFalse().subscribe((response: any) => {
+      if (response)
+        window.location.href = 'home';
+      else
+        window.location.href = '';
+    });
   }
 }

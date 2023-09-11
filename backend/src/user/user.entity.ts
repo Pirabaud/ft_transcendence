@@ -15,4 +15,7 @@ export class User {
     @Column()
     img: string;
 
+    @Column()
+    tfa: boolean;
+
 }

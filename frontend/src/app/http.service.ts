@@ -6,13 +6,22 @@ import { Observable } from 'rxjs';
 export class HttpService {
     constructor(private http: HttpClient){}
 
-    sendAuthorizationCode(code: string): Observable<Boolean> {
-        return this.http.post<boolean>("http://localhost:3000/auth/signin", {code});
-    }
     getjwt(code: string): Observable<any> {
         return this.http.post<any>("http://localhost:3000/auth/login", {code});
     }
     getProfile(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/profile");
+    }
+    setTfaTrue(): Observable<any> {
+       return this.http.get<any>("http://localhost:3000/user/setTfaTrue");
+    }
+    setTfaFalse(): Observable<any> {
+        return this.http.get<any>("http://localhost:3000/user/setTfaFalse");
+     }
+    getTfaStatus(): Observable<Boolean> {
+        return this.http.get<boolean>("http://localhost:3000/user/getTfa");
+    }
+    generate2fa(): Observable<any> {
+        return this.http.get<any>("http://localhost:3000/auth/generatetfa");
     }
 }

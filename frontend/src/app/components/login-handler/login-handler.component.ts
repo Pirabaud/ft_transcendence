@@ -29,7 +29,15 @@ export class LoginHandlerComponent implements OnInit {
           if (response.first_connection)
             window.location.href = 'two-factor';
           else
-            window.location.href = 'home';
+          {
+            this.httpBackend.getTfaStatus().subscribe((response: any) => {
+            console.log(response);
+            if (response == true)
+              window.location.href = 'google';
+            else
+              window.location.href = 'home';
+            });
+          }
         } else {
           console.log('failure to obtain access token');
           window.location.href = '';
