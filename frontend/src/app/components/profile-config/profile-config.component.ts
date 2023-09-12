@@ -29,7 +29,7 @@ export class ProfileConfigComponent {
           const filenameValue: string = url;
           this.httpBackend.uploadFile(filenameValue).subscribe(
             (response: any) => {
-              this.profilePicElement.nativeElement.src = response.fileName;
+              this.profilePicElement.nativeElement.src = response.url;
             }
           );
         } else {

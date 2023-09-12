@@ -50,4 +50,10 @@ export class UserController {
     }
     return false;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('removeFriend')
+  async removeFriend(@Body() idObject: any, @Request() req) {
+    await this.userService.removeFriend(idObject.id, req.user.sub);
+  }
 }

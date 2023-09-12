@@ -25,7 +25,6 @@ export class HttpService {
     {
       return this.http.post<any>("http://localhost:3000/user/saveUsername", { username })
     }
-    /*return the list of all the profiles in the database*/
     checkDoubleUsername(username: string): Observable<any>
     {
       return this.http.post<any>("http://localhost:3000/user/doubleUsername", { username });
@@ -40,6 +39,22 @@ export class HttpService {
     }
     getUsernameWithId(id: number): Observable<any>
     {
-        return this.http.post<any>("http://localhost:3000/friendRequest/usernameWithId", { id })
+      return this.http.post<any>("http://localhost:3000/friendRequest/usernameWithId", { id })
+    }
+    getIdWithUsername(username: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/friendRequest/idWithUsername", { username })
+    }
+    acceptFriendRequest(senderId: number): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/friendRequest/acceptFR", { senderId })
+    }
+    refuseFriendRequest(senderId: number): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/friendRequest/refuseFR", { senderId })
+    }
+    removeFriend(id: string): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/user/removeFriend", { id })
     }
 }

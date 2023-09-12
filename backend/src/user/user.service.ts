@@ -36,12 +36,12 @@ export class UserService {
 
   async updateAvatar(id: number, imagePathObject: any) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
-    userToUpdate.img = imagePathObject.fileName;
+    userToUpdate.img = imagePathObject.url;
     await this.saveUser(userToUpdate);
     return imagePathObject;
   }
-  async updateFriendsRequestsNb(username: string, action: string) {
-    const userToUpdate = await this.findOneByUsername(username);
+  async updateFriendsRequestsNb(id: number, action: string) {
+    const userToUpdate = await this.findById(id);
     if (userToUpdate !== null) {
       if (action === 'add')
         userToUpdate.friendRequestsNb++;
@@ -49,6 +49,40 @@ export class UserService {
         userToUpdate.friendRequestsNb--;
       await this.saveUser(userToUpdate);
     }
+  }
+  async removeFriend(friendId: number, userId: number)
+  {
+    let userToUpdate= await this.findById(userId);
+    let friendListArray = userToUpdate.friendList;
+    let index = friendListArray.indexOf(friendId);
+    friendListArray.splice(index, 1);
+    userToUpdate.friendList = friendListArray;
+    await this.saveUser(userToUpdate);
+    userToUpdate = await this.findById(friendId);
+    friendListArray = userToUpdate.friendList;
+    index = friendListArray.indexOf(userId);
+    friendListArray.splice(index, 1);
+    userToUpdate.friendList = friendListArray;
+    await this.saveUser(userToUpdate);
+  }
+  async addFriend(friendId: number, userId: number)
+  {
+    let userToUpdate= await this.findById(userId);
+    let friendListArray = userToUpdate.friendList;
+    if (friendListArray)
+      friendListArray.push(friendId);
+    else
+      friendListArray = [friendId];
+    userToUpdate.friendList = friendListArray;
+    await this.saveUser(userToUpdate);
+    userToUpdate = await this.findById(friendId);
+    friendListArray = userToUpdate.friendList;
+    if (friendListArray)
+      friendListArray.push(userId);
+    else
+      friendListArray = [userId];
+    userToUpdate.friendList = friendListArray;
+    await this.saveUser(userToUpdate);
   }
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);

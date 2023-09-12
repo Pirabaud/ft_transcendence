@@ -14,6 +14,6 @@ export class User {
   @Column()
   friendRequestsNb: number;
 
-  @Column({ nullable: true })
-  friendList: string;
+  @Column('simple-array', { nullable: true })
+  friendList: number[];
 }
