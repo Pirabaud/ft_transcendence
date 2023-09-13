@@ -19,7 +19,7 @@ export class ProfileComponent {
   @ViewChild('matchHistoryListContainer') matchHistoryListContainerElement: ElementRef;
   @ViewChild('leaderboardList') leaderboardListElement: ElementRef;
   @ViewChild('profilePic') profilePicElement: ElementRef;
-  @ViewChild('login') loginElement: ElementRef;
+  @ViewChild('username') usernameElement: ElementRef;
   @ViewChild('statsWin') statsWinElement: ElementRef;
   @ViewChild('statsLose') statsLoseElement: ElementRef;
   @ViewChild('statsElo') statsEloElement: ElementRef;
@@ -61,18 +61,18 @@ export class ProfileComponent {
         console.log(response);
         if(this.statsWinElement)
         {
-          this.statsWinElement.nativeElement.textContent = response.win;
+          this.statsWinElement.nativeElement.innerHTML = response.win;
         }
         if(this.statsLoseElement)
         {
-          this.statsLoseElement.nativeElement.textContent = response.lose;
+          this.statsLoseElement.nativeElement.innerHTML = response.lose;
         }
         if(this.statsEloElement)
         {
-          this.statsEloElement.nativeElement.textContent = response.elo;
+          this.statsEloElement.nativeElement.innerHTML = response.elo;
         }
-        if (this.loginElement) {
-          this.loginElement.nativeElement.textContent = response.username;
+        if (this.usernameElement) {
+          this.usernameElement.nativeElement.innerHTML = response.username;
         }
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;
@@ -84,30 +84,7 @@ export class ProfileComponent {
       }
     );
   }
-  // ngAfterViewInit()
-  // {
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  //   this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  // }
-
-  /*ajoute une partie a la liste de parties, passer en parametre la data de la partie(score, qui a gagne et photos des joueurs)*/
-  // faire des verifs selon les parametres pour mettre les bons noms de classe (win, lose, score-win, score-lose), pour que les couleurs et l'alignement soit bon
+  
   addGameToHistory(myImg: string, oppImg: string, myscore: number, oppScore: number, result: boolean)
   {
     const newListItem = this.renderer.createElement('li');
@@ -116,7 +93,7 @@ export class ProfileComponent {
     // Création de l'élément img 1
     const imgElement1 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement1, 'match-history-small-img');
-    this.renderer.setAttribute(imgElement1, 'src', myImg);//p1Img a la place
+   this.renderer.setAttribute(imgElement1, 'src', myImg);//p1Img a la place
 
     // Création de la div center-content 1
     const centerContentDiv1 = this.renderer.createElement('div');
@@ -150,6 +127,7 @@ export class ProfileComponent {
     // Création de l'élément img 2
     const imgElement2 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement2, 'match-history-small-img');
+
     this.renderer.setAttribute(imgElement2, 'src', oppImg);//p2Img a la place
 
     // Création de la div center-content 2
@@ -179,7 +157,6 @@ export class ProfileComponent {
     this.renderer.appendChild(newListItem, centerContentDiv2);
 
     this.renderer.appendChild(this.matchHistoryListElement.nativeElement, newListItem);
-    console.log(newListItem);
   }
 
   /*meme chose que addGameToHistory*/
@@ -216,7 +193,6 @@ export class ProfileComponent {
     this.renderer.appendChild(newListItem, centerContentDiv);
 
     this.renderer.appendChild(this.leaderboardListElement.nativeElement, newListItem);
-    console.log(newListItem);
   }
 
   navToProfileConfig() {

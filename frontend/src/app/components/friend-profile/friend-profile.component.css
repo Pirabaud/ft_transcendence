@@ -25,7 +25,7 @@
   font-style: italic;
   font-size: large;
   top: 50%;
-  visibility: hidden;
+  visibility: visible;
 }
 
 #match-history-list-container
@@ -46,7 +46,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px;
-  visibility: visible;
+  visibility: hidden;
 }
 
 #profile-container
@@ -199,26 +199,4 @@
 {
   color: #d91b1b;
   display: inline;
-}
-
-#modify-profile
-{
-  position: relative;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: white;
-  border: hidden 1px;
-  border-radius: 14px;
-  padding: 17px 17px;
-  width: 12vw;
-  font-size: 1vw;
-  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
-  font-family: 'Oswald', sans-serif;
-  cursor: pointer;
-}
-
-#modify-profile:hover
-{
-  background-color: #c1c1cb;
 }

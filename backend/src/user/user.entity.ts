@@ -23,5 +23,10 @@ export class User {
   @Column("simple-array", {nullable: true})
   matchHistory: string[];
 
+  @Column()
+  friendRequestsNb: number;
+
+  @Column('simple-array', { nullable: true })
+  friendList: number[];
 }
 

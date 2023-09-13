@@ -9,6 +9,8 @@ import { User } from './user/user.entity';
 import { DatabaseModule } from './database/database.module';
 import { GameHistory } from './game/game.entity';
 import { MatchesModule } from './matches/matches.module';
+import { FriendRequestModule } from './friendRequest/friendRequestModule';
+import { FriendRequest } from './friendRequest/friendRequest.entity';
 
 @Module({
   imports: [
@@ -19,13 +21,14 @@ import { MatchesModule } from './matches/matches.module';
       username: 'user',
       password: 'password',
       database: 'database',
-      entities: [User, GameHistory],
+      entities: [User, GameHistory, FriendRequest],
       synchronize: true,
     }),
     UserModule,
     GameModule,
     DatabaseModule,
     MatchesModule,
+    FriendRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
