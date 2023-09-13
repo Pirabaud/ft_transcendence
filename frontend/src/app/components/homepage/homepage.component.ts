@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import { Router } from '@angular/router'
 import { HttpService } from '../../http.service';
 
@@ -11,32 +11,32 @@ import { HttpService } from '../../http.service';
 export class HomepageComponent {
   constructor(private router: Router, private httpBackend:HttpService) {};
 
+  @ViewChild('profilePic') profilePicElement: ElementRef;
+  @ViewChild('username') usernameElement: ElementRef;
+  @ViewChild('statsWins') statsWinsElement: ElementRef;
+  @ViewChild('statsLoses') statsLosesElement: ElementRef;
+  @ViewChild('statsElo') statsEloElement: ElementRef;
   ngOnInit() {
-    
+
     this.httpBackend.getProfile().subscribe(
-      (response: any) => { 
-        const profileImageElement: HTMLImageElement | null = document.getElementById("profile-image") as HTMLImageElement;
-        const profileUsernameElement: HTMLElement | null = document.getElementById("profile-username");
-        const winElement: HTMLElement | null = document.getElementById("stats-win");
-        const loseElement: HTMLElement | null = document.getElementById("stats-lose");
-        const eloElement: HTMLElement | null = document.getElementById("stats-elo");
-        if(winElement)
+      (response: any) => {
+        if(this.statsWinsElement)
         {
-          winElement.textContent = response.win;
+          this.statsWinsElement.nativeElement.innerHTML = response.win;
         }
-        if(loseElement)
+        if(this.statsLosesElement)
         {
-          loseElement.textContent = response.lose;
+          this.statsLosesElement.nativeElement.innerHTML = response.lose;
         }
-        if(eloElement)
+        if(this.statsEloElement)
         {
-          eloElement.textContent = response.elo;
+          this.statsEloElement.nativeElement.innerHTML = response.elo;
         }
-        if (profileUsernameElement) {
-           profileUsernameElement.textContent = response.login;
+        if (this.usernameElement) {
+           this.usernameElement.nativeElement.innerHTML = response.username;
          }
-         if (profileImageElement) {
-          profileImageElement.src = response.img;
+         if (this.profilePicElement) {
+          this.profilePicElement.nativeElement.src = response.img;
         }
 
       },

@@ -6,11 +6,14 @@ export class User {
   id: number;
 
   @Column()
-  login: string;
+  username: string;
 
-  @Column({ nullable: true })
-  username?: string;
+  @Column()
+  img: string;
 
-   @Column()
-   img: string;
+  @Column()
+  friendRequestsNb: number;
+
+  @Column('simple-array', { nullable: true })
+  friendList: number[];
 }

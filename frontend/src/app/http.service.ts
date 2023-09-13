@@ -15,20 +15,49 @@ export class HttpService {
     getProfile(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/profile");
     }
-    uploadFile(file: FormData): Observable<any> {
-      return this.http.post<any>("http://localhost:3000/database/fileUpload", file);
+    getProfileById(id: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/profileById", { id });
+  }
+    getFriendRequests(): Observable<any> {
+        return this.http.get<any>("http://localhost:3000/friendRequest/friendRequests");
     }
-
+    uploadFile(url: string): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/user/changePic", { url });
+    }
     saveNewUsername(username: string): Observable<any>
     {
       return this.http.post<any>("http://localhost:3000/user/saveUsername", { username })
     }
-    /*return the list of all the profiles in the database*/
     checkDoubleUsername(username: string): Observable<any>
     {
-      return this.http.post<any>("http://localhost:3000/database/doubleUsername", { username });
+      return this.http.post<any>("http://localhost:3000/user/doubleUsername", { username });
     }
-    fetchDbUsers(): Observable<any> {
-      return this.http.get<any>("http://localhost:3000/database/users");
+    checkUserExists(username: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/user/userExists", { username });
+    }
+    createFriendRequest(username: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/friendRequest/createFR", { username });
+    }
+    getUsernameWithId(id: number): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/friendRequest/usernameWithId", { id })
+    }
+    getIdWithUsername(username: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/friendRequest/idWithUsername", { username })
+    }
+    acceptFriendRequest(senderId: number): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/friendRequest/acceptFR", { senderId })
+    }
+    refuseFriendRequest(senderId: number): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/friendRequest/refuseFR", { senderId })
+    }
+    removeFriend(id: string): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/user/removeFriend", { id })
     }
 }

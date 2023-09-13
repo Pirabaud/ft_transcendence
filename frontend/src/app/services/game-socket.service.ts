@@ -30,7 +30,6 @@ export class GameSocketService extends Socket
 {
   private readonly tokenJwt = localStorage.getItem('jwt');
   constructor(){
-    console.log("jwt socket: ", localStorage.getItem('jwt'));
     super(config);
   }
 

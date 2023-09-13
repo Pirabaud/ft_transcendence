@@ -17,7 +17,7 @@ export class ProfileComponent {
   @ViewChild('matchHistoryList') matchHistoryListElement: ElementRef;
   @ViewChild('leaderboardList') leaderboardListElement: ElementRef;
   @ViewChild('profilePic') profilePicElement: ElementRef;
-  @ViewChild('login') loginElement: ElementRef;
+  @ViewChild('username') usernameElement: ElementRef;
   @ViewChild('statsWin') statsWinElement: ElementRef;
   @ViewChild('statsLose') statsLoseElement: ElementRef;
   @ViewChild('statsElo') statsEloElement: ElementRef;
@@ -27,18 +27,18 @@ export class ProfileComponent {
       (response: any) => {
         if(this.statsWinElement)
         {
-          this.statsWinElement.nativeElement.textContent = response.win;
+          this.statsWinElement.nativeElement.innerHTML = response.win;
         }
         if(this.statsLoseElement)
         {
-          this.statsLoseElement.nativeElement.textContent = response.lose;
+          this.statsLoseElement.nativeElement.innerHTML = response.lose;
         }
         if(this.statsEloElement)
         {
-          this.statsEloElement.nativeElement.textContent = response.elo;
+          this.statsEloElement.nativeElement.innerHTML = response.elo;
         }
-        if (this.loginElement) {
-          this.loginElement.nativeElement.textContent = response.login;
+        if (this.usernameElement) {
+          this.usernameElement.nativeElement.innerHTML = response.username;
         }
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;
@@ -82,7 +82,7 @@ export class ProfileComponent {
     // Création de l'élément img 1
     const imgElement1 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement1, 'match-history-small-img');
-    this.renderer.setAttribute(imgElement1, 'src', 'assets/images/blevrel.jpeg');//p1Img a la place
+    // this.renderer.setAttribute(imgElement1, 'src', 'assets/images/blevrel.jpeg');//p1Img a la place
 
     // Création de la div center-content 1
     const centerContentDiv1 = this.renderer.createElement('div');
@@ -110,7 +110,7 @@ export class ProfileComponent {
     // Création de l'élément img 2
     const imgElement2 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement2, 'match-history-small-img');
-    this.renderer.setAttribute(imgElement2, 'src', 'assets/images/blevrel.jpeg');//p2Img a la place
+    // this.renderer.setAttribute(imgElement2, 'src', 'assets/images/blevrel.jpeg');//p2Img a la place
 
     // Création de la div center-content 2
     const centerContentDiv2 = this.renderer.createElement('div');
@@ -129,7 +129,6 @@ export class ProfileComponent {
     this.renderer.appendChild(newListItem, centerContentDiv2);
 
     this.renderer.appendChild(this.matchHistoryListElement.nativeElement, newListItem);
-    console.log(newListItem);
   }
 
   /*meme chose que addGameToHistory*/
@@ -166,7 +165,6 @@ export class ProfileComponent {
     this.renderer.appendChild(newListItem, centerContentDiv);
 
     this.renderer.appendChild(this.leaderboardListElement.nativeElement, newListItem);
-    console.log(newListItem);
   }
 
   navToProfileConfig() {

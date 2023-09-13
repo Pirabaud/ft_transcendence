@@ -43,11 +43,12 @@ export class AuthService {
     try {
       let payload: NonNullable<unknown>;
       const response = await axios.get(apiUrl, { headers });
-      if ((await this.userService.findOne(response.data.id)) === null) {
+      if ((await this.userService.findById(response.data.id)) === null) {
         const newUser: User = new User();
         newUser.id = response.data.id;
-        newUser.login = response.data.login;
+        newUser.username = response.data.login;
         newUser.img = response.data.image.link;
+        newUser.friendRequestsNb = 0;
         await this.userService.saveUser(newUser);
         payload = { sub: newUser.id };
       } else {
