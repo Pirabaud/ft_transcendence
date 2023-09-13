@@ -23,7 +23,7 @@ export class User {
   @Column("simple-array", {nullable: true})
   matchHistory: string[];
 
-  @Column()
+  @Column({nullable: true})
   friendRequestsNb: number;
 
   @Column('simple-array', { nullable: true })

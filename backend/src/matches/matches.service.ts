@@ -72,7 +72,7 @@ export class MatchesService {
 
     async getMatch(idGame: string, idUser: number) : Promise<Match>
     {
-        const user = await this.userDatabase.findOne(idUser);
+        const user = await this.userDatabase.findById(idUser);
         const gameHistory = await this.findMatch(idGame);
         if (gameHistory === null)
             return;

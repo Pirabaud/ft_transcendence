@@ -6,7 +6,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
-import { DatabaseModule } from './database/database.module';
 import { GameHistory } from './game/game.entity';
 import { MatchesModule } from './matches/matches.module';
 import { FriendRequestModule } from './friendRequest/friendRequestModule';
@@ -26,7 +25,6 @@ import { FriendRequest } from './friendRequest/friendRequest.entity';
     }),
     UserModule,
     GameModule,
-    DatabaseModule,
     MatchesModule,
     FriendRequestModule,
   ],
