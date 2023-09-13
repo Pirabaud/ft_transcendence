@@ -1,11 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
-import * as speakeasy from 'speakeasy';
-import * as qrCode from 'qrcode';
-import  { QRcode } from './auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -84,46 +81,6 @@ async verifyJwt(jwt: string) {
   catch (error) {
       console.log(error);
      return null;
-  }
-}
-
-async generateQRcode() {
-  try {
-    // Générer une clé secrète
-    const secret = speakeasy.generateSecret();
-
-    console.log("Secret:", secret);
-
-    // Générer un URL pour le QR code
-    const otpAuthUrl = speakeasy.otpauthURL({
-      secret: secret.base32,
-      label: 'Transcendence',
-      issuer: 'Transcendence',
-    });
-
-    console.log("URL:", otpAuthUrl);
-
-    // Générer le QR code
-    qrCode.toDataURL(otpAuthUrl, (err: any, imageUrl: any) => {
-      if (err) {
-        console.error('Erreur lors de la génération du QR code');
-        return null;
-      }
-    
-      console.log("QR Code:", qrCode);
-
-      // Renvoyer le secret et l'URL du QR code
-      const newQRcode: QRcode = new QRcode();
-      newQRcode.secret = secret.base32;
-      newQRcode.imageURL = imageUrl;
-      
-      console.log("newQRcode:", newQRcode);
-      
-      return newQRcode;
-    });
-  } catch (error) {
-    console.log(error);
-    return null;
   }
 }
 

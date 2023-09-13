@@ -22,6 +22,6 @@ export class HttpService {
         return this.http.get<boolean>("http://localhost:3000/user/getTfa");
     }
     generate2fa(): Observable<any> {
-        return this.http.get<any>("http://localhost:3000/auth/generatetfa");
+        return this.http.get<any>("http://localhost:3000/auth/generateTfa");
     }
 }
