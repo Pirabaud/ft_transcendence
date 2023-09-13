@@ -24,6 +24,11 @@ export class UserController {
     return await this.userService.findById(req.user.sub);
   }
   @UseGuards(JwtAuthGuard)
+  @Post('profileById')
+  async getProfileById(@Body() id) {
+    return await this.userService.findById(id.id);
+  }
+  @UseGuards(JwtAuthGuard)
   @Post('changePic')
   changePic(@Body() urlObject: any, @Request() req) {
     return this.userService.updateAvatar(req.user.sub, urlObject);

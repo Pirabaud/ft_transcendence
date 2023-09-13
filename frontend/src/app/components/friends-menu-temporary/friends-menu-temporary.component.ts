@@ -1,5 +1,6 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { HttpService } from "../../http.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-friends-menu-temporary',
@@ -12,7 +13,7 @@ export class FriendsMenuTemporaryComponent {
   @ViewChild('notifsField') notifsElement: ElementRef;
   @ViewChild('requestsContainer') requestsContainerElement: ElementRef;
   @ViewChild('friendListContainer') friendsContainerElement: ElementRef;
-  constructor(private httpBackend: HttpService, private renderer: Renderer2) {
+  constructor(private httpBackend: HttpService, private renderer: Renderer2, private router: Router) {
   }
 
   ngOnInit()
@@ -109,7 +110,7 @@ export class FriendsMenuTemporaryComponent {
   }
   viewFriendProfile(id: string)
   {
-
+    this.router.navigate(['/friendProfile', id]);
   }
   private fetchAndUpdateFriendRequests()
   {
@@ -201,9 +202,8 @@ export class FriendsMenuTemporaryComponent {
               });
               this.renderer.listen(buttonElement2, 'click', (event) => {
                 const id = event.target.id;
-                this.removeFriend(id);
+                this.viewFriendProfile(id);
               });
-              this.renderer.listen(buttonElement2, 'click', () => this.viewFriendProfile('id'))
               this.renderer.appendChild(buttonElement1, acceptButtonText);
               this.renderer.appendChild(buttonElement2, refuseButtonText);
               this.renderer.appendChild(liElement, buttonElement1);

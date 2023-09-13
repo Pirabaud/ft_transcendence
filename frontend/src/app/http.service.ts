@@ -15,6 +15,9 @@ export class HttpService {
     getProfile(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/profile");
     }
+    getProfileById(id: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/profileById", { id });
+  }
     getFriendRequests(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/friendRequest/friendRequests");
     }

@@ -16,6 +16,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { ProfileConfigComponent } from './components/profile-config/profile-config.component';
 import { FriendsMenuTemporaryComponent } from './components/friends-menu-temporary/friends-menu-temporary.component';
+import { FriendProfileComponent } from './components/friend-profile/friend-profile.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { FriendsMenuTemporaryComponent } from './components/friends-menu-tempora
     LoginHandlerComponent,
     ProfileConfigComponent,
     FriendsMenuTemporaryComponent,
+    FriendProfileComponent,
   ],
   imports: [
     BrowserModule,
