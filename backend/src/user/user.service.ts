@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import { leaderBoard } from './interface/leaderBoard.interface';
 
 @Injectable()
 export class UserService {
@@ -48,6 +49,23 @@ export class UserService {
     await this.userRepository.save(user);
   }
 
+  async updateElo(id: number, victory: boolean)
+  {
+      const user = await this.userRepository.findOneBy({ id })
+      if (victory === true)
+      {
+          user.elo += 10;
+          user.win++;
+      }
+      else 
+      {
+        if (user.elo !== 0)
+            user.elo -= 10;
+          user.lose++;
+      }
+      await this.userRepository.save(user);
+  }
+
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
@@ -58,5 +76,21 @@ export class UserService {
     } catch (error) {
       console.error('error for save', error);
     }
+  }
+
+  async getLeaderBoard(): Promise<leaderBoard[]>
+  {
+    let leaderBoard: leaderBoard[] = [];
+    const allUser = await this.userRepository.createQueryBuilder("user").orderBy("user.elo", "DESC").getMany();
+    if (allUser === null)
+      return leaderBoard;
+    for(let i = 0; i < allUser.length; i++)
+    {
+        leaderBoard[i] = {
+          elo: allUser[i].elo,
+          user: allUser[i].username
+        }
+    }
+    return leaderBoard;
   }
 }

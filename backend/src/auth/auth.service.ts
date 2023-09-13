@@ -44,10 +44,15 @@ export class AuthService {
       let payload: NonNullable<unknown>;
       const response = await axios.get(apiUrl, { headers });
       if ((await this.userService.findOne(response.data.id)) === null) {
-        const newUser: User = new User();
-        newUser.id = response.data.id;
-        newUser.username = response.data.login;
-        newUser.img = response.data.image.link;
+        const newUser: User = {
+        id:  response.data.id,
+        username: response.data.login,
+        img: response.data.image.link,
+        elo: 0,
+        win: 0,
+        lose: 0,
+        matchHistory: null
+        };
         await this.userService.saveUser(newUser);
         payload = { sub: newUser.id };
       } else {

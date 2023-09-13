@@ -23,4 +23,10 @@ export class UserController {
   async getProfile(@Request() req) {
     return await this.UserService.findOne(req.user.sub);
   }
+  @UseGuards(JwtAuthGuard)
+  @Get('leaderBoard')
+  async getLeaderBoard()
+  {
+    return await this.UserService.getLeaderBoard();
+  }
 }

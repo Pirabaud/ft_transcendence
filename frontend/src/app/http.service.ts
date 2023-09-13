@@ -34,4 +34,8 @@ export class HttpService {
     getMatchesHistory(): Observable<any> {
       return this.http.get<any>("http://localhost:3000/matches/history");
     }
+
+    getLeaderBoard(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/user/leaderboard")
+    }
 }

@@ -10,6 +10,6 @@ export class MatchesController {
     @Get('history')
     async getHistory(@Request() req) 
     {
-        return await this.matchesService.getMatchesHistory(req.user.id);
+        return await this.matchesService.getMatchesHistory(req.user.sub);
     }
 }

@@ -5,9 +5,6 @@ import { GameId } from './interfaces/game.interface';
 import { Ball } from './interfaces/ball.interface';
 import { GameDatabase } from './gameDatabase.service';
 import { MatchesService } from 'src/matches/matches.service';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/user.entity';
-import { Repository } from 'typeorm';
 
 export class GameCalculation {
   constructor(
@@ -35,7 +32,7 @@ export class GameCalculation {
       server.in(gameId).emit('recGoalScored', game.score);
       if (game.score.p1_score === 1) {
         this.matchesService.saveGame(game, 1);
-        this.matchesService.updateMatchHistory(game.user1, game.user2, game.multiGameId);
+        this.matchesService.updateUserData(game.user1, game.user2, game.multiGameId, 1);
         server.in(gameId).emit('recStopGame', game.user1.username);
         return 0;
       }
@@ -45,7 +42,7 @@ export class GameCalculation {
       server.in(gameId).emit('recGoalScored', game.score);
       if (game.score.p2_score === 1) {
         this.matchesService.saveGame(game, 2);
-        this.matchesService.updateMatchHistory(game.user1, game.user2, game.multiGameId);
+        this.matchesService.updateUserData(game.user1, game.user2, game.multiGameId, 2);
         game.gameStatus = 0;
         server.in(gameId).emit('recStopGame', game.user2.username);
         return 0;

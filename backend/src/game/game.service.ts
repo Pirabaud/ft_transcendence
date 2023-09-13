@@ -159,7 +159,6 @@ createGame(multiGameId: string, gameMode: number, firstPlayer: UserWaiting, seco
         const user2: User = this.waitRoomNormal[0].user;
         //this.runningGames.push(new Game(res, gameMode, this.waitRoomNormal[0].socket, socket.id, user, user2));
         this.runningGames.push(this.createGame(res, gameMode, this.waitRoomNormal[0], userWaiting))
-        console.log("create game: ", this.runningGames);
         this.waitRoomNormal = [];
       }
       else
@@ -211,7 +210,6 @@ createGame(multiGameId: string, gameMode: number, firstPlayer: UserWaiting, seco
           server.in(gameId).emit("recPauseGame");
         else if (game.gameStatus === 0)
         {
-          console.log("status:", game.gameStatus);
           this.stopGame(server, gameId);
           clearInterval(ballLoop)
         }
