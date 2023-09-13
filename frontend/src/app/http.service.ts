@@ -60,4 +60,12 @@ export class HttpService {
     {
       return this.http.post<any>("http://localhost:3000/user/removeFriend", { id })
     }
+
+    getMatchesHistory(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/matches/history");
+    }
+
+    getLeaderBoard(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/user/leaderboard")
+    }
 }

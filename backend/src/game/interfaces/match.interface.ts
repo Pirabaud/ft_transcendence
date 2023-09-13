@@ -1,8 +1,7 @@
 export interface Match {
-    id: number;
-    yourId: number;
-    opponent: string;
+    oppImg: string;
+    yourImg: string;
     yourScore: number;
-    opponentScore: number;
+    oppScore: number;
     victory: boolean;
 }

@@ -61,4 +61,10 @@ export class UserController {
   async removeFriend(@Body() idObject: any, @Request() req) {
     await this.userService.removeFriend(idObject.id, req.user.sub);
   }
+  @UseGuards(JwtAuthGuard)
+  @Get('leaderBoard')
+  async getLeaderBoard()
+  {
+    return await this.UserService.getLeaderBoard();
+  }
 }

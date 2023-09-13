@@ -8,6 +8,8 @@ import { UserWaiting } from './interfaces/userWaiting.interface';
 import { GamesUtileService } from './gameUtiles.service';
 import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
+import { GameDatabase } from './gameDatabase.service';
+import { MatchesService } from 'src/matches/matches.service';
 
 @WebSocketGateway({ cors: { origin: ["http://localhost:4200"] } })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
@@ -18,11 +20,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
     private authService: AuthService, 
     private gameUtile: GamesUtileService,
     private gamePortal: GamePortal,
-    private gameCalculation: GameCalculation) {
-    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal);
+    private gameCalculation: GameCalculation,
+    private gameDatabase: GameDatabase,
+    private matchesService: MatchesService) {
+    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal, gameDatabase, matchesService);
   }
   async handleConnection(socket: Socket) {
-    //console.log("handleConnection jwt: ", socket.handshake.headers.authorization);
   }
   handleDisconnect(client: any): any {
     console.log(client.id + " disconnected");
@@ -30,7 +33,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
   @SubscribeMessage("accessGame")
   handleAccessGame(socket: Socket)
   {
-    // socket.emit("recAccessGame", this.gameModule.accessGame());
   }
   @SubscribeMessage("createGame")
   async handleCreateGame(socket: Socket, gameData: any)

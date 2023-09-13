@@ -5,11 +5,23 @@ export class User {
   @PrimaryColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   username: string;
 
+  @Column({ nullable: true})
+   img: string;
+
   @Column()
-  img: string;
+    elo: number;
+
+  @Column()
+    win: number;
+
+  @Column()
+    lose: number;
+
+  @Column("simple-array", {nullable: true})
+  matchHistory: string[];
 
   @Column()
   friendRequestsNb: number;
@@ -17,3 +29,4 @@ export class User {
   @Column('simple-array', { nullable: true })
   friendList: number[];
 }
+

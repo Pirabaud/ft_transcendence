@@ -14,7 +14,9 @@ export class ProfileComponent {
     this.rank = 0;
   }
 
+  @ViewChild('noMatchHistory') noMatchHistoryElement: ElementRef;
   @ViewChild('matchHistoryList') matchHistoryListElement: ElementRef;
+  @ViewChild('matchHistoryListContainer') matchHistoryListContainerElement: ElementRef;
   @ViewChild('leaderboardList') leaderboardListElement: ElementRef;
   @ViewChild('profilePic') profilePicElement: ElementRef;
   @ViewChild('username') usernameElement: ElementRef;
@@ -23,8 +25,40 @@ export class ProfileComponent {
   @ViewChild('statsElo') statsEloElement: ElementRef;
   ngOnInit() {
 
+    this.httpBackend.getMatchesHistory().subscribe(
+      (response: any) => {
+        if (response.length === 0)
+        {
+          this.matchHistoryListContainerElement.nativeElement.style.visibility = 'hidden';
+          this.noMatchHistoryElement.nativeElement.style.visibility = 'visible'
+        }
+
+        for (var i = 0; i < response.length; i++)
+        {
+          if(response[i] !== null)
+            this.addGameToHistory( 
+              response[i].yourImg, 
+              response[i].oppImg, 
+              response[i].yourScore,
+              response[i].oppScore,
+              response[i].victory);
+            }
+      },
+    );
+    this.httpBackend.getLeaderBoard().subscribe(
+      (response: any) => {
+        if (response !== null)
+        {
+          for(let i = 0; i < response.length; ++i)
+          {
+              this.addPlayerToLeaderboard(response[i].elo, response[i].user);
+          }
+        }
+      } 
+    )
     this.httpBackend.getProfile().subscribe(
       (response: any) => {
+        console.log(response);
         if(this.statsWinElement)
         {
           this.statsWinElement.nativeElement.innerHTML = response.win;
@@ -50,31 +84,8 @@ export class ProfileComponent {
       }
     );
   }
-  ngAfterViewInit()
-  {
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-    this.addPlayerToLeaderboard(/*playerImg, playerName, eloPoints*/);
-  }
-
-  /*ajoute une partie a la liste de parties, passer en parametre la data de la partie(score, qui a gagne et photos des joueurs)*/
-  // faire des verifs selon les parametres pour mettre les bons noms de classe (win, lose, score-win, score-lose), pour que les couleurs et l'alignement soit bon
-  addGameToHistory(/*p1Img, p2Img, p1Score, p2Score, result*/)
+  
+  addGameToHistory(myImg: string, oppImg: string, myscore: number, oppScore: number, result: boolean)
   {
     const newListItem = this.renderer.createElement('li');
     this.renderer.addClass(newListItem, 'match-history-list-elem');
@@ -82,15 +93,18 @@ export class ProfileComponent {
     // Création de l'élément img 1
     const imgElement1 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement1, 'match-history-small-img');
-    // this.renderer.setAttribute(imgElement1, 'src', 'assets/images/blevrel.jpeg');//p1Img a la place
+   this.renderer.setAttribute(imgElement1, 'src', myImg);//p1Img a la place
 
     // Création de la div center-content 1
     const centerContentDiv1 = this.renderer.createElement('div');
     this.renderer.addClass(centerContentDiv1, 'center-content');
 
     const scoreElement1 = this.renderer.createElement('p');
-    this.renderer.addClass(scoreElement1, 'score-win');
-    const scoreText1 = this.renderer.createText('8');//p1Score a la place
+    if (result === true)
+      this.renderer.addClass(scoreElement1, 'score-win');
+    else
+      this.renderer.addClass(scoreElement1, 'score-lose');
+    const scoreText1 = this.renderer.createText(myscore.toString());//p1Score a la place
     this.renderer.appendChild(scoreElement1, scoreText1);
 
     const hyphenElement = this.renderer.createElement('p');
@@ -99,8 +113,11 @@ export class ProfileComponent {
     this.renderer.appendChild(hyphenElement, hyphenText);
 
     const scoreElement2 = this.renderer.createElement('p');
-    this.renderer.addClass(scoreElement2, 'score-lose');
-    const scoreText2 = this.renderer.createText('2');//p2Score a la place
+    if (result !== true )
+      this.renderer.addClass(scoreElement2, 'score-win');
+    else 
+      this.renderer.addClass(scoreElement2, 'score-lose');
+    const scoreText2 = this.renderer.createText(oppScore.toString());//p2Score a la place
     this.renderer.appendChild(scoreElement2, scoreText2);
 
     this.renderer.appendChild(centerContentDiv1, scoreElement1);
@@ -110,16 +127,27 @@ export class ProfileComponent {
     // Création de l'élément img 2
     const imgElement2 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement2, 'match-history-small-img');
-    // this.renderer.setAttribute(imgElement2, 'src', 'assets/images/blevrel.jpeg');//p2Img a la place
+
+    this.renderer.setAttribute(imgElement2, 'src', oppImg);//p2Img a la place
 
     // Création de la div center-content 2
     const centerContentDiv2 = this.renderer.createElement('div');
     this.renderer.addClass(centerContentDiv2, 'center-content');
 
     const winOrLoseElement = this.renderer.createElement('p');
-    this.renderer.addClass(winOrLoseElement, 'win');
-    const winOrLoseText = this.renderer.createText('WIN');//result a la place
-    this.renderer.appendChild(winOrLoseElement, winOrLoseText);
+    if (result === true)
+    {
+       this.renderer.addClass(winOrLoseElement, 'win');
+        const winOrLoseText = this.renderer.createText('WIN');//result a la place
+      this.renderer.appendChild(winOrLoseElement, winOrLoseText);
+    }
+
+    else 
+    {
+        this.renderer.addClass(winOrLoseElement, 'lose');
+        const winOrLoseText = this.renderer.createText('LOSE');//result a la place
+        this.renderer.appendChild(winOrLoseElement, winOrLoseText);
+    }
 
     this.renderer.appendChild(centerContentDiv2, winOrLoseElement);
 
@@ -133,7 +161,7 @@ export class ProfileComponent {
 
   /*meme chose que addGameToHistory*/
   /*Trier par ordre du classement des points*/
-  addPlayerToLeaderboard(/*playerName, eloPoints*/)
+  addPlayerToLeaderboard(elo: number, user: string)
   {
     ++this.rank;
     const newListItem = this.renderer.createElement('li');
@@ -150,12 +178,12 @@ export class ProfileComponent {
 
     const loginElement = this.renderer.createElement('p');
     this.renderer.addClass(loginElement, 'login');
-    const loginText = this.renderer.createText('login:');//playerName a la place
+    const loginText = this.renderer.createText(user);//playerName a la place
     this.renderer.appendChild(loginElement, loginText);
 
     const eloElement = this.renderer.createElement('p');
     this.renderer.addClass(eloElement, 'elo');
-    const eloText = this.renderer.createText('100' + 'pts');//eloPoints a la place
+    const eloText = this.renderer.createText(elo + 'pts');//eloPoints a la place
     this.renderer.appendChild(eloElement, eloText);
 
     this.renderer.appendChild(centerContentDiv, rankElement);

@@ -7,13 +7,18 @@ import { UserWaiting } from './interfaces/userWaiting.interface';
 import { Socket } from "socket.io";
 import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
+import { GameDatabase } from './gameDatabase.service';
+import { MatchesService } from 'src/matches/matches.service';
 
 @Injectable()
 export class GameService {
 constructor(private gameUtile: GamesUtileService, 
   private gameCalculation: GameCalculation,
-   private gamePortal: GamePortal) {
-    this.gameCalculation = new GameCalculation(gameUtile, gamePortal);
+   private gamePortal: GamePortal,
+   private gameDatabase: GameDatabase,
+   private MatchesService: MatchesService,
+   ) {
+    this.gameCalculation = new GameCalculation(gameUtile, gamePortal, gameDatabase, MatchesService);
    }
 /*Where all the data about players waiting and ingame is stored*/
 waitRoomNormal: Array<UserWaiting> = [];
@@ -205,7 +210,6 @@ createGame(multiGameId: string, gameMode: number, firstPlayer: UserWaiting, seco
           server.in(gameId).emit("recPauseGame");
         else if (game.gameStatus === 0)
         {
-          console.log("status:", game.gameStatus);
           this.stopGame(server, gameId);
           clearInterval(ballLoop)
         }
@@ -218,8 +222,7 @@ createGame(multiGameId: string, gameMode: number, firstPlayer: UserWaiting, seco
   updatePaddlePos(socket: Socket, gameId: string, data: any, clientHeight: number) {
     let index = this.gameUtile.getGameIndex(gameId, "gameId", this.runningGames);
     let clientId = this.knownClients.get(socket.id);
-    //console.log(clientId)
-    if (clientId === "0") {
+    if (clientId.clientId === "0") {
       this.runningGames[index].paddle1.posY = data.data.posY - (clientHeight / 2);
       this.runningGames[index].paddle1.posY = this.runningGames[index].paddle1.posY * (600 / clientHeight);
       this.runningGames[index].paddle1.posY += (600 / 2);

@@ -3,11 +3,15 @@ import { GamePortal } from './gamePortal.service';
 import { GamesUtileService } from './gameUtiles.service';
 import { GameId } from './interfaces/game.interface';
 import { Ball } from './interfaces/ball.interface';
+import { GameDatabase } from './gameDatabase.service';
+import { MatchesService } from 'src/matches/matches.service';
 
 export class GameCalculation {
   constructor(
     private gameUtileService: GamesUtileService,
     private gamePortal: GamePortal,
+    private gameDatabase: GameDatabase,
+    private matchesService: MatchesService,
   ) {}
 
   ballMovement(server: Server, gameId: string, runningGames: Array<GameId>) {
@@ -27,7 +31,8 @@ export class GameCalculation {
       ++game.score.p1_score;
       server.in(gameId).emit('recGoalScored', game.score);
       if (game.score.p1_score === 1) {
-        game.gameStatus = 0;
+        this.matchesService.saveGame(game, 1);
+        this.matchesService.updateUserData(game.user1, game.user2, game.multiGameId, 1);
         server.in(gameId).emit('recStopGame', game.user1.username);
         return 0;
       }
@@ -36,6 +41,8 @@ export class GameCalculation {
       ++game.score.p2_score;
       server.in(gameId).emit('recGoalScored', game.score);
       if (game.score.p2_score === 1) {
+        this.matchesService.saveGame(game, 2);
+        this.matchesService.updateUserData(game.user1, game.user2, game.multiGameId, 2);
         game.gameStatus = 0;
         server.in(gameId).emit('recStopGame', game.user2.username);
         return 0;
@@ -63,8 +70,10 @@ export class GameCalculation {
 
     let checkCollision = this.detectPaddleCollision(ball, game);
     if (checkCollision === 1 || checkCollision === 2) {
-      if (checkCollision === 1) game.ball.posX += 10;
-      else game.ball.posX -= 10;
+      if (checkCollision === 1)
+        game.ball.posX += 10;
+      else 
+        game.ball.posX -= 10;
     }
     if (game.gameMode === 1 && game.portalOn == true) {
       checkCollision = this.gamePortal.detectPortalCollision(ball, game);
@@ -91,69 +100,65 @@ export class GameCalculation {
     }
     return game;
   }
-  detectPaddleCollision(ballObj: Ball, game: any): number {
-    if (game.ball.posX < 0) {
-      const paddleLeft = -field.width / 2;
-      const paddleRight = -field.width / 2 + game.paddle1.width;
-      const paddleTop = game.paddle1.posY - game.paddle1.height / 2;
-      const paddleBottom = game.paddle1.posY + game.paddle1.height / 2;
-      if (
+    detectPaddleCollision(ballObj: Ball, game: GameId): number {
+  if (game.ball.posX < 0) {
+    const paddleLeft = -field.width / 2;
+    const paddleRight = -field.width / 2 + game.paddle1.width;
+    const paddleTop = game.paddle1.posY - (game.paddle1.height / 2);
+    const paddleBottom = game.paddle1.posY + (game.paddle1.height / 2);
+        if (
         ballObj.left < paddleRight &&
         ballObj.right > paddleLeft &&
         ballObj.top < paddleBottom &&
         ballObj.bottom > paddleTop
-      ) {
-        const paddleOffset =
-          (game.ball.posY - game.paddle1.posY) / (game.paddle1.height / 2);
-        const maxBounceAngle = Math.PI / 4;
-        const bounceAngle = paddleOffset * maxBounceAngle;
-        let ballSpeed = Math.sqrt(
-          game.ball.directionX * game.ball.directionX +
-            game.ball.directionY * game.ball.directionY,
-        ); // Calculate current speed
+    ) {
+      let paddleOffset = (game.ball.posY - game.paddle1.posY) / (game.paddle1.height / 2);
+      let maxBounceAngle = Math.PI / 4;
+      let bounceAngle = paddleOffset * maxBounceAngle;
+      let ballSpeed = Math.sqrt(game.ball.directionX * game.ball.directionX + game.ball.directionY * game.ball.directionY); // Calculate current speed
 
-        /*Speed cap*/
-        if (ballSpeed < 2.7) ballSpeed += 0.1;
-        game.ball.directionX = Math.cos(bounceAngle);
-        game.ball.directionY = Math.sin(bounceAngle);
-        game.ball.directionX *= ballSpeed;
-        game.ball.directionY *= ballSpeed;
+      /*Speed cap*/
+      if (ballSpeed < 2.7)
+        ballSpeed += 0.1;
+      game.ball.directionX = Math.cos(bounceAngle);
+      game.ball.directionY = Math.sin(bounceAngle);
+      game.ball.directionX *= ballSpeed;
+      game.ball.directionY *= ballSpeed;
 
-        return 1;
-      }
-    } else if (game.ball.posX > 0) {
-      const paddleLeft = field.width / 2 - game.paddle2.width;
-      const paddleRight = field.width / 2;
-      const paddleTop = game.paddle2.posY - game.paddle2.height / 2;
-      const paddleBottom = game.paddle2.posY + game.paddle2.height / 2;
+      return 1;
+    }
+  }
+  else if (game.ball.posX > 0)
+  {
+    let paddleLeft = field.width / 2 - game.paddle2.width;
+    let paddleRight = field.width / 2;
+    let paddleTop = game.paddle2.posY - (game.paddle2.height / 2);
+    let paddleBottom = game.paddle2.posY + (game.paddle2.height / 2);
+    if (
+          ballObj.left < paddleRight && 
+          ballObj.right > paddleLeft && 
+          ballObj.top < paddleBottom &&
+          ballObj.bottom > paddleTop
+    ) {
+      let paddleOffset = (game.ball.posY - game.paddle2.posY) / (game.paddle2.height / 2);
+      let maxBounceAngle = Math.PI / 4;
+      let bounceAngle = paddleOffset * maxBounceAngle;
+      let ballSpeed = Math.sqrt(game.ball.directionX * game.ball.directionX + game.ball.directionY * game.ball.directionY); // Calculate current speed
 
-      if (
-        ballObj.left < paddleRight &&
-        ballObj.right > paddleLeft &&
-        ballObj.top < paddleBottom &&
-        ballObj.bottom > paddleTop
-      ) {
-        const paddleOffset =
-          (game.ball.posY - game.paddle2.posY) / (game.paddle2.height / 2);
-        const maxBounceAngle = Math.PI / 4;
-        const bounceAngle = paddleOffset * maxBounceAngle;
-        let ballSpeed = Math.sqrt(
-          game.ball.directionX * game.ball.directionX +
-            game.ball.directionY * game.ball.directionY,
-        ); // Calculate current speed
+      /*Speed cap*/
+      if (ballSpeed < 2.7)
+        ballSpeed += 0.1;
+      game.ball.directionX = Math.cos(bounceAngle) * -1;
+      game.ball.directionY = Math.sin(bounceAngle);
+      game.ball.directionX *= ballSpeed;
+      game.ball.directionY *= ballSpeed;
 
-        /*Speed cap*/
-        if (ballSpeed < 2.7) ballSpeed += 0.1;
-        game.ball.directionX = Math.cos(bounceAngle) * -1;
-        game.ball.directionY = Math.sin(bounceAngle);
-        game.ball.directionX *= ballSpeed;
-        game.ball.directionY *= ballSpeed;
+      return 2;
 
-        return 2;
-      }
     }
     return 0;
   }
+}
 
   resetBall(
     side: string,
@@ -190,6 +195,7 @@ export class GameCalculation {
     }, 800);
   }
 }
+
 
 /*The backend board template used to make all the calculations*/
 let field: { width: number; height: number };
