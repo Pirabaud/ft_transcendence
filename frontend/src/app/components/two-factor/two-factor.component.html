@@ -1,9 +1,7 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <h1>Google Authenticator</h1>
-    <mat-slide-toggle (click)="setupGoogle()" [(ngModel)]="isChecked">{{isChecked}}</mat-slide-toggle>
-    <h2>Générateur de QR Code Google </h2>
-    <button (click)="GenerateQRcode()">Generate</button>
-    <img id="QR-Code-image" src="" alt="QR Code" />
-    <p>Scannez ce QR code avec Google Authenticator pour activer l'authentification à deux facteurs.</p>
+    <h1>Activate two-factor authentication</h1>
+    <mat-slide-toggle class="slide" (click)="setupGoogle()" [(ngModel)]="isChecked"></mat-slide-toggle>
+    <img id="QR-Code-image" src="./assets/images/caneton.jpg" alt="QR Code" />
+    <p>Scan this QR code with Google Authenticator.</p>
 </div>

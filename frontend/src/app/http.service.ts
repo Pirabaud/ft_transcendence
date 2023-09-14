@@ -24,4 +24,10 @@ export class HttpService {
     generate2fa(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/auth/generateTfa");
     }
+    getQRcode(): Observable<any> {
+        return this.http.get<any>("http://localhost:3000/user/getQRcode");
+    }
+    postGoogle(Google: any): Observable<any> {
+        return this.http.post<any>("http://localhost:3000/user/changeGoogle", Google);
+    }
 }

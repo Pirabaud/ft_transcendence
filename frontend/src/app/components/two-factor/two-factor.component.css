@@ -4,15 +4,7 @@ h1
   text-align: center;
   font-weight: bolder;
   font-size: xx-large;
-  margin-bottom: 30px;
-}
-
-h2
-{
-  font-family: 'Oswald', sans-serif;
-  text-align: center;
-  font-weight: bolder;
-  font-size: xx-large;
+  margin-bottom: 40px;
 }
 
 .container {
@@ -23,16 +15,6 @@ h2
     height: 90vh;
 }
 
-button {
-    background-color: #333;
-    color: white;
-    width: 180px;
-    padding: 20px;
-    margin: 15px auto;
-    border-radius: 10px;
-    box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.4);
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Oswald', sans-serif;
+.slide {
+  margin-bottom: 30px;
 }

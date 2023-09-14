@@ -18,4 +18,9 @@ export class User {
     @Column()
     tfa: boolean;
 
+    @Column({ nullable: true })
+    secret?: string;
+
+    @Column({ nullable: true })
+    QRcode?: string;
 }

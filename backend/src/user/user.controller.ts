@@ -1,4 +1,4 @@
-import { Body, Controller, Get, UseGuards, Request } from "@nestjs/common";
+import { Body, Controller, Get, UseGuards, Request, Post } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { UserService } from "./user.service";
 import { JwtService } from '@nestjs/jwt';
@@ -29,5 +29,17 @@ export class UserController {
     @Get('getTfa')
     async GetTfaStatus(@Request() req) {
         return await this.UserService.getTfaStatus(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('getQRcode')
+    async GetQRcode(@Request() req) {
+        return await this.UserService.getQRcode(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('changeGoogle')
+    async ChangeGoogle(@Request() req, @Body() google: { secret: string, imageUrl: string }): Promise<any> {
+        return await this.UserService.changeGoogle(req.user.sub, google.secret, google.imageUrl);
     }
 }

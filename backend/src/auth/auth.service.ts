@@ -1,8 +1,10 @@
-import { Injectable, Res } from '@nestjs/common';
+import { Injectable, Res, Request } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
+import * as speakeasy from 'speakeasy';
+import * as qrCode from 'qrcode';
 
 @Injectable()
 export class AuthService {
@@ -51,6 +53,8 @@ export class AuthService {
       newUser.login = response.data.login;
       newUser.img = response.data.image.link;
       newUser.tfa = false;
+      newUser.secret = null;
+      newUser.QRcode = null;
       await this.userService.save(newUser);
       payload = {sub: newUser.id}
     }
@@ -81,6 +85,33 @@ async verifyJwt(jwt: string) {
   catch (error) {
       console.log(error);
      return null;
+  }
+}
+
+async generateTFA(@Res() res) {
+  try {
+    // Générer une clé secrète
+    const secret = speakeasy.generateSecret();
+
+    // Générer un URI pour le QR code
+    const otpAuthUrl = speakeasy.otpauthURL({
+      secret: secret.base32,
+      label: 'Transcendence',
+      // issuer: '',
+    });
+    
+    // Générer le QR code
+    qrCode.toDataURL(otpAuthUrl, (err: any, imageUrl: string) => {
+      if (err) {
+        return res.status(500).json({ error: 'Erreur lors de la génération du QR code' });
+      }
+
+      // Renvoyer le secret et l'URL du QR code
+      res.json({ secret: secret.base32, imageUrl });
+    });
+    
+  } catch (error) {
+    return res.status(500).json({ error: 'Une erreur est survenue' });
   }
 }
 
