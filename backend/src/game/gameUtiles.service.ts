@@ -1,37 +1,39 @@
-import { Injectable } from "@nestjs/common";
-import { GameId } from "./interfaces/game.interface";
+import { Injectable } from '@nestjs/common';
+import { GameId } from './interfaces/game.interface';
 
 @Injectable()
 export class GamesUtileService {
-  constructor() {};
+  constructor() {}
 
-countValues(gameId: string, knownClients: Map<any, any>) : number
-{
-  let count = 0;
-  for (let iter of knownClients.values())
-  {
-    if (iter.gameId === gameId) {
-      count++;
+  countValues(gameId: string, knownClients: Map<any, any>): number {
+    let count = 0;
+    for (const iter of knownClients.values()) {
+      if (iter.gameId === gameId) {
+        count++;
+      }
     }
+    return count;
   }
-  return (count);
-}
 
-getGameIndex(data: string, dataType: string, runningGames: Array<GameId>) : number
-{
-  if (dataType === "gameId") {
-    for (let i = 0; runningGames[i]; ++i) {
-      if (runningGames[i].multiGameId === data)
-        return (i);
+  getGameIndex(
+    data: string,
+    dataType: string,
+    runningGames: Array<GameId>,
+  ): number {
+    if (dataType === 'gameId') {
+      for (let i = 0; runningGames[i]; ++i) {
+        if (runningGames[i].multiGameId === data) return i;
+      }
+      return -1;
+    } else {
+      for (let i = 0; runningGames[i]; ++i) {
+        if (
+          runningGames[i].p1SocketId === data ||
+          runningGames[i].p2SocketId === data
+        )
+          return i;
+      }
+      return -1;
     }
-    return (-1);
   }
-  else {
-    for (let i = 0; runningGames[i]; ++i) {
-      if (runningGames[i].p1SocketId === data || runningGames[i].p2SocketId === data)
-        return (i);
-    }
-    return (-1);
-  }
-}
 }
