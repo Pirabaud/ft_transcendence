@@ -18,10 +18,6 @@ export class GoogleAuthenticatorComponent {
     private http: HttpClient,
   ) {}
 
-  redirectionToHome() {
-    window.location.href = 'home';
-  }
-
   verifyForm() {
     const form = document.getElementById('myForm') as HTMLFormElement;
 
