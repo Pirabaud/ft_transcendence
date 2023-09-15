@@ -6,6 +6,15 @@
     height: 90vh;
 }
 
+h1
+{
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
+  font-weight: bolder;
+  font-size: xx-large;
+  margin-bottom: 40px;
+}
+
 button {
     background-color: #333;
     color: white;
@@ -18,4 +27,41 @@ button {
     border: none;
     cursor: pointer;
     font-family: 'Oswald', sans-serif;
-  }
+}
+
+.card {
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.card-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.card-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    font-size: 18px;
+    display: block;
+}
+
+.form-input {
+    width: 94.5%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+}

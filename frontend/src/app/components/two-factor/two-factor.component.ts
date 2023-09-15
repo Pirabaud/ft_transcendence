@@ -17,8 +17,7 @@ export class TwoFactorComponent {
     private router: Router,
     private httpBackend: HttpService,
     private http: HttpClient,
-    ) {
-    }
+    ) {}
     
     ngOnInit() {
       this.httpBackend.getTfaStatus().subscribe((response1: any) => {

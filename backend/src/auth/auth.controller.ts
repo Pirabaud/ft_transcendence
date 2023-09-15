@@ -17,4 +17,9 @@ export class AuthController {
     return await this.appService.generateTFA(res);
   }
 
+  @Post('verify-2fa')
+  async verifyTwoFactorAuth(@Res() res, @Body() body: { input: string, secret: string } ) {
+    return await this.appService.verifyTFA(res, body.input, body.secret);
+  }
+
 }

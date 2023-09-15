@@ -30,7 +30,13 @@ export class UserController {
     async GetTfaStatus(@Request() req) {
         return await this.UserService.getTfaStatus(req.user.sub);
     }
-
+    
+    @UseGuards(JwtAuthGuard)
+    @Post('changeGoogle')
+    async ChangeGoogle(@Request() req, @Body() google: { secret: string, imageUrl: string }): Promise<any> {
+        return await this.UserService.changeGoogle(req.user.sub, google.secret, google.imageUrl);
+    }
+    
     @UseGuards(JwtAuthGuard)
     @Get('getQRcode')
     async GetQRcode(@Request() req) {
@@ -38,8 +44,8 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('changeGoogle')
-    async ChangeGoogle(@Request() req, @Body() google: { secret: string, imageUrl: string }): Promise<any> {
-        return await this.UserService.changeGoogle(req.user.sub, google.secret, google.imageUrl);
+    @Get('getSecret')
+    async GetSecret(@Request() req) {
+        return await this.UserService.getSecret(req.user.sub);
     }
 }

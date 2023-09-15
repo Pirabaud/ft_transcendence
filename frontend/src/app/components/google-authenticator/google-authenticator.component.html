@@ -1,3 +1,13 @@
 <div class="container">
     <button (click)="redirectionToHome()">Home</button>
-</div>
+    <div class="card">
+      <h1 class="card-title">Enter your Google Authentificator code</h1>
+      <form class="card-form" id="myForm">
+        <div class="form-group">
+          <label class="form-label" for="inputText"></label>
+          <input class="form-input" type="text" id="inputText" required>
+        </div>
+        <button class="btn" type="submit" (click)="verifyForm()">Verify</button>
+      </form>
+    </div>
+  </div>

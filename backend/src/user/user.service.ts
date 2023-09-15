@@ -69,18 +69,7 @@ export class UserService {
 
     return user.tfa;
   }
-
-  async getQRcode(id: number): Promise<any> {
-    const user = await this.userRepository.findOneBy({ id });
-
-    if (!user) {
-      console.error('User with ID ${id} not found');
-      return null;
-    }
-
-    return { QRcode: user.QRcode };
-  }
-
+  
   async changeGoogle(id: number, secret: string, imageUrl: string) {
     const user = await this.userRepository.findOneBy({ id });
 
@@ -94,6 +83,28 @@ export class UserService {
     user.QRcode = imageUrl;
     await this.userRepository.save(user);
     return true;
+  }
+
+  async getQRcode(id: number): Promise<any> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { QRcode: user.QRcode };
+  }
+
+  async getSecret(id: number): Promise<any> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { Secret: user.secret };
   }
 
 }

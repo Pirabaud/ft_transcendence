@@ -97,7 +97,6 @@ async generateTFA(@Res() res) {
     const otpAuthUrl = speakeasy.otpauthURL({
       secret: secret.base32,
       label: 'Transcendence',
-      // issuer: '',
     });
     
     // Générer le QR code
@@ -110,6 +109,23 @@ async generateTFA(@Res() res) {
       res.json({ secret: secret.base32, imageUrl });
     });
     
+  } catch (error) {
+    return res.status(500).json({ error: 'Une erreur est survenue' });
+  }
+}
+
+async verifyTFA(@Res() res, input: string, secret: string) {
+  try {
+    const verified = speakeasy.totp.verify({
+      secret: secret,
+      token: input,
+    });
+
+    if (verified) {
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: false });
+    }
   } catch (error) {
     return res.status(500).json({ error: 'Une erreur est survenue' });
   }
