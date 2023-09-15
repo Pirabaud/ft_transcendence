@@ -27,6 +27,7 @@ export class ProfileComponent {
 
     this.httpBackend.getMatchesHistory().subscribe(
       (response: any) => {
+        console.log(response);
         if (response.length === 0)
         {
           this.matchHistoryListContainerElement.nativeElement.style.visibility = 'hidden';

@@ -17,12 +17,12 @@ clean: stop
 	sudo docker volume prune -af
 
 status:
-	docker ps
+	sudo docker ps
 	@echo "\n"
-	docker images
+	sudo docker images
 	@echo "\n"
-	docker volume ls
+	sudo docker volume ls
 	@echo "\n"
-	docker network ls
+	sudo docker network ls
 
 re:	stop clean build start

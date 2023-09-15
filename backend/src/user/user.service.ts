@@ -78,6 +78,12 @@ export class UserService {
       await this.userRepository.save(user);
   }
 
+  async getimg(id: number): Promise<string> {
+    const user = await this.findById(id);
+    return user.img;
+  }
+
+
   async updateFriendsRequestsNb(id: number, action: string) {
     const userToUpdate = await this.findById(id);
     if (userToUpdate !== null) {
@@ -88,6 +94,7 @@ export class UserService {
       await this.saveUser(userToUpdate);
     }
   }
+
   async removeFriend(friendId: number, userId: number)
   {
     let userToUpdate= await this.findById(userId);

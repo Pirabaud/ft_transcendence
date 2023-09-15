@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
+    "@auth0/angular-jwt": "^5.1.2",
     "@nestjs/common": "^10.2.3",
     "ngx-socket-io": "^4.5.1",
     "require": "^0.4.4",

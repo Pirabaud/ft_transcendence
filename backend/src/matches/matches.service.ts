@@ -32,9 +32,9 @@ export class MatchesService {
         {
             match = {
             id: game.multiGameId,
-            winner: game.user1.img,
+            winner: game.user1.id,
             winnerScore: game.score.p1_score,
-            loser: game.user2.img,
+            loser: game.user2.id,
             loserScore: game.score.p2_score,
             }
         }
@@ -42,10 +42,10 @@ export class MatchesService {
         {
           match = {
             id: game.multiGameId,
-            winner: game.user1.img,
-            winnerScore: game.score.p1_score,
-            loser: game.user2.img,
-            loserScore: game.score.p2_score,
+            winner: game.user2.id,
+            winnerScore: game.score.p2_score,
+            loser: game.user1.id,
+            loserScore: game.score.p1_score,
             }
         }
         await this.gameRepository.save(match);
@@ -78,11 +78,11 @@ export class MatchesService {
             return;
         let match: Match
 
-        if (user.img === gameHistory.winner)
+        if (user.id === gameHistory.winner)
         {
             match = {
             yourImg: user.img,
-            oppImg: gameHistory.loser,
+            oppImg: await this.userDatabase.getimg(gameHistory.loser),
             yourScore: gameHistory.winnerScore,
             oppScore: gameHistory.loserScore,
             victory:  true,
@@ -92,7 +92,7 @@ export class MatchesService {
         {
             match = {
             yourImg: user.img,
-            oppImg: gameHistory.winner,
+            oppImg: await this.userDatabase.getimg(gameHistory.winner),
             yourScore: gameHistory.loserScore,
             oppScore: gameHistory.winnerScore,
             victory:  false,
@@ -110,7 +110,7 @@ export class MatchesService {
             return gameHistory;
         for (var i = 0; i < gameId.length; i++)
         {
-            gameHistory.push(await this.getMatch(gameId[i], id));
+            gameHistory.push(await this.getMatch(gameId[i], id ));
         }
         return gameHistory;
     }
