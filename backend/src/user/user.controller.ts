@@ -33,14 +33,18 @@ export class UserController {
   changePic(@Body() urlObject: any, @Request() req) {
     return this.userService.updateAvatar(req.user.sub, urlObject);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('updateStatus')
+  updateUserStatus(@Body() statusObject: any, @Request() req) {
+    return this.userService.updateUserStatus(req.user.sub, statusObject);
+  }
   @UseGuards(JwtAuthGuard)
   @Post('doubleUsername')
   async checkDoubleUsername(@Body() usernameObject: any) {
     const users = await this.userService.findAll();
-    for (let i = 0; i < users.length; ++i)
-    {
-      if (users[i].username === usernameObject.username)
-        return false;
+    for (let i = 0; i < users.length; ++i) {
+      if (users[i].username === usernameObject.username) return false;
     }
     return true;
   }
@@ -48,10 +52,8 @@ export class UserController {
   @Post('userExists')
   async checkUserExists(@Body() usernameObject: any) {
     const users = await this.userService.findAll();
-    for (let i = 0; i < users.length; ++i)
-    {
-      if (users[i].username === usernameObject.username)
-        return true;
+    for (let i = 0; i < users.length; ++i) {
+      if (users[i].username === usernameObject.username) return true;
     }
     return false;
   }
@@ -64,8 +66,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('leaderBoard')
-  async getLeaderBoard()
-  {
+  async getLeaderBoard() {
     return await this.userService.getLeaderBoard();
   }
 }

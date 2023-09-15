@@ -11,6 +11,7 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {ProfileConfigComponent} from "./components/profile-config/profile-config.component";
 import {FriendsMenuTemporaryComponent} from "./components/friends-menu-temporary/friends-menu-temporary.component";
 import {FriendProfileComponent} from "./components/friend-profile/friend-profile.component";
+import {NavbarComponent} from "./components/navbar/navbar.component";
 
 const routes: Routes = [
   { path: '', component: LoginComponent, title: 'Login' },

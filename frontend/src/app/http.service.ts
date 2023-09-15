@@ -42,15 +42,19 @@ export class HttpService {
     }
     getUsernameWithId(id: number): Observable<any>
     {
-      return this.http.post<any>("http://localhost:3000/friendRequest/usernameWithId", { id })
+      return this.http.post<any>("http://localhost:3000/friendRequest/usernameWithId", { id });
     }
     getIdWithUsername(username: string): Observable<any>
     {
-     return this.http.post<any>("http://localhost:3000/friendRequest/idWithUsername", { username })
+     return this.http.post<any>("http://localhost:3000/friendRequest/idWithUsername", { username });
+    }
+    updateUserStatus(status: string): Observable<any>
+    {
+      return this.http.post<any>("http://localhost:3000/user/updateStatus", { status });
     }
     acceptFriendRequest(senderId: number): Observable<any>
     {
-      return this.http.post<any>("http://localhost:3000/friendRequest/acceptFR", { senderId })
+      return this.http.post<any>("http://localhost:3000/friendRequest/acceptFR", { senderId });
     }
     refuseFriendRequest(senderId: number): Observable<any>
     {
@@ -63,6 +67,9 @@ export class HttpService {
 
     getMatchesHistory(): Observable<any> {
       return this.http.get<any>("http://localhost:3000/matches/history");
+    }
+    getMatchesHistoryById(id: string): Observable<any> {
+        return this.http.post<any>("http://localhost:3000/matches/historyById", { id });
     }
 
     getLeaderBoard(): Observable<any> {

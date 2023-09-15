@@ -46,15 +46,16 @@ export class AuthService {
 
       if ((await this.userService.findById(response.data.id)) === null) {
         const newUser: User = {
-        id:  response.data.id,
-        username: response.data.login,
-        img: response.data.image.link,
-        elo: 0,
-        win: 0,
-        lose: 0,
-        matchHistory: null,
-        friendList: null,
-        friendRequestsNb: 0,
+          id: response.data.id,
+          username: response.data.login,
+          img: response.data.image.link,
+          elo: 0,
+          win: 0,
+          lose: 0,
+          matchHistory: null,
+          friendList: null,
+          friendRequestsNb: 0,
+          status: 'offline',
         };
         await this.userService.saveUser(newUser);
         payload = { sub: newUser.id };
