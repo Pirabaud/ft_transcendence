@@ -9,9 +9,6 @@ stop:
 
 restart: stop start
 
-build:
-	sudo docker-compose -f docker-compose.yml build
-
 clean: stop
 	sudo docker system prune -af
 	sudo docker volume prune -af

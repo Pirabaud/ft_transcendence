@@ -19,7 +19,6 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
-
   async findMatchesid(id: number): Promise<string[]> {
     const User = await this.userRepository.findOneBy({ id });
     return User.matchHistory;
@@ -28,11 +27,9 @@ export class UserService {
   async findOneByUsername(username: string): Promise<User | null> {
     const usersList = await this.findAll();
     for (let i = 0; i < usersList.length; ++i) {
-      if (username === usersList[i].username)
-        return usersList[i];
+      if (username === usersList[i].username) return usersList[i];
     }
     return null;
-
   }
 
   async updateUsername(id: number, usernameObject: any) {
@@ -49,33 +46,31 @@ export class UserService {
     return imagePathObject;
   }
 
+  async updateUserStatus(id: number, statusObject: any) {
+    const userToUpdate = await this.userRepository.findOneBy({ id });
+    userToUpdate.status = statusObject.status;
+    await this.saveUser(userToUpdate);
+  }
 
-  async updateHistory(id: number, gameid: string) 
-  {
+  async updateHistory(id: number, gameid: string) {
     const user = await this.userRepository.findOneBy({ id });
-    if (user.matchHistory == null)
-    {
+    if (user.matchHistory == null) {
       user.matchHistory = [gameid];
     }
     user.matchHistory.push(gameid);
     await this.userRepository.save(user);
   }
 
-  async updateElo(id: number, victory: boolean)
-  {
-      const user = await this.userRepository.findOneBy({ id })
-      if (victory === true)
-      {
-          user.elo += 10;
-          user.win++;
-      }
-      else 
-      {
-        if (user.elo !== 0)
-            user.elo -= 10;
-          user.lose++;
-      }
-      await this.userRepository.save(user);
+  async updateElo(id: number, victory: boolean) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (victory === true) {
+      user.elo += 10;
+      user.win++;
+    } else {
+      if (user.elo !== 0) user.elo -= 10;
+      user.lose++;
+    }
+    await this.userRepository.save(user);
   }
 
   async getimg(id: number): Promise<string> {
@@ -87,17 +82,13 @@ export class UserService {
   async updateFriendsRequestsNb(id: number, action: string) {
     const userToUpdate = await this.findById(id);
     if (userToUpdate !== null) {
-      if (action === 'add')
-        userToUpdate.friendRequestsNb++;
-      else
-        userToUpdate.friendRequestsNb--;
+      if (action === 'add') userToUpdate.friendRequestsNb++;
+      else userToUpdate.friendRequestsNb--;
       await this.saveUser(userToUpdate);
     }
   }
-
-  async removeFriend(friendId: number, userId: number)
-  {
-    let userToUpdate= await this.findById(userId);
+  async removeFriend(friendId: number, userId: number) {
+    let userToUpdate = await this.findById(userId);
     let friendListArray = userToUpdate.friendList;
     let index = friendListArray.indexOf(friendId);
     friendListArray.splice(index, 1);
@@ -110,22 +101,17 @@ export class UserService {
     userToUpdate.friendList = friendListArray;
     await this.saveUser(userToUpdate);
   }
-  async addFriend(friendId: number, userId: number)
-  {
-    let userToUpdate= await this.findById(userId);
+  async addFriend(friendId: number, userId: number) {
+    let userToUpdate = await this.findById(userId);
     let friendListArray = userToUpdate.friendList;
-    if (friendListArray)
-      friendListArray.push(friendId);
-    else
-      friendListArray = [friendId];
+    if (friendListArray) friendListArray.push(friendId);
+    else friendListArray = [friendId];
     userToUpdate.friendList = friendListArray;
     await this.saveUser(userToUpdate);
     userToUpdate = await this.findById(friendId);
     friendListArray = userToUpdate.friendList;
-    if (friendListArray)
-      friendListArray.push(userId);
-    else
-      friendListArray = [userId];
+    if (friendListArray) friendListArray.push(userId);
+    else friendListArray = [userId];
     userToUpdate.friendList = friendListArray;
     await this.saveUser(userToUpdate);
   }
@@ -142,18 +128,18 @@ export class UserService {
     }
   }
 
-  async getLeaderBoard(): Promise<leaderBoard[]>
-  {
-    let leaderBoard: leaderBoard[] = [];
-    const allUser = await this.userRepository.createQueryBuilder("user").orderBy("user.elo", "DESC").getMany();
-    if (allUser === null)
-      return leaderBoard;
-    for(let i = 0; i < allUser.length; i++)
-    {
-        leaderBoard[i] = {
-          elo: allUser[i].elo,
-          user: allUser[i].username
-        }
+  async getLeaderBoard(): Promise<leaderBoard[]> {
+    const leaderBoard: leaderBoard[] = [];
+    const allUser = await this.userRepository
+      .createQueryBuilder('user')
+      .orderBy('user.elo', 'DESC')
+      .getMany();
+    if (allUser === null) return leaderBoard;
+    for (let i = 0; i < allUser.length; i++) {
+      leaderBoard[i] = {
+        elo: allUser[i].elo,
+        user: allUser[i].username,
+      };
     }
     return leaderBoard;
   }

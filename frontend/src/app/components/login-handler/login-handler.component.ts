@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../http.service';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login-handler',
@@ -11,6 +12,7 @@ export class LoginHandlerComponent implements OnInit {
 
   constructor(
      private httpBackend: HttpService,
+     private router: Router,
   ) {}
 
 
@@ -22,16 +24,20 @@ export class LoginHandlerComponent implements OnInit {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
           localStorage.setItem(this.key, response.jwt_token);
-          window.location.href = 'profileConfig';
+          this.httpBackend.updateUserStatus('online').subscribe(
+            () => {});
+          this.router.navigate(['/profileConfig']);
         } else {
           console.log('failure to obtain access token');
-          window.location.href = '';
+          this.httpBackend.updateUserStatus('offline').subscribe(
+            () => {});
+          this.router.navigate(['/login']);
         }
       });
     }
     else {
       console.log('access denied');
-      window.location.href = '';
+      this.router.navigate(['/login']);
     }
 
   }

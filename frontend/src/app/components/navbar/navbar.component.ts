@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
+import { HttpService } from "../../http.service";
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +8,25 @@ import { Router } from "@angular/router";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(private router: Router) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private httpBackend: HttpService) {
   };
 
+  ngOnInit()
+  {
+    this.activatedRoute.url.subscribe(
+        (url: any) =>
+        {
+          if (url[0].path === 'game')
+            this.httpBackend.updateUserStatus('in game').subscribe(() => {});
+          else
+            this.httpBackend.updateUserStatus('online').subscribe(() => {});
+        }
+    )
+    window.addEventListener('beforeunload', () =>
+    {
+      this.httpBackend.updateUserStatus('offline').subscribe(() => {});
+    })
+  }
   navToHomepage() {
     this.router.navigate(['/home']);
   }
@@ -27,6 +44,8 @@ export class NavbarComponent {
   }
 
   navToLogin() {
+    this.httpBackend.updateUserStatus('offline').subscribe(
+      () => {});
     this.router.navigate(['/login']);
   }
 }

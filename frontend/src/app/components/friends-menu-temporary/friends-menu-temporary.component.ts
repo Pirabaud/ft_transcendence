@@ -13,6 +13,7 @@ export class FriendsMenuTemporaryComponent {
   @ViewChild('notifsField') notifsElement: ElementRef;
   @ViewChild('requestsContainer') requestsContainerElement: ElementRef;
   @ViewChild('friendListContainer') friendsContainerElement: ElementRef;
+  @ViewChild('userStatus') userStatusElement: ElementRef;
   constructor(private httpBackend: HttpService, private renderer: Renderer2, private router: Router) {
   }
 
@@ -181,11 +182,11 @@ export class FriendsMenuTemporaryComponent {
         for (let i = 0; i < length; ++i)
         {
           const friend = profile.friendList[i];
-          this.httpBackend.getUsernameWithId(friend).subscribe(
-            (username: any) =>
+          this.httpBackend.getProfileById(friend).subscribe(
+            (profile: any) =>
             {
               const liElement = this.renderer.createElement('li');
-              const senderText = this.renderer.createText(username.username.toString());
+              const senderText = this.renderer.createText(profile.username.toString() + ': ' + profile.status);
 
               this.renderer.appendChild(liElement, senderText);
 

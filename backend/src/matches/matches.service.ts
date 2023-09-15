@@ -50,11 +50,15 @@ export class MatchesService {
         }
         await this.gameRepository.save(match);
     }
-    
-    async updateUserData(user1: User, user2: User, gameId: string, victory: number){
 
-        // if (this.findMatch(gameId) !== null)
-        //     return;
+  async updateUserData(
+    user1: User,
+    user2: User,
+    gameId: string,
+    victory: number,
+  ) {
+    // if (this.findMatch(gameId) !== null)
+    //     return;
 
     if (victory === 1) {
       await this.userDatabase.updateElo(user1.id, true);
@@ -96,18 +100,13 @@ export class MatchesService {
         return match
     }
 
-    
-    async getMatchesHistory(id: number) : Promise<Match[]>
-    {
-        let gameHistory: Match[] = [];
-        const gameId: string[] = await this.userDatabase.findMatchesid(id);
-        if (gameId == null)
-            return gameHistory;
-        for (var i = 0; i < gameId.length; i++)
-        {
-            gameHistory.push(await this.getMatch(gameId[i], id));
-        }
-        return gameHistory;
+  async getMatchesHistory(id: number): Promise<Match[]> {
+    const gameHistory: Match[] = [];
+    const gameId: string[] = await this.userDatabase.findMatchesid(id);
+    if (gameId == null) return gameHistory;
+    for (let i = 0; i < gameId.length; i++) {
+      gameHistory.push(await this.getMatch(gameId[i], id));
     }
-
+    return gameHistory;
+}
 }
