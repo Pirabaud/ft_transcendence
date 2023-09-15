@@ -42,10 +42,10 @@ export class MatchesService {
         {
           match = {
             id: game.multiGameId,
-            winner: game.user1.id,
-            winnerScore: game.score.p1_score,
-            loser: game.user2.id,
-            loserScore: game.score.p2_score,
+            winner: game.user2.id,
+            winnerScore: game.score.p2_score,
+            loser: game.user1.id,
+            loserScore: game.score.p1_score,
             }
         }
         await this.gameRepository.save(match);
