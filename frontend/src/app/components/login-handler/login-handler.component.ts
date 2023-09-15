@@ -31,7 +31,6 @@ export class LoginHandlerComponent implements OnInit {
           else
           {
             this.httpBackend.getTfaStatus().subscribe((response: any) => {
-            console.log(response);
             if (response == true)
               window.location.href = 'google';
             else
