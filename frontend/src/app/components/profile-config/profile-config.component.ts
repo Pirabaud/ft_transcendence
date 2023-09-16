@@ -19,13 +19,14 @@ export class ProfileConfigComponent {
     {
       const url = this.fileNameElement.nativeElement.value.trim();
 
-      if (!url) {
+      if (!url || !this.isValidURL(url)) {
         alert("Enter a valid link");
         return;
       }
 
-      this.checkUrlValidity(url).then((isValid) => {
-        if (isValid) {
+      this.httpBackend.checkValidUrl(url).subscribe(
+          (isValid: any) => {
+        if (isValid === 200) {
           const filenameValue: string = url;
           this.httpBackend.uploadFile(filenameValue).subscribe(
             (response: any) => {
@@ -68,14 +69,6 @@ export class ProfileConfigComponent {
     }
   }
 
-  async checkUrlValidity(url: string): Promise<boolean> {
-    try {
-      const response = await fetch(url, { method: 'HEAD' });
-      return response.ok;
-    } catch (error) {
-      return false;
-    }
-  }
   ngOnInit() {
 
     this.httpBackend.getProfile().subscribe(
@@ -92,5 +85,9 @@ export class ProfileConfigComponent {
           console.error('no data', error);
         }
     );
+  }
+  isValidURL(url: string): boolean {
+    const imageUrlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i;
+    return imageUrlPattern.test(url);
   }
 }
