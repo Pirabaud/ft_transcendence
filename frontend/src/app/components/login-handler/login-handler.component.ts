@@ -24,13 +24,20 @@ export class LoginHandlerComponent implements OnInit {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
           localStorage.setItem(this.key, response.jwt_token);
-          this.httpBackend.updateUserStatus('online').subscribe(
-            () => {});
-          this.router.navigate(['/profileConfig']);
+          if (response.first_connection)
+            this.router.navigate(['/profileConfig']);
+//             this.router.navigate(['/two-factor']);
+          else
+          {
+            this.httpBackend.getTfaStatus().subscribe((response: any) => {
+            if (response == true)
+              this.router.navigate(['/google']);
+            else
+              this.router.navigate(['/home']);
+            });
+          }
         } else {
           console.log('failure to obtain access token');
-          this.httpBackend.updateUserStatus('offline').subscribe(
-            () => {});
           this.router.navigate(['/login']);
         }
       });

@@ -58,6 +58,42 @@ export class UserController {
     return false;
   }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('setTfaTrue')
+    async TurnOnTfa(@Request() req) {
+        return await this.UserService.turnOnTfa(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('setTfaFalse')
+    async TurnOffTfa(@Request() req) {
+        return await this.UserService.turnOffTfa(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('getTfa')
+    async GetTfaStatus(@Request() req) {
+        return await this.UserService.getTfaStatus(req.user.sub);
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Post('changeGoogle')
+    async ChangeGoogle(@Request() req, @Body() google: { secret: string, imageUrl: string }): Promise<any> {
+        return await this.UserService.changeGoogle(req.user.sub, google.secret, google.imageUrl);
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Get('getQRcode')
+    async GetQRcode(@Request() req) {
+        return await this.UserService.getQRcode(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('getSecret')
+    async GetSecret(@Request() req) {
+        return await this.UserService.getSecret(req.user.sub);
+    }
+
   @UseGuards(JwtAuthGuard)
   @Post('removeFriend')
   async removeFriend(@Body() idObject: any, @Request() req) {
@@ -69,4 +105,5 @@ export class UserController {
   async getLeaderBoard() {
     return await this.userService.getLeaderBoard();
   }
+
 }

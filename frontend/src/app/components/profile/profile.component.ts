@@ -1,6 +1,6 @@
-import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import {Router} from '@angular/router'
-import {HttpService} from '../../http.service';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpService } from '../../http.service';
 
 @Component({
   selector: 'app-profile',
@@ -196,5 +196,9 @@ export class ProfileComponent {
 
   navToProfileConfig() {
     this.router.navigate(['/profileConfig']);
+  }
+
+  navToTowFactor() {
+    this.router.navigate(['two-factor']);
   }
 }

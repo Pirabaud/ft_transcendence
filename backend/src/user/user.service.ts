@@ -128,6 +128,82 @@ export class UserService {
     }
   }
 
+  async turnOnTfa(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    
+    await this.userRepository.delete(id);
+    user.tfa = true;
+    await this.userRepository.save(user);
+    return true;
+  }
+
+  async turnOffTfa(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    
+    await this.userRepository.delete(id);
+    user.tfa = false;
+    await this.userRepository.save(user);
+    return true;
+  }
+
+  async getTfaStatus(id: number): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return user.tfa;
+  }
+  
+  async changeGoogle(id: number, secret: string, imageUrl: string) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    await this.userRepository.delete(id);
+    user.secret = secret;
+    user.QRcode = imageUrl;
+    await this.userRepository.save(user);
+    return true;
+  }
+
+  async getQRcode(id: number): Promise<any> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { QRcode: user.QRcode };
+  }
+
+  async getSecret(id: number): Promise<any> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { Secret: user.secret };
+  }
+
   async getLeaderBoard(): Promise<leaderBoard[]> {
     const leaderBoard: leaderBoard[] = [];
     const allUser = await this.userRepository
@@ -143,4 +219,5 @@ export class UserService {
     }
     return leaderBoard;
   }
+
 }
