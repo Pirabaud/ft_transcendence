@@ -25,8 +25,7 @@ export class LoginHandlerComponent implements OnInit {
         if (response && response.jwt_token) {
           localStorage.setItem(this.key, response.jwt_token);
           if (response.first_connection)
-            this.router.navigate(['/profileConfig']);
-//             this.router.navigate(['/two-factor']);
+            this.router.navigate(['/two-factor-first-co']);
           else
           {
             this.httpBackend.getTfaStatus().subscribe((response: any) => {

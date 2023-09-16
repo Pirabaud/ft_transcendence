@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@auth0/angular-jwt": "^5.1.2"
-  }
-}
