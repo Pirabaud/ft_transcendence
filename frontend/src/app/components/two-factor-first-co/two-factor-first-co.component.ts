@@ -49,8 +49,6 @@ export class TwoFactorFirstCoComponent {
     if (this.isChecked == true) {
       this.httpBackend.setTfaTrue().subscribe((response1: any) => {
         if (response1) {
-          console.log("2FA activated");
-
           this.GenerateQRcode();
         } else {
           console.error("Error while activating 2FA");
@@ -59,8 +57,6 @@ export class TwoFactorFirstCoComponent {
     } else {
       this.httpBackend.setTfaFalse().subscribe((response2: any) => {
         if (response2) {
-          console.log("2FA deactivated");
-          
           if (QRcodeImageElement) {
             QRcodeImageElement.src = "./assets/images/caneton.jpg";
           }

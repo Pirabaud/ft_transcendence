@@ -36,13 +36,13 @@ export class LoginHandlerComponent implements OnInit {
             });
           }
         } else {
-          console.log('failure to obtain access token');
+          console.error('Failure to obtain access token');
           this.router.navigate(['/login']);
         }
       });
     }
     else {
-      console.log('access denied');
+      console.error('Access denied');
       this.router.navigate(['/login']);
     }
 

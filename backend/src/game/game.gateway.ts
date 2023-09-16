@@ -35,7 +35,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
   async handleConnection(socket: Socket) {
   }
   handleDisconnect(client: any): any {
-    console.log(client.id + " disconnect");
   }
   @SubscribeMessage("accessGame")
   handleAccessGame(socket: Socket)
