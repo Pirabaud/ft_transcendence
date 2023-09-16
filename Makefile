@@ -1,13 +1,13 @@
-build:
-	sudo docker-compose -f docker-compose.yml up --build
-
-start: 
-	sudo docker-compose -f docker-compose.yml up
+start:
+	docker-compose up --build
 
 stop:
-	sudo docker-compose -f docker-compose.yml stop
+	docker-compose stop
 
 restart: stop start
+
+build:
+	docker-compose build
 
 clean: stop
 	sudo docker system prune -af

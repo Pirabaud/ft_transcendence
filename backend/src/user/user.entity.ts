@@ -12,6 +12,15 @@ export class User {
   img: string;
 
   @Column()
+  tfa: boolean;
+
+  @Column({ nullable: true })
+  secret?: string;
+
+  @Column({ nullable: true })
+  QRcode?: string;
+  
+  @Column()
   elo: number;
 
   @Column()
