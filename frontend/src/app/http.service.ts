@@ -57,6 +57,11 @@ export class HttpService {
     {
      return this.http.post<any>("http://localhost:3000/user/userExists", { username });
     }
+
+    checkValidUrl(url: string): Observable<any>
+    {
+        return this.http.get('http://localhost:3000/proxy?url=' + url);
+    }
     createFriendRequest(username: string): Observable<any>
     {
      return this.http.post<any>("http://localhost:3000/friendRequest/createFR", { username });

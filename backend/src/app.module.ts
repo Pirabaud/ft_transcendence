@@ -10,10 +10,13 @@ import { GameHistory } from './game/game.entity';
 import { MatchesModule } from './matches/matches.module';
 import { FriendRequestModule } from './friendRequest/friendRequestModule';
 import { FriendRequest } from './friendRequest/friendRequest.entity';
+import { ProxyController } from './proxy/proxy.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     AuthModule,
+    HttpModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
@@ -28,7 +31,7 @@ import { FriendRequest } from './friendRequest/friendRequest.entity';
     MatchesModule,
     FriendRequestModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ProxyController],
   providers: [AppService],
 })
 export class AppModule {}
