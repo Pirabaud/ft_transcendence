@@ -20,6 +20,7 @@ import { GoogleAuthenticatorComponent } from './components/google-authenticator/
 import { ProfileConfigComponent } from './components/profile-config/profile-config.component';
 import { FriendsMenuTemporaryComponent } from './components/friends-menu-temporary/friends-menu-temporary.component';
 import { FriendProfileComponent } from './components/friend-profile/friend-profile.component';
+import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { FriendProfileComponent } from './components/friend-profile/friend-profi
     GoogleAuthenticatorComponent,
     ProfileConfigComponent,
     FriendsMenuTemporaryComponent,
-    FriendProfileComponent
+    FriendProfileComponent,
+    TwoFactorFirstCoComponent
   ],
   imports: [
     BrowserModule,
