@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,8 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LoginComponent {
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router
   ) {}
 
   redirectionToApi() {

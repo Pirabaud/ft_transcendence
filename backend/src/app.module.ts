@@ -6,20 +6,28 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
+import { GameHistory } from './game/game.entity';
+import { MatchesModule } from './matches/matches.module';
+import { FriendRequestModule } from './friendRequest/friendRequestModule';
+import { FriendRequest } from './friendRequest/friendRequest.entity';
 
 @Module({
-  imports: [AuthModule,
+  imports: [
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
       username: 'user',
-      password:  'password',
+      password: 'password',
       database: 'database',
-      entities: [User],
+      entities: [User, GameHistory, FriendRequest],
       synchronize: true,
     }),
     UserModule,
-    GameModule],
+    GameModule,
+    MatchesModule,
+    FriendRequestModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

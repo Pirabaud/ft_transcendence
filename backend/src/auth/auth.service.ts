@@ -8,21 +8,21 @@ import * as qrCode from 'qrcode';
 
 @Injectable()
 export class AuthService {
-
   constructor(
-     private jwtService: JwtService,
-     private userService: UserService
+    private jwtService: JwtService,
+    private userService: UserService,
   ) {}
 
-  
   async getAccessToken(code: string): Promise<string> {
     const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
-    const clientId = 'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
-    const clientSecret = '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';
+    const clientId =
+      'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
+    const clientSecret =
+      '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';
     const redirectUri = 'http://localhost:4200/login-handler';
 
     try {
-        const response = await axios.post(tokenEndpoint, {
+      const response = await axios.post(tokenEndpoint, {
         grant_type: 'authorization_code',
         code: code,
         client_id: clientId,
@@ -36,55 +36,60 @@ export class AuthService {
   }
 
   async login(code: string) {
-  const access_token = await this.getAccessToken(code);
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-  };
-  const apiUrl = 'https://api.intra.42.fr/v2/me';
-  let first_co = false;
+    const access_token = await this.getAccessToken(code);
+    const headers = {
+      Authorization: `Bearer ${access_token}`,
+    };
+    const apiUrl = 'https://api.intra.42.fr/v2/me';
+    let first_co = false;
 
-  try {
-     let payload = {};
-    const response = await axios.get(apiUrl, { headers });
-    if (await this.userService.findOne(response.data.id) === null) {
-      first_co = true;
-      const newUser: User = new User();
-      newUser.id = response.data.id;
-      newUser.login = response.data.login;
-      newUser.img = response.data.image.link;
-      newUser.tfa = false;
-      newUser.secret = null;
-      newUser.QRcode = null;
-      await this.userService.save(newUser);
-      payload = {sub: newUser.id}
-    }
-    else
-    {
-      first_co = false;
-      payload = {sub: response.data.id}
-    }
-    return { jwt_token: await this.jwtService.signAsync(payload), first_connection: first_co };
-  }
-   catch (error) {
-    return null;
-  }
-}
+    try {
+      let payload: NonNullable<unknown>;
+      const response = await axios.get(apiUrl, { headers });
 
-async verifyJwt(jwt: string) {
-  try {
-  {
-    return this.jwtService.verifyAsync(
-     jwt,
-     {
-       secret: 'prout',
-       ignoreExpiration: true,
-     },
-   );
+      if ((await this.userService.findById(response.data.id)) === null) {
+        first_co = true;
+        const newUser: User = {
+          id: response.data.id,
+          username: response.data.login,
+          img: response.data.image.link,
+          tfa: false,
+          secret: null,
+          QRcode: null,
+          elo: 0,
+          win: 0,
+          lose: 0,
+          matchHistory: null,
+          friendList: null,
+          friendRequestsNb: 0,
+          status: 'offline',
+        };
+        await this.userService.saveUser(newUser);
+        payload = { sub: newUser.id };
+      } else {
+        first_co = false;
+        payload = { sub: response.data.id };
+      }
+      return {
+        jwt_token: await this.jwtService.signAsync(payload),
+        first_connection: first_co
+      };
+    } catch (error) {
+      return null;
+    }
   }
-  }
-  catch (error) {
+
+  async verifyJwt(jwt: string) {
+    try {
+      {
+        return this.jwtService.verifyAsync(jwt, {
+          secret: 'prout',
+          ignoreExpiration: true,
+        });
+      }
+    } catch (error) {
       console.log(error);
-     return null;
+      return null;
   }
 }
 
@@ -129,6 +134,6 @@ async verifyTFA(@Res() res, input: string, secret: string) {
   } catch (error) {
     return res.status(500).json({ error: 'Une erreur est survenue' });
   }
+ }
 }
 
-}
