@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./google-authenticator.component.css']
 })
 export class GoogleAuthenticatorComponent {
-  private readonly key = 'tfa';
   
   constructor (
     private route: ActivatedRoute,
@@ -38,7 +37,7 @@ export class GoogleAuthenticatorComponent {
           this.httpBackend.verify2fa(obj).subscribe((response2: any) => {
             if (response2) {
               if (response2.success == true) {
-				localStorage.setItem(this.key, "true");
+				localStorage.setItem('tfa', "true");
                 window.location.href = 'home';
               } else {
                 window.alert("Please enter a valid code");
