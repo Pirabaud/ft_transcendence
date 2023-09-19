@@ -15,10 +15,8 @@ export class AuthService {
 
   async getAccessToken(code: string): Promise<string> {
     const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
-    const clientId =
-      'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
-    const clientSecret =
-      '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';
+    const clientId = '$API_ID';
+    const clientSecret = '$API_SECRET';
     const redirectUri = 'http://localhost:4200/login-handler';
 
     try {
@@ -83,7 +81,7 @@ export class AuthService {
     try {
       {
         return this.jwtService.verifyAsync(jwt, {
-          secret: 'prout',
+          secret: '$JWT_SECRET',
           ignoreExpiration: true,
         });
       }

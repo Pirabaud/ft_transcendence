@@ -10,7 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'prout',
+      secret: '$JWT_SECRET',
       signOptions: { expiresIn: '1h' },
     }),
     TypeOrmModule.forFeature([User]),
