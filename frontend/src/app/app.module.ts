@@ -19,7 +19,8 @@ import { TwoFactorComponent } from './components/two-factor/two-factor.component
 import { GoogleAuthenticatorComponent } from './components/google-authenticator/google-authenticator.component';
 import { ProfileConfigComponent } from './components/profile-config/profile-config.component';
 import { FriendsMenuTemporaryComponent } from './components/friends-menu-temporary/friends-menu-temporary.component';
-import { FriendProfileComponent } from './components/friend-profile/friend-profile.component';
+import { FriendProfileComponent } from './components/friend-profile/friend-profile.component'
+import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 
 @NgModule({
@@ -48,7 +49,7 @@ import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-
     MatSlideToggleModule,
     FormsModule
   ],
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },JwtHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
