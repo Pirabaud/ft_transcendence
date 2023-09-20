@@ -1,12 +1,25 @@
+h1
+{
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
+  font-weight: bolder;
+  font-size: xx-large;
+  margin-bottom: 40px;
+}
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 90vh;
 }
 
-.bouton {
+.slide {
+  margin-bottom: 30px;
+}
+
+button {
     background-color: #333;
     color: white;
     width: 180px;
@@ -18,4 +31,4 @@
     border: none;
     cursor: pointer;
     font-family: 'Oswald', sans-serif;
-  }
+}

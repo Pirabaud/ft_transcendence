@@ -54,7 +54,7 @@
   display: flex;
   flex-wrap: wrap;
   position: absolute;
-  top: 30%;
+  top: 15%;
   right: 8%;
   width: 20vw;
   height: 25vw;
@@ -201,7 +201,7 @@
   display: inline;
 }
 
-#modify-profile
+#modify-two-factor, #modify-profile
 {
   position: relative;
   margin-top: 10px;
@@ -218,7 +218,7 @@
   cursor: pointer;
 }
 
-#modify-profile:hover
+#modify-two-factor:hover, #modify-profile:hover
 {
   background-color: #c1c1cb;
 }

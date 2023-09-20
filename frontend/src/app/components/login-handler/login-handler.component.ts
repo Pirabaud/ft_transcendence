@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../http.service';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login-handler',
@@ -7,12 +8,11 @@ import { HttpService } from '../../http.service';
   styleUrls: ['./login-handler.component.css']
 })
 export class LoginHandlerComponent implements OnInit {
-    private readonly key = 'jwt';
 
   constructor(
      private httpBackend: HttpService,
+     private router: Router,
   ) {}
-
 
   ngOnInit() {
     const url = window.location.href;
@@ -21,17 +21,28 @@ export class LoginHandlerComponent implements OnInit {
     if (code) {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
-          localStorage.setItem(this.key, response.jwt_token);
-          window.location.href = 'profileConfig';
+          localStorage.setItem('jwt', response.jwt_token);
+          if (response.first_connection) {
+				  localStorage.setItem('tfa', "true");
+				  this.router.navigate(['/two-factor-first-co']);
+		  } else {
+            this.httpBackend.getTfaStatus().subscribe((response: any) => {
+            	if (response == true) {
+            	  this.router.navigate(['/google']);
+				} else {
+				  localStorage.setItem('tfa', "true");
+            	  this.router.navigate(['/home']);
+				}
+			});
+          }
         } else {
-          console.log('failure to obtain access token');
-          window.location.href = '';
+          console.error('Failure to obtain access token');
+          this.router.navigate(['/login']);
         }
       });
     }
     else {
-      console.log('access denied');
-      window.location.href = '';
+      this.router.navigate(['/login']);
     }
 
   }

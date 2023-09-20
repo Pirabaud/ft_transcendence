@@ -1,0 +1,7 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <h1>Activate two-factor authentication</h1>
+    <mat-slide-toggle class="slide" (click)="setupGoogle()" [(ngModel)]="isChecked"></mat-slide-toggle>
+    <img id="QR-Code-image" src="./assets/images/caneton.jpg" alt="QR Code" />
+    <p>Scan this QR code with Google Authenticator.</p>
+</div>

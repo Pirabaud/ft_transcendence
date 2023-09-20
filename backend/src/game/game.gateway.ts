@@ -23,12 +23,18 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
     private gameCalculation: GameCalculation,
     private gameDatabase: GameDatabase,
     private matchesService: MatchesService) {
-    this.gameModule = new GameService(gameUtile, gameCalculation, gamePortal, gameDatabase, matchesService);
+    this.gameModule = new GameService(
+      gameUtile,
+      gameCalculation,
+      gamePortal,
+      gameDatabase,
+      matchesService,
+      userService,
+    );
   }
   async handleConnection(socket: Socket) {
   }
   handleDisconnect(client: any): any {
-    console.log(client.id + " disconnected");
   }
   @SubscribeMessage("accessGame")
   handleAccessGame(socket: Socket)

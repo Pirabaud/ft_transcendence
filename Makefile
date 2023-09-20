@@ -1,20 +1,17 @@
-build:
-	sudo docker-compose -f docker-compose.yml up --build
-
-start: 
-	sudo docker-compose -f docker-compose.yml up
+start:
+	docker-compose up --build
 
 stop:
-	sudo docker-compose -f docker-compose.yml stop
+	docker-compose stop
 
 restart: stop start
 
 build:
-	sudo docker-compose -f docker-compose.yml build
+	docker-compose build
 
 clean: stop
-	sudo docker system prune -af
-	sudo docker volume prune -af
+	docker system prune -af
+	docker volume prune -af
 
 status:
 	docker ps

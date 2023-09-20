@@ -33,14 +33,18 @@ export class UserController {
   changePic(@Body() urlObject: any, @Request() req) {
     return this.userService.updateAvatar(req.user.sub, urlObject);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('updateStatus')
+  updateUserStatus(@Body() statusObject: any, @Request() req) {
+    return this.userService.updateUserStatus(req.user.sub, statusObject);
+  }
   @UseGuards(JwtAuthGuard)
   @Post('doubleUsername')
   async checkDoubleUsername(@Body() usernameObject: any) {
     const users = await this.userService.findAll();
-    for (let i = 0; i < users.length; ++i)
-    {
-      if (users[i].username === usernameObject.username)
-        return false;
+    for (let i = 0; i < users.length; ++i) {
+      if (users[i].username === usernameObject.username) return false;
     }
     return true;
   }
@@ -48,13 +52,47 @@ export class UserController {
   @Post('userExists')
   async checkUserExists(@Body() usernameObject: any) {
     const users = await this.userService.findAll();
-    for (let i = 0; i < users.length; ++i)
-    {
-      if (users[i].username === usernameObject.username)
-        return true;
+    for (let i = 0; i < users.length; ++i) {
+      if (users[i].username === usernameObject.username) return true;
     }
     return false;
   }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('setTfaTrue')
+    async TurnOnTfa(@Request() req) {
+        return await this.userService.turnOnTfa(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('setTfaFalse')
+    async TurnOffTfa(@Request() req) {
+        return await this.userService.turnOffTfa(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('getTfa')
+    async GetTfaStatus(@Request() req) {
+        return await this.userService.getTfaStatus(req.user.sub);
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Post('changeGoogle')
+    async ChangeGoogle(@Request() req, @Body() google: { secret: string, imageUrl: string }): Promise<any> {
+        return await this.userService.changeGoogle(req.user.sub, google.secret, google.imageUrl);
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Get('getQRcode')
+    async GetQRcode(@Request() req) {
+        return await this.userService.getQRcode(req.user.sub);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('getSecret')
+    async GetSecret(@Request() req) {
+        return await this.userService.getSecret(req.user.sub);
+    }
 
   @UseGuards(JwtAuthGuard)
   @Post('removeFriend')
@@ -64,8 +102,8 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('leaderBoard')
-  async getLeaderBoard()
-  {
+  async getLeaderBoard() {
     return await this.userService.getLeaderBoard();
   }
+
 }

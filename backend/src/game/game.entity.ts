@@ -6,10 +6,10 @@ export class GameHistory {
     id: string;
 
     @Column({ nullable: true})
-    winner: string;
+    winner: number;
 
     @Column({ nullable: true})
-    loser: string;
+    loser: number;
 
     @Column()
     winnerScore: number;

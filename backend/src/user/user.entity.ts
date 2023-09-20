@@ -8,25 +8,36 @@ export class User {
   @Column({ nullable: true })
   username: string;
 
-  @Column({ nullable: true})
-   img: string;
+  @Column({ nullable: true })
+  img: string;
 
   @Column()
-    elo: number;
+  tfa: boolean;
+
+  @Column({ nullable: true })
+  secret?: string;
+
+  @Column({ nullable: true })
+  QRcode?: string;
+  
+  @Column()
+  elo: number;
 
   @Column()
-    win: number;
+  win: number;
 
   @Column()
-    lose: number;
+  lose: number;
 
-  @Column("simple-array", {nullable: true})
+  @Column('simple-array', { nullable: true })
   matchHistory: string[];
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   friendRequestsNb: number;
 
   @Column('simple-array', { nullable: true })
   friendList: number[];
-}
 
+  @Column({ nullable: true })
+  status: string;
+}

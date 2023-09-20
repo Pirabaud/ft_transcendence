@@ -1,5 +1,5 @@
-import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import { Router } from '@angular/router'
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpService } from '../../http.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -41,9 +41,9 @@ export class ProfileComponent {
         for (var i = 0; i < response.length; i++)
         {
           if(response[i] !== null)
-            this.addGameToHistory( 
-              response[i].yourImg, 
-              response[i].oppImg, 
+            this.addGameToHistory(
+              response[i].yourImg,
+              response[i].oppImg,
               response[i].yourScore,
               response[i].oppScore,
               response[i].victory);
@@ -59,11 +59,10 @@ export class ProfileComponent {
               this.addPlayerToLeaderboard(response[i].elo, response[i].user);
           }
         }
-      } 
+      }
     )
     this.httpBackend.getProfile().subscribe(
       (response: any) => {
-        console.log(response);
         if(this.statsWinElement)
         {
           this.statsWinElement.nativeElement.innerHTML = response.win;
@@ -89,7 +88,7 @@ export class ProfileComponent {
       }
     );
   }
-  
+
   addGameToHistory(myImg: string, oppImg: string, myscore: number, oppScore: number, result: boolean)
   {
     const newListItem = this.renderer.createElement('li');
@@ -98,7 +97,7 @@ export class ProfileComponent {
     // Création de l'élément img 1
     const imgElement1 = this.renderer.createElement('img');
     this.renderer.addClass(imgElement1, 'match-history-small-img');
-   this.renderer.setAttribute(imgElement1, 'src', myImg);//p1Img a la place
+   this.renderer.setAttribute(imgElement1, 'src', myImg);
 
     // Création de la div center-content 1
     const centerContentDiv1 = this.renderer.createElement('div');
@@ -120,7 +119,7 @@ export class ProfileComponent {
     const scoreElement2 = this.renderer.createElement('p');
     if (result !== true )
       this.renderer.addClass(scoreElement2, 'score-win');
-    else 
+    else
       this.renderer.addClass(scoreElement2, 'score-lose');
     const scoreText2 = this.renderer.createText(oppScore.toString());//p2Score a la place
     this.renderer.appendChild(scoreElement2, scoreText2);
@@ -147,7 +146,7 @@ export class ProfileComponent {
       this.renderer.appendChild(winOrLoseElement, winOrLoseText);
     }
 
-    else 
+    else
     {
         this.renderer.addClass(winOrLoseElement, 'lose');
         const winOrLoseText = this.renderer.createText('LOSE');//result a la place
@@ -202,5 +201,9 @@ export class ProfileComponent {
 
   navToProfileConfig() {
     this.router.navigate(['/profileConfig']);
+  }
+
+  navToTowFactor() {
+    this.router.navigate(['two-factor']);
   }
 }
