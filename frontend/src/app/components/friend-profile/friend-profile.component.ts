@@ -1,6 +1,8 @@
+
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpService} from "../../http.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-friend-profile',
@@ -8,7 +10,6 @@ import {HttpService} from "../../http.service";
   styleUrls: ['./friend-profile.component.css']
 })
 export class FriendProfileComponent {
-
     private userId: string;
     private rank: number;
     @ViewChild('noMatchHistory') noMatchHistoryElement: ElementRef;
@@ -20,13 +21,18 @@ export class FriendProfileComponent {
     @ViewChild('statsWin') statsWinElement: ElementRef;
     @ViewChild('statsLose') statsLoseElement: ElementRef;
     @ViewChild('statsElo') statsEloElement: ElementRef;
-
-    constructor(private route: ActivatedRoute, private httpBackend: HttpService, private renderer: Renderer2) {
-        this.rank = 0;
-    }
-
+  constructor(private route: ActivatedRoute, 
+    private httpBackend: HttpService, 
+    private jwtHelper: JwtHelperService, 
+    private router: Router,
+    private render: Renderer2) {
+      this.rank = 0;
+  }
   ngOnInit()
   {
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+      this.router.navigate(['/login']);
+
     this.userId = this.route.snapshot.paramMap.get('id')!;
 
       this.httpBackend.getMatchesHistoryById(this.userId).subscribe(
