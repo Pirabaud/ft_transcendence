@@ -1,6 +1,6 @@
 
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HttpService} from "../../http.service";
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -25,7 +25,7 @@ export class FriendProfileComponent {
     private httpBackend: HttpService, 
     private jwtHelper: JwtHelperService, 
     private router: Router,
-    private render: Renderer2) {
+    private renderer: Renderer2) {
       this.rank = 0;
   }
   ngOnInit()

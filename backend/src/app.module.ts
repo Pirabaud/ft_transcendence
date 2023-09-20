@@ -24,7 +24,7 @@ import { HttpModule } from '@nestjs/axios';
       password: 'password',
       database: 'database',
       entities: [User, GameHistory, FriendRequest],
-      synchronize: true,
+      synchronize: false,
     }),
     UserModule,
     GameModule,

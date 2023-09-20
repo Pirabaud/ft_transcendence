@@ -20,9 +20,7 @@ export class FriendsMenuTemporaryComponent {
     private router: Router, 
     private jwtHelper: JwtHelperService) {}
 
-  }
-
-  ngOnInit()
+    ngOnInit()
   {
     if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
           this.router.navigate(['/login']);
