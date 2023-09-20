@@ -1,5 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {HttpService} from "../../http.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-config',
@@ -12,7 +14,9 @@ export class ProfileConfigComponent {
   @ViewChild('login') loginElement: ElementRef;
   @ViewChild('fileName') fileNameElement: ElementRef;
 
-  constructor(private httpBackend:HttpService) {};
+  constructor(private httpBackend:HttpService, 
+      private jwtHelper: JwtHelperService,
+      private router: Router) {};
   onFileSelected(keycode: KeyboardEvent)
   {
     if (keycode.code === 'Enter' || keycode.code === 'NumpadEnter')
@@ -77,7 +81,8 @@ export class ProfileConfigComponent {
     }
   }
   ngOnInit() {
-
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+          this.router.navigate(['/login']);
     this.httpBackend.getProfile().subscribe(
 
       (response: any) => {

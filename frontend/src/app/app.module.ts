@@ -17,6 +17,7 @@ import { HomepageComponent } from './components/homepage/homepage.component';
 import { ProfileConfigComponent } from './components/profile-config/profile-config.component';
 import { FriendsMenuTemporaryComponent } from './components/friends-menu-temporary/friends-menu-temporary.component';
 import { FriendProfileComponent } from './components/friend-profile/friend-profile.component';
+import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { FriendProfileComponent } from './components/friend-profile/friend-profi
     HttpClientModule,
     FormsModule
   ],
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },JwtHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

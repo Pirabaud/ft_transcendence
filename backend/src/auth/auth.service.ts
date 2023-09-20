@@ -16,7 +16,7 @@ export class AuthService {
     const clientId =
       'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
     const clientSecret =
-      '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';
+      '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';
     const redirectUri = 'http://localhost:4200/login-handler';
 
     try {

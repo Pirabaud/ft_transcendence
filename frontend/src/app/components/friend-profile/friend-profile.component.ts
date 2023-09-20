@@ -1,6 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HttpService} from "../../http.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-friend-profile',
@@ -17,10 +18,16 @@ export class FriendProfileComponent {
   @ViewChild('statsElo') statsEloElement: ElementRef;
   private userId: string;
 
-  constructor(private route: ActivatedRoute, private httpBackend: HttpService) {}
+  constructor(private route: ActivatedRoute, 
+    private httpBackend: HttpService, 
+    private jwtHelper: JwtHelperService, 
+    private router: Router) {}
 
   ngOnInit()
   {
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+      this.router.navigate(['/login']);
+
     this.userId = this.route.snapshot.paramMap.get('id')!;
     this.httpBackend.getProfileById(this.userId).subscribe(
       (profile: any) => {

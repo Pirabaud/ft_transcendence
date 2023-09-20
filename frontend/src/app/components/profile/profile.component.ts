@@ -1,6 +1,7 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { Router } from '@angular/router'
 import { HttpService } from '../../http.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +11,10 @@ import { HttpService } from '../../http.service';
 export class ProfileComponent {
 
   private rank: number;
-  constructor(private router: Router, private renderer: Renderer2, private httpBackend: HttpService) {
+  constructor(private router: Router,
+    private renderer: Renderer2,
+    private httpBackend: HttpService,
+    private jwtHelper: JwtHelperService) {
     this.rank = 0;
   }
 
@@ -24,7 +28,8 @@ export class ProfileComponent {
   @ViewChild('statsLose') statsLoseElement: ElementRef;
   @ViewChild('statsElo') statsEloElement: ElementRef;
   ngOnInit() {
-
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+          this.router.navigate(['/login']);
     this.httpBackend.getMatchesHistory().subscribe(
       (response: any) => {
         if (response.length === 0)
