@@ -22,6 +22,7 @@ export class LoginHandlerComponent implements OnInit {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
           localStorage.setItem('jwt', response.jwt_token);
+          localStorage.setItem('api', "true");
           if (response.first_connection) {
 				  localStorage.setItem('tfa', "true");
 				  this.router.navigate(['/two-factor-first-co']);

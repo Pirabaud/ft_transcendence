@@ -1,23 +1,10 @@
 import { Injectable } from "@angular/core"
 import { SocketIoConfig, Socket } from "ngx-socket-io"
 
-// const config: SocketIoConfig = {
-//   url: "http://localhost:3000", {
-//   auth: {
-//     authorization: localStorage.getItem("jwt") }
-//   }
-// }
-
-
-
-export function getJwt() {
-      return localStorage.getItem('jwt');
-  }
-
 const config: SocketIoConfig = {
 url: 'http://localhost:3000', options: {
       extraHeaders: {
-      authorization: (localStorage.getItem('jwt') || '{}'),
+      authorization: (localStorage.getItem('jwt')!)
       }
     }
   }
@@ -28,9 +15,13 @@ url: 'http://localhost:3000', options: {
 
 export class GameSocketService extends Socket
 {
-  private readonly tokenJwt = localStorage.getItem('jwt');
   constructor(){
+    console.log("socket-jwt", localStorage.getItem('jwt'));
     super(config);
+  }
+
+  getConfig() {
+    return config;
   }
 
  }

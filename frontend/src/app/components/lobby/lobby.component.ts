@@ -11,6 +11,12 @@ import { v4 as uuidv4 } from "uuid"
 
 export class LobbyComponent {
   constructor(private router:Router, private gameService: GameService) {}
+  
+  ngOnInit(){
+    console.log(localStorage.getItem('jwt'));
+    console.log(this.gameService.getheader());
+  }
+  
   createGame(gameMode: number)
   {
     let gameId = uuidv4();

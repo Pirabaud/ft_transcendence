@@ -44,6 +44,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection{
   async handleCreateGame(socket: Socket, gameData: any)
   {
     
+    console.log("header socket: ", socket.handshake.headers.authorization);
     const decodedToken = await this.authService.verifyJwt(socket.handshake.headers.authorization);
     const user = await this.userService.findById(decodedToken.sub);
     const userWaiting: UserWaiting = {

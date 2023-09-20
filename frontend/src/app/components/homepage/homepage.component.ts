@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 import { HttpService } from '../../http.service';
 
 @Component({
