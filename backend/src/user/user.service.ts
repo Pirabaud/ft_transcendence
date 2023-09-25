@@ -52,6 +52,11 @@ export class UserService {
     await this.saveUser(userToUpdate);
   }
 
+  async getUserStatus(id: number) {
+    const user = await this.findById(id);
+    return { status: user.status };
+  }
+
   async updateHistory(id: number, gameid: string) {
     const user = await this.userRepository.findOneBy({ id });
     if (user.matchHistory == null) {
@@ -77,7 +82,6 @@ export class UserService {
     const user = await this.findById(id);
     return user.img;
   }
-
 
   async updateFriendsRequestsNb(id: number, action: string) {
     const userToUpdate = await this.findById(id);
@@ -135,7 +139,7 @@ export class UserService {
       console.error('User with ID ${id} not found');
       return null;
     }
-    
+
     await this.userRepository.delete(id);
     user.tfa = true;
     await this.userRepository.save(user);
@@ -149,7 +153,7 @@ export class UserService {
       console.error('User with ID ${id} not found');
       return null;
     }
-    
+
     await this.userRepository.delete(id);
     user.tfa = false;
     await this.userRepository.save(user);
@@ -166,7 +170,7 @@ export class UserService {
 
     return user.tfa;
   }
-  
+
   async changeGoogle(id: number, secret: string, imageUrl: string) {
     const user = await this.userRepository.findOneBy({ id });
 
@@ -219,5 +223,61 @@ export class UserService {
     }
     return leaderBoard;
   }
+  async getGameStatus(id: number) {
+    const user = await this.findById(id);
+    if (!user) {
+      console.error(`User with ID ${id} not found`);
+      return null;
+    }
+    return { gameStatus: user.gameStatus };
+  }
 
+  async setGameStatus(gameStatus: number, id: number) {
+    const user = await this.findById(id);
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return;
+    }
+    user.gameStatus = gameStatus;
+    await this.saveUser(user);
+  }
+  async getCurrentGameId(id: number) {
+    const user = await this.findById(id);
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    return { currentGameId: user.currentGameId };
+  }
+  async setCurrentGameId(gameId: string, id: number) {
+    const user = await this.findById(id);
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return;
+    }
+    user.currentGameId = gameId;
+    await this.saveUser(user);
+  }
+  async getCurrentOpponentId(id: number) {
+    const user = await this.findById(id);
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    return { currentOpponentId: user.currentOpponentId };
+  }
+  async setCurrentOpponentId(id: number, gameId: string) {
+    const user = await this.findById(id);
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return;
+    }
+    const allUsers = await this.findAll();
+    const length = allUsers.length;
+    for (let i = 0; i < length; ++i) {
+      if (allUsers[i].currentGameId === gameId && allUsers[i].id !== id)
+        user.currentOpponentId = allUsers[i].id;
+    }
+    await this.saveUser(user);
+  }
 }

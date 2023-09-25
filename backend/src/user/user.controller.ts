@@ -40,6 +40,11 @@ export class UserController {
     return this.userService.updateUserStatus(req.user.sub, statusObject);
   }
   @UseGuards(JwtAuthGuard)
+  @Get('updateStatus')
+  getUserStatus(@Request() req) {
+    return this.userService.getUserStatus(req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
   @Post('doubleUsername')
   async checkDoubleUsername(@Body() usernameObject: any) {
     const users = await this.userService.findAll();
@@ -58,41 +63,48 @@ export class UserController {
     return false;
   }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('setTfaTrue')
-    async TurnOnTfa(@Request() req) {
-        return await this.userService.turnOnTfa(req.user.sub);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get('setTfaTrue')
+  async TurnOnTfa(@Request() req) {
+    return await this.userService.turnOnTfa(req.user.sub);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('setTfaFalse')
-    async TurnOffTfa(@Request() req) {
-        return await this.userService.turnOffTfa(req.user.sub);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get('setTfaFalse')
+  async TurnOffTfa(@Request() req) {
+    return await this.userService.turnOffTfa(req.user.sub);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('getTfa')
-    async GetTfaStatus(@Request() req) {
-        return await this.userService.getTfaStatus(req.user.sub);
-    }
-    
-    @UseGuards(JwtAuthGuard)
-    @Post('changeGoogle')
-    async ChangeGoogle(@Request() req, @Body() google: { secret: string, imageUrl: string }): Promise<any> {
-        return await this.userService.changeGoogle(req.user.sub, google.secret, google.imageUrl);
-    }
-    
-    @UseGuards(JwtAuthGuard)
-    @Get('getQRcode')
-    async GetQRcode(@Request() req) {
-        return await this.userService.getQRcode(req.user.sub);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get('getTfa')
+  async GetTfaStatus(@Request() req) {
+    return await this.userService.getTfaStatus(req.user.sub);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Get('getSecret')
-    async GetSecret(@Request() req) {
-        return await this.userService.getSecret(req.user.sub);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Post('changeGoogle')
+  async ChangeGoogle(
+    @Request() req,
+    @Body() google: { secret: string; imageUrl: string },
+  ): Promise<any> {
+    return await this.userService.changeGoogle(
+      req.user.sub,
+      google.secret,
+      google.imageUrl,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getQRcode')
+  async GetQRcode(@Request() req) {
+    return await this.userService.getQRcode(req.user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getSecret')
+  async GetSecret(@Request() req) {
+    return await this.userService.getSecret(req.user.sub);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post('removeFriend')
@@ -105,5 +117,34 @@ export class UserController {
   async getLeaderBoard() {
     return await this.userService.getLeaderBoard();
   }
-
+  @UseGuards(JwtAuthGuard)
+  @Get('gameStatus')
+  getGameStatus(@Request() req) {
+    return this.userService.getGameStatus(req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('gameStatus')
+  async setGameStatus(@Body() statusObj: { status: number }, @Request() req) {
+    return await this.userService.setGameStatus(statusObj.status, req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('currentGameId')
+  getCurrentGameId(@Request() req) {
+    return this.userService.getCurrentGameId(req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('currentGameId')
+  setCurrentGameId(@Body() gameIdObj: { gameId: string }, @Request() req) {
+    return this.userService.setCurrentGameId(gameIdObj.gameId, req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('currentOpponentId')
+  getCurrentOpponentId(@Request() req) {
+    return this.userService.getCurrentOpponentId(req.user.sub);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('currentOpponentId')
+  setCurrentOpponentId(@Body() gameIdObj: { gameId: string }, @Request() req) {
+    return this.userService.setCurrentOpponentId(req.user.sub, gameIdObj.gameId);
+  }
 }

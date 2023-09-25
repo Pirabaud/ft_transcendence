@@ -7,6 +7,36 @@ import { Observable } from "rxjs";
 })
 export class GameService {
   constructor(private socket: GameSocketService) {}
+
+  private simulateRecJoinedPlayers = false;
+  private joinedViaMatchmaking = false;
+  private gameMode = 0;
+
+  setSimulateRecJoinedPlayers(value: boolean)
+  {
+    this.simulateRecJoinedPlayers = value;
+  }
+  getSimulateRecJoinedPlayers()
+  {
+    return this.simulateRecJoinedPlayers;
+  }
+  getJoinedViaMatchmaking(): boolean {
+    return this.joinedViaMatchmaking;
+  }
+
+  setJoinedViaMatchmaking(value: boolean) {
+    this.joinedViaMatchmaking = value;
+  }
+  getGameMode(): number {
+    return this.gameMode;
+  }
+  setGameMode(value: number) {
+    this.gameMode = value;
+  }
+  disconnectSocket()
+  {
+    this.socket.disconnect();
+  }
   accessGame(): void
   {
     this.socket.emit("accessGame");
@@ -56,13 +86,17 @@ export class GameService {
   {
     return this.socket.fromEvent<string>("recStartCountdown")
   }
-  getInitBallDir(): Observable<number>
+  getInitBallDir(): Observable<{directionX: number, directionY: number}>
   {
-    return this.socket.fromEvent<number>("recInitBallDir")
+    return this.socket.fromEvent<{directionX: number, directionY: number}>("recInitBallDir")
   }
   getGamePos(): Observable<any>
   {
     return this.socket.fromEvent<any>("recBallPos");
+  }
+  pauseGame(gameId: string)
+  {
+    this.socket.emit('pauseGame', gameId)
   }
   getPauseGame(): Observable<any>
   {
@@ -76,9 +110,26 @@ export class GameService {
   {
     return this.socket.fromEvent<any>("recGoalScored");
   }
+  cancelMatchmaking(gameMode: number, gameId: string)
+  {
+    const gameData = {gameId: gameId, gameMode: gameMode};
+    this.socket.emit('cancelMatchmaking', gameData);
+  }
+  cancelGame(gameId: string)
+  {
+    this.socket.emit('cancelGame', gameId);
+  }
+  getCancelGame(): Observable<string>
+  {
+    return this.socket.fromEvent<string>("recCancelGame");
+  }
   getStopGame(): Observable<string>
   {
     return this.socket.fromEvent<string>("recStopGame");
+  }
+  resumeGame(gameId: string)
+  {
+    this.socket.emit('resumeGame', gameId)
   }
   getResumeGame(): Observable<void>
   {

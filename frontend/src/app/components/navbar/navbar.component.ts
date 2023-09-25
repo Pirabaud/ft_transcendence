@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { HttpService } from "../../http.service";
+import { AppComponent } from "../../app.component";
+import { GameService } from "../../services/game.service";
+import {Subscription} from "rxjs";
+import { GameComponent } from "../game/game.component";
 
 @Component({
   selector: 'app-navbar',
@@ -8,24 +12,61 @@ import { HttpService } from "../../http.service";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private httpBackend: HttpService) {
+  private joinGameSubscription: Subscription;
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private httpBackend: HttpService, private appService: AppComponent, private gameService: GameService) {
   };
+  @ViewChild(GameComponent) gameComponent: GameComponent;
 
+  ngAfterViewInit()
+  {
+    this.httpBackend.getCurrentGameId().subscribe(
+      (gameIdObj: { currentGameId: string }) => {
+        this.joinGameSubscription = this.gameService.getJoinGame().subscribe(() => {
+          this.gameService.setSimulateRecJoinedPlayers(true);
+          this.router.navigate(['/game', gameIdObj.currentGameId]);
+        });
+      });
+  }
   ngOnInit()
   {
     this.activatedRoute.url.subscribe(
         (url: any) =>
         {
-          if (url[0].path === 'game')
-            this.httpBackend.updateUserStatus('in game').subscribe(() => {});
-          else
-            this.httpBackend.updateUserStatus('online').subscribe(() => {});
+          if (url[0].path === 'game') {
+                this.httpBackend.updateUserStatus('in game').subscribe(() => {});
+          }
+          else if (url[0].path !== 'login')
+          {
+            this.httpBackend.getGameStatus().subscribe(
+              (gameStatusObj: { gameStatus: number }) =>
+            {
+              setTimeout(() => {
+                if (gameStatusObj.gameStatus === 1) {
+                  this.httpBackend.getCurrentGameId().subscribe(
+                    (gameIdObj: { currentGameId: string }) => {
+                      this.gameService.pauseGame(gameIdObj.currentGameId);
+                      this.httpBackend.setGameStatus(2).subscribe(() => {});
+                    });
+                }
+                else
+                  this.httpBackend.updateUserStatus('online').subscribe(() => {});
+              }, 100);
+            });
+          }
         }
     )
     window.addEventListener('beforeunload', () =>
     {
       this.httpBackend.updateUserStatus('offline').subscribe(() => {});
+      this.httpBackend.setGameStatus(0).subscribe(() => {});
+      this.httpBackend.setCurrentGameId('').subscribe(() => {});
     })
+  }
+
+  ngOnDestroy()
+  {
+    if (this.joinGameSubscription)
+      this.joinGameSubscription.unsubscribe();
   }
   navToHomepage() {
     this.router.navigate(['/home']);
@@ -40,10 +81,38 @@ export class NavbarComponent {
   }
 
   navToLobby() {
-    this.router.navigate(['/lobby']);
+    this.httpBackend.getCurrentGameId().subscribe(
+      (gameIdObj: {currentGameId: string}) => {
+        if (gameIdObj.currentGameId)
+          this.router.navigate(['/game', gameIdObj.currentGameId]);
+        else
+          this.router.navigate(['/lobby']);
+      }
+    )
   }
 
   navToLogin() {
+    this.httpBackend.getGameStatus().subscribe(
+      (gameStatusObj: { gameStatus: number }) =>
+      {
+        setTimeout(() => {
+            this.httpBackend.getCurrentGameId().subscribe(
+              (gameIdObj: { currentGameId: string }) => {
+                if (gameStatusObj.gameStatus === 1 || gameStatusObj.gameStatus === 2) {
+                this.gameService.cancelGame(gameIdObj.currentGameId);
+                this.httpBackend.setGameStatus(0).subscribe(() => {});
+                this.httpBackend.setCurrentGameId("").subscribe(() => {});
+                }
+                else {
+                  this.gameService.cancelMatchmaking(this.gameService.getGameMode(), gameIdObj.currentGameId);
+                  this.gameService.setSimulateRecJoinedPlayers(false);
+                  this.gameService.setJoinedViaMatchmaking(false);
+                  this.httpBackend.setCurrentGameId('').subscribe(() => {});
+                }
+              });
+
+        }, 100);
+      });
     this.httpBackend.updateUserStatus('offline').subscribe(
       () => {});
     this.router.navigate(['/login']);

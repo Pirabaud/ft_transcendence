@@ -19,7 +19,7 @@ export class User {
 
   @Column({ nullable: true })
   QRcode?: string;
-  
+
   @Column()
   elo: number;
 
@@ -40,4 +40,13 @@ export class User {
 
   @Column({ nullable: true })
   status: string;
+
+  @Column({ nullable: true })
+  gameStatus: number;
+
+  @Column({ nullable: true })
+  currentGameId: string;
+
+  @Column({ nullable: true })
+  currentOpponentId: number;
 }
