@@ -6,6 +6,8 @@ services:
     container_name: nestJS
     image: backend
     build: ./backend
+    env_file:
+      - .env
     restart: always
     depends_on:
       - postgres
@@ -31,9 +33,9 @@ services:
     image: "postgres:latest"
     restart: always
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=database
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_DATABASE
     ports:
       - 5432:5432
 

@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, Type } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GameModule } from './game/game.module';
@@ -17,14 +18,22 @@ import { HttpModule } from '@nestjs/axios';
   imports: [
     AuthModule,
     HttpModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'postgres',
-      username: 'user',
-      password: 'password',
-      database: 'database',
-      entities: [User, GameHistory, FriendRequest],
-      synchronize: false,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './../../.env',
+      }),
+      TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+        useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: 'postgres',
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        entities: [User, GameHistory, FriendRequest],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     UserModule,
     GameModule,

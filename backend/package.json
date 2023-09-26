@@ -22,6 +22,7 @@
   "dependencies": {
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.1.0",
     "@nestjs/passport": "^10.0.0",
@@ -37,8 +38,8 @@
     "qrcode": "^1.5.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "speakeasy": "^2.0.0",
     "socket.io": "^4.7.2",
+    "speakeasy": "^2.0.0",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
