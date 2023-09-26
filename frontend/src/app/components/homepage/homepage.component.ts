@@ -1,6 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 import { HttpService } from '../../http.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-homepage',
@@ -9,7 +10,9 @@ import { HttpService } from '../../http.service';
 })
 
 export class HomepageComponent {
-  constructor(private router: Router, private httpBackend:HttpService) {};
+  constructor(private router: Router, 
+    private httpBackend:HttpService, 
+    private jwtHelper: JwtHelperService) {};
 
   @ViewChild('profilePic') profilePicElement: ElementRef;
   @ViewChild('username') usernameElement: ElementRef;
@@ -17,7 +20,8 @@ export class HomepageComponent {
   @ViewChild('statsLoses') statsLosesElement: ElementRef;
   @ViewChild('statsElo') statsEloElement: ElementRef;
   ngOnInit() {
-
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+          this.router.navigate(['/login']);
     this.httpBackend.getProfile().subscribe(
       (response: any) => {
         if(this.statsWinsElement)

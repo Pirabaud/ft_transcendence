@@ -7,12 +7,16 @@ import { Observable } from "rxjs";
 })
 export class GameService {
   constructor(private socket: GameSocketService) {}
+  getheader(){
+    return this.socket.getConfig();
+  }
   accessGame(): void
   {
     this.socket.emit("accessGame");
   }
   createGame(gameId: string, gameMode: number): void
   {
+    console.log(localStorage.getItem('jwt'));
     let obj = {
       gameId: gameId,
       gameMode: gameMode

@@ -17,14 +17,23 @@ export class NavbarComponent {
         (url: any) =>
         {
           if (url[0].path === 'game')
-            this.httpBackend.updateUserStatus('in game').subscribe(() => {});
+            this.httpBackend.updateUserStatus('in game').subscribe((response: any) => {
+              if (!response)
+                console.error("Error while updating status");
+            });
           else
-            this.httpBackend.updateUserStatus('online').subscribe(() => {});
+            this.httpBackend.updateUserStatus('online').subscribe((response: any) => {
+              if (!response)
+                console.error("Error while updating status");
+            });
         }
     )
     window.addEventListener('beforeunload', () =>
     {
-      this.httpBackend.updateUserStatus('offline').subscribe(() => {});
+      this.httpBackend.updateUserStatus('offline').subscribe((response: any) => {
+        if (!response)
+          console.error("Error while updating status");
+      });
     })
   }
   navToHomepage() {
@@ -44,8 +53,10 @@ export class NavbarComponent {
   }
 
   navToLogin() {
-    this.httpBackend.updateUserStatus('offline').subscribe(
-      () => {});
+    this.httpBackend.updateUserStatus('offline').subscribe((response: any) => {
+      if (!response)
+        console.error("Error while updating status");
+    });
     this.router.navigate(['/login']);
   }
 }

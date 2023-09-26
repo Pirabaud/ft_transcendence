@@ -36,9 +36,10 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('updateStatus')
-  updateUserStatus(@Body() statusObject: any, @Request() req) {
-    return this.userService.updateUserStatus(req.user.sub, statusObject);
+  updateUserStatus(@Body() statusObject: { status: string}, @Request() req) {
+    return this.userService.updateUserStatus(req.user.sub, statusObject.status);
   }
+
   @UseGuards(JwtAuthGuard)
   @Post('doubleUsername')
   async checkDoubleUsername(@Body() usernameObject: any) {

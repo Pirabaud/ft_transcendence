@@ -1,6 +1,7 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { HttpService } from "../../http.service";
 import { Router } from "@angular/router";
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-friends-menu-temporary',
@@ -14,11 +15,15 @@ export class FriendsMenuTemporaryComponent {
   @ViewChild('requestsContainer') requestsContainerElement: ElementRef;
   @ViewChild('friendListContainer') friendsContainerElement: ElementRef;
   @ViewChild('userStatus') userStatusElement: ElementRef;
-  constructor(private httpBackend: HttpService, private renderer: Renderer2, private router: Router) {
-  }
+  constructor(private httpBackend: HttpService, 
+    private renderer: Renderer2, 
+    private router: Router, 
+    private jwtHelper: JwtHelperService) {}
 
-  ngOnInit()
+    ngOnInit()
   {
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+          this.router.navigate(['/login']);
     this.fetchAndUpdateFriendRequests();
     this.fetchAndUpdateFriendlist();
     setInterval(() => {

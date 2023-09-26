@@ -18,22 +18,22 @@ import { HttpModule } from '@nestjs/axios';
   imports: [
     AuthModule,
     HttpModule,
-	ConfigModule.forRoot({
-		isGlobal: true,
-		envFilePath: './../../.env',
-	  }),
-    TypeOrmModule.forRootAsync({
-	  imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-		  type: 'postgres',
-		  host: 'postgres',
-		  username: configService.get<string>('DB_USERNAME'),
-		  password: configService.get<string>('DB_PASSWORD'),
-		  database: configService.get<string>('DB_DATABASE'),
-		  entities: [User, GameHistory, FriendRequest],
-		  synchronize: true,
-		}),
-		inject: [ConfigService],
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './../../.env',
+      }),
+      TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+        useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: 'postgres',
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        entities: [User, GameHistory, FriendRequest],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     UserModule,
     GameModule,

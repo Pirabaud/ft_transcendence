@@ -59,7 +59,7 @@ export class AuthService {
           elo: 0,
           win: 0,
           lose: 0,
-          matchHistory: null,
+          matchHistory: [],
           friendList: null,
           friendRequestsNb: 0,
           status: 'offline',
@@ -80,6 +80,7 @@ export class AuthService {
   }
 
   async verifyJwt(jwt: string) {
+    console.log(jwt);
     try {
       {
         return this.jwtService.verifyAsync(jwt, {
