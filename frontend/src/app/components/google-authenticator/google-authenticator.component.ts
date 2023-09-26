@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./google-authenticator.component.css']
 })
 export class GoogleAuthenticatorComponent {
-  
+
   constructor (
     private route: ActivatedRoute,
     private router: Router,
@@ -41,6 +41,7 @@ export class GoogleAuthenticatorComponent {
                 window.location.href = 'home';
               } else {
                 window.alert("Please enter a valid code");
+				// sub.complete();
               }
             } else {
               console.error("Error during two-factor authentication verification");
