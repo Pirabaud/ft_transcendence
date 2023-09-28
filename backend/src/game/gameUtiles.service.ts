@@ -3,8 +3,6 @@ import { GameId } from './interfaces/game.interface';
 
 @Injectable()
 export class GamesUtileService {
-  constructor() {}
-
   countValues(gameId: string, knownClients: Map<any, any>): number {
     let count = 0;
     for (const iter of knownClients.values()) {

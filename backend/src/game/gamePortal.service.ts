@@ -25,9 +25,10 @@ export class GamePortal {
     return 0;
   }
   spawnPortals(server: Server, gameId: string, runningGames: Array<GameId>) {
+    const index = this.gameUtile.getGameIndex(gameId, 'gameId', runningGames);
+    const game = runningGames[index];
+
     const loop = setInterval(() => {
-      const index = this.gameUtile.getGameIndex(gameId, 'gameId', runningGames);
-      const game = runningGames[index];
       if (game.portalOn === false) {
         const halfWidth = field.width / 2;
         const halfHeight = field.height / 2;
@@ -53,8 +54,11 @@ export class GamePortal {
           state: 'on',
         });
       }
-      if (game.gameStatus === 0) clearInterval(loop);
     }, 10000);
+    setInterval(() => {
+      if (game.gameStatus === 0)
+        clearInterval(loop);
+    }, 1000);
   }
 }
 let field: { width: number; height: number };

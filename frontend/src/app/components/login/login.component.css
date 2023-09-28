@@ -6,6 +6,11 @@
     height: 100vh;
 }
 
+app-navbar
+{
+  visibility: hidden;
+}
+
 .bouton {
     background-color: #333;
     color: white;

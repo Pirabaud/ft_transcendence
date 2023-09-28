@@ -1,6 +1,5 @@
 <app-navbar></app-navbar>
 <body>
-<!--paddle depasse du terrain et trouver un moyen d'ajuster la taille du terrain a la fenetre-->
     <div #field id="field">
       <div #countdown id="countdown"></div>
       <div #p1_score id="p1_score">0</div>
@@ -18,7 +17,10 @@
       <div #paddle1 id="paddle1" class="paddle"></div>
       <div #paddle2 id="paddle2" class="paddle"></div>
       <div #matchmaking_message id ="matchmaking_message">Looking for a game...</div>
+      <div #disconnection_message id ="disconnection_message"><pre>      Your opponent is reconnecting,
+      game will end in 30 seconds...</pre></div>
       <div #p1_victory_message id ="p1_victory_message">Player 1 wins !</div>
       <div #p2_victory_message id ="p2_victory_message">Player 2 wins !</div>
     </div>
+    <div #cancelButton id="cancelButton" (click)="cancelMatchmaking()">Cancel matchmaking</div>
 </body>

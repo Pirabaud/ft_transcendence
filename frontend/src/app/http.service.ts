@@ -26,7 +26,7 @@ export class HttpService {
     }
     postGoogle(Google: any): Observable<any> {
         return this.http.post<any>("http://localhost:3000/user/changeGoogle", Google);
-    }  
+    }
     getQRcode(): Observable<any> {
         return this.http.get<any>("http://localhost:3000/user/getQRcode");
     }
@@ -78,6 +78,10 @@ export class HttpService {
     {
       return this.http.post<any>("http://localhost:3000/user/updateStatus", { status });
     }
+    getUserStatus()
+    {
+      return this.http.get<{status: string}>("http://localhost:3000/user/updateStatus");
+    }
     acceptFriendRequest(senderId: number): Observable<any>
     {
       return this.http.post<any>("http://localhost:3000/friendRequest/acceptFR", { senderId });
@@ -97,6 +101,24 @@ export class HttpService {
         return this.http.post<any>("http://localhost:3000/matches/historyById", { id });
     }
     getLeaderBoard(): Observable<any> {
-      return this.http.get<any>("http://localhost:3000/user/leaderboard")
+      return this.http.get<any>("http://localhost:3000/user/leaderboard");
+    }
+    getGameStatus(): Observable<{gameStatus: number}> {
+      return this.http.get<{gameStatus: number}>("http://localhost:3000/user/gameStatus");
+    }
+    setGameStatus(status: number): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/user/gameStatus", { status });
+    }
+    getCurrentGameId(): Observable<{currentGameId: string}> {
+      return this.http.get<{currentGameId: string}>("http://localhost:3000/user/currentGameId");
+    }
+    setCurrentGameId(gameId: string): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/user/currentGameId", { gameId });
+    }
+    getCurrentOpponentId(): Observable<{currentOpponentId: string}> {
+      return this.http.get<{currentOpponentId: string}>("http://localhost:3000/user/currentOpponentId");
+    }
+    setCurrentOpponentId(gameId: string): Observable<any> {
+      return this.http.post<any>("http://localhost:3000/user/currentOpponentId", { gameId });
     }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GameId } from './interfaces/game.interface';
 import { Server } from 'socket.io';
-import { User } from 'src/user/user.entity';
 import { GamesUtileService } from './gameUtiles.service';
 import { UserWaiting } from './interfaces/userWaiting.interface';
 import { Socket } from 'socket.io';
@@ -9,7 +8,6 @@ import { GamePortal } from './gamePortal.service';
 import { GameCalculation } from './gameCalculation';
 import { GameDatabase } from './gameDatabase.service';
 import { MatchesService } from 'src/matches/matches.service';
-import { UserService } from "../user/user.service";
 
 @Injectable()
 export class GameService {
@@ -17,9 +15,8 @@ export class GameService {
     private gameUtile: GamesUtileService,
     private gameCalculation: GameCalculation,
     private gamePortal: GamePortal,
-    private gameDatabase: GameDatabase,
-    private MatchesService: MatchesService,
-    private userService: UserService,
+    gameDatabase: GameDatabase,
+    MatchesService: MatchesService,
   ) {
     this.gameCalculation = new GameCalculation(
       gameUtile,
@@ -55,14 +52,7 @@ export class GameService {
       this.runningGames,
     );
     setTimeout(() => {
-      this.runningGames[index].count = 3;
-      this.runningGames[index].countdownDone = false;
-      this.runningGames[index].score.p1_score = 0;
-      this.runningGames[index].score.p2_score = 0;
-      this.runningGames[index].ball.posX = 0;
-      this.runningGames[index].ball.posY = 0;
-      this.runningGames[index].ball.directionX = Math.random() < 0.5 ? -1 : 1;
-      this.runningGames[index].ball.directionY = Math.random() < 0.5 ? -1 : 1;
+      this.runningGames.splice(index, 1);
     }, 2500);
   }
 
@@ -92,7 +82,7 @@ export class GameService {
         directionY: Math.random() < 0.5 ? -1 : 1,
         height: 60,
         width: 30,
-        speed: (field.width - field.height) / 120,
+        speed: (field.width - field.height) / 200,
       },
 
       paddle1: {
@@ -144,9 +134,8 @@ export class GameService {
     userWaiting: UserWaiting,
   ) {
     let res: string;
-    let waitRoomLength: number;
 
-    waitRoomLength =
+    const waitRoomLength: number =
       gameMode === 0 ? this.waitRoomNormal.length : this.waitRoomPortal.length;
     if (waitRoomLength === 0) {
       this.addNewClient(userWaiting.socket, userWaiting.gameId);
@@ -161,7 +150,7 @@ export class GameService {
           this.runningGames,
         );
         if (i !== -1) {
-          server.in(userWaiting.gameId).emit('recJoinGame', gameMode);
+          server.in(userWaiting.gameId).emit('recJoinGame');
           clearInterval(gameReadyCheck);
         }
       }, 2000);
@@ -172,14 +161,11 @@ export class GameService {
       else res = this.waitRoomPortal[0].gameId;
       this.addNewClient(userWaiting.socket, res);
       if (gameMode === 0) {
-        const user2: User = this.waitRoomNormal[0].user;
-        //this.runningGames.push(new Game(res, gameMode, this.waitRoomNormal[0].socket, socket.id, user, user2));
         this.runningGames.push(
           this.createGame(res, gameMode, this.waitRoomNormal[0], userWaiting),
         );
         this.waitRoomNormal = [];
       } else {
-        //this.runningGames.push(new Game(res, gameMode, this.waitRoomPortal[0].socket, socket.id, user, this.waitRoomPortal[0].user));
         this.runningGames.push(
           this.createGame(res, gameMode, this.waitRoomPortal[0], userWaiting),
         );
@@ -200,6 +186,7 @@ export class GameService {
     const game = this.runningGames[index];
 
     socket.emit('recInitId', obj.clientId.toString());
+
     if (game.once === 0) {
       ++game.once;
       /*send events for the countdown every 0.7 seconds*/
@@ -233,14 +220,76 @@ export class GameService {
           server
             .in(gameId)
             .emit('recBallPos', { ball: game.ball, portal: game.portal });
-        } else if (game.gameStatus === 2)
-          server.in(gameId).emit('recPauseGame');
-        else if (game.gameStatus === 0) {
+        } else if (game.gameStatus === 0) {
           this.stopGame(server, gameId);
           clearInterval(ballLoop);
         }
       }, 1000 / 60);
     }
+    const leaveRoomLoop = setInterval(() => {
+      if (game.gameStatus === 0) {
+        socket.leave(gameId);
+        clearInterval(leaveRoomLoop);
+      }
+    }, 3000);
+  }
+  pauseGame(server: Server, gameId: string) {
+    const index: number = this.gameUtile.getGameIndex(
+      gameId,
+      'gameId',
+      this.runningGames,
+    );
+    if (index === -1) return;
+    const game = this.runningGames[index];
+    if (game.gameStatus === 2) {
+      game.gameStatus = 0;
+      server.in(gameId).emit('recCancelGame');
+    } else {
+      game.gameStatus = 2;
+      server.in(gameId).emit('recPauseGame');
+      setTimeout(() => {
+        if (game.gameStatus === 2) {
+          game.gameStatus = 0;
+          server.in(gameId).emit('recCancelGame');
+        }
+      }, 30000);
+    }
+  }
+
+  resumeGame(server: Server, socket: Socket, gameId: string) {
+    const index: number = this.gameUtile.getGameIndex(
+      gameId,
+      'gameId',
+      this.runningGames,
+    );
+    const game = this.runningGames[index];
+    const obj: any = this.knownClients.get(socket.id);
+
+    game.gameStatus = 1;
+    socket.emit('recInitId', obj.clientId.toString());
+    server.in(gameId).emit('recResumeGame');
+  }
+
+  cancelGame(server: Server, socket: Socket, gameId: string) {
+    const index: number = this.gameUtile.getGameIndex(
+      gameId,
+      'gameId',
+      this.runningGames,
+    );
+    if (index === -1) return;
+    const game = this.runningGames[index];
+
+    game.gameStatus = 0;
+    server.in(gameId).emit('recCancelGame');
+  }
+
+  cancelMatchmaking(
+    socket: Socket,
+    gameData: { gameId: string; gameMode: number },
+  ) {
+    socket.leave(gameData.gameId);
+    if (gameData.gameMode === 0) this.waitRoomNormal = [];
+    else this.waitRoomPortal = [];
   }
 
   /*Extract data from the client and convert it to the backend template game to make all the calculations, once it is done,
@@ -256,6 +305,7 @@ export class GameService {
       'gameId',
       this.runningGames,
     );
+    if (index === -1) return;
     const clientId = this.knownClients.get(socket.id);
     if (clientId.clientId === '0') {
       this.runningGames[index].paddle1.posY = data.data.posY - clientHeight / 2;
