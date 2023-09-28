@@ -2,25 +2,32 @@ import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { HttpService } from "../../http.service";
 import { Router } from "@angular/router";
 import { JwtHelperService } from '@auth0/angular-jwt';
+import {FriendObject} from "./friend-object.interface";
 
 @Component({
-  selector: 'app-friends-menu-temporary',
-  templateUrl: './friends-menu-temporary.component.html',
-  styleUrls: ['./friends-menu-temporary.component.css']
+  selector: 'app-friends-menu',
+  templateUrl: './friends-menu.component.html',
+  styleUrls: ['./friends-menu.component.css']
 })
-export class FriendsMenuTemporaryComponent {
+export class FriendsMenuComponent {
 
+  nbRequests: number = 0;
+  allFriends: FriendObject[] = [];
+  allRequests: string[] = [];
+  @ViewChild('friendsMenuButton') friendsMenuButtonElement: ElementRef;
+  @ViewChild('drawer') drawerElement: ElementRef;
+  @ViewChild('noRequests') noRequestsElement: ElementRef;
+  @ViewChild('noFriends') noFriendsElement: ElementRef;
   @ViewChild('friendUsername') friendUsernameElement: ElementRef;
-  @ViewChild('notifsField') notifsElement: ElementRef;
   @ViewChild('requestsContainer') requestsContainerElement: ElementRef;
   @ViewChild('friendListContainer') friendsContainerElement: ElementRef;
   @ViewChild('userStatus') userStatusElement: ElementRef;
-  constructor(private httpBackend: HttpService, 
-    private renderer: Renderer2, 
-    private router: Router, 
+  constructor(private httpBackend: HttpService,
+    private renderer: Renderer2,
+    private router: Router,
     private jwtHelper: JwtHelperService) {}
 
-    ngOnInit()
+  ngOnInit()
   {
     if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
           this.router.navigate(['/login']);
@@ -29,7 +36,7 @@ export class FriendsMenuTemporaryComponent {
     setInterval(() => {
       this.fetchAndUpdateFriendRequests();
       this.fetchAndUpdateFriendlist();
-    }, 10000);
+    }, 5000);
   }
   sendFriendRequest(keycode: KeyboardEvent)
   {
@@ -109,7 +116,13 @@ export class FriendsMenuTemporaryComponent {
     if (window.confirm("Do you really want to remove this friend ?")) {
       this.httpBackend.removeFriend(id).subscribe(
         () => {
-          this.fetchAndUpdateFriendlist();
+          this.httpBackend.getUsernameWithId(parseInt(id)).subscribe(
+            (username: string) => {
+              const index = this.allRequests.indexOf(username);
+              this.allRequests.splice(index, 1);
+              this.fetchAndUpdateFriendlist();
+            }
+          )
         }
       );
     }
@@ -124,50 +137,33 @@ export class FriendsMenuTemporaryComponent {
       (response: any) =>
       {
         const length = response ? response.length : 0;
-          const ulElement = this.renderer.createElement('ul');
-          this.renderer.setAttribute(ulElement, 'id', 'friend-requests-ul'); // Assign an ID
 
-          const existingUlElement = this.requestsContainerElement.nativeElement.querySelector('#friend-requests-ul');
-
-          if (existingUlElement)
-            this.renderer.removeChild(this.requestsContainerElement.nativeElement, existingUlElement);
-
+        this.allRequests = [];
           for (let i = 0; i < length; ++i)
           {
             const friendRequest = response[i];
             this.httpBackend.getUsernameWithId(friendRequest.sender).subscribe(
               (response: any) =>
               {
-                const liElement = this.renderer.createElement('li');
-                const senderText = this.renderer.createText(response.username.toString());
-
-                this.renderer.appendChild(liElement, senderText);
-
-                const buttonElement1 = this.renderer.createElement('button');
-                const buttonElement2 = this.renderer.createElement('button');
-                const acceptButtonText = this.renderer.createText('Accept');
-                const refuseButtonText = this.renderer.createText('Refuse');
-
-                this.renderer.listen(buttonElement1, 'click', () => this.acceptFriendRequest(response.username))
-                this.renderer.listen(buttonElement2, 'click', () => this.refuseFriendRequest(response.username))
-                this.renderer.appendChild(buttonElement1, acceptButtonText);
-                this.renderer.appendChild(buttonElement2, refuseButtonText);
-                this.renderer.appendChild(liElement, buttonElement1);
-                this.renderer.appendChild(liElement, buttonElement2);
-                this.renderer.appendChild(ulElement, liElement);
+                this.allRequests.push(response.username);
               }
             );
           }
-          this.renderer.appendChild(this.requestsContainerElement.nativeElement, ulElement);
       })
     this.httpBackend.getProfile().subscribe(
-      (response: any) =>
-      {
-        if (response.friendRequestsNb !== 0)
-          this.notifsElement.nativeElement.innerHTML = response.friendRequestsNb;
-        else
-          this.notifsElement.nativeElement.innerHTML = '';
-      })
+      (response: {friendRequestsNb: number}) => {
+        this.nbRequests = response.friendRequestsNb
+        if (this.nbRequests !== 0) {
+          this.noRequestsElement.nativeElement.style.visibility = 'hidden';
+          this.noRequestsElement.nativeElement.style.maxHeight = 0;
+          this.noRequestsElement.nativeElement.style.margin = 0;
+        }
+        else {
+          this.noRequestsElement.nativeElement.style.visibility = 'visible';
+          this.noRequestsElement.nativeElement.style.maxHeight = 22 + 'px';
+          this.noRequestsElement.nativeElement.style.margin = 15 + 'px';
+        }
+      });
   }
 
   private fetchAndUpdateFriendlist()
@@ -176,58 +172,41 @@ export class FriendsMenuTemporaryComponent {
       (profile: any) =>
       {
         const length = profile.friendList ? profile.friendList.length : 0;
-        const ulElement = this.renderer.createElement('ul');
-        this.renderer.setAttribute(ulElement, 'id', 'friendlist-ul');
 
-        const existingUlElement = this.friendsContainerElement.nativeElement.querySelector('#friendlist-ul');
+        if (length === 0) {
+          this.noFriendsElement.nativeElement.style.visibility = "visible"
+          this.noFriendsElement.nativeElement.style.maxHeight = 22 + 'px';
+          this.noFriendsElement.nativeElement.style.margin = 15 + 'px';
+        }
+        else {
+          this.noFriendsElement.nativeElement.style.visibility = "hidden"
+          this.noFriendsElement.nativeElement.style.maxHeight = 0;
+          this.noFriendsElement.nativeElement.style.margin = 0;
+        }
 
-        if (existingUlElement)
-          this.renderer.removeChild(this.friendsContainerElement.nativeElement, existingUlElement);
-
+        this.allFriends = [];
         for (let i = 0; i < length; ++i)
         {
           const friend = profile.friendList[i];
           this.httpBackend.getProfileById(friend).subscribe(
             (profile: any) =>
             {
-              const liElement = this.renderer.createElement('li');
-              const senderText = this.renderer.createText(profile.username.toString() + ': ' + profile.status);
-
-              this.renderer.appendChild(liElement, senderText);
-
-              const buttonElement1 = this.renderer.createElement('button');
-              this.renderer.setAttribute(buttonElement1, 'id', friend.toString())
-              const buttonElement2 = this.renderer.createElement('button');
-              this.renderer.setAttribute(buttonElement2, 'id', friend.toString())
-              const acceptButtonText = this.renderer.createText('Remove');
-              const refuseButtonText = this.renderer.createText('Profile');
-
-              this.renderer.listen(buttonElement1, 'click', (event) => {
-                const id = event.target.id;
-                this.removeFriend(id);
-              });
-              this.renderer.listen(buttonElement2, 'click', (event) => {
-                const id = event.target.id;
-                this.viewFriendProfile(id);
-              });
-              this.renderer.appendChild(buttonElement1, acceptButtonText);
-              this.renderer.appendChild(buttonElement2, refuseButtonText);
-              this.renderer.appendChild(liElement, buttonElement1);
-              this.renderer.appendChild(liElement, buttonElement2);
-              this.renderer.appendChild(ulElement, liElement);
+              let friendObject: FriendObject = {username: profile.username, status: profile.status === 'in game' ? 'in-game' : profile.status, id: profile.id};
+              this.allFriends.push(friendObject);
             }
           );
         }
-        this.renderer.appendChild(this.friendsContainerElement.nativeElement, ulElement);
       })
   }
-  private acceptFriendRequest(senderUsername: string) {
+  acceptFriendRequest(senderUsername: string) {
     this.httpBackend.getIdWithUsername(senderUsername).subscribe(
       (senderId: number) =>
       {
         this.httpBackend.acceptFriendRequest(senderId).subscribe(
           () =>
           {
+            const index = this.allRequests.indexOf(senderUsername);
+            this.allRequests.splice(index, 1);
             this.fetchAndUpdateFriendRequests();
             this.fetchAndUpdateFriendlist();
           }
@@ -236,13 +215,15 @@ export class FriendsMenuTemporaryComponent {
     );
   }
 
-  private refuseFriendRequest(senderUsername: string) {
+  refuseFriendRequest(senderUsername: string) {
     this.httpBackend.getIdWithUsername(senderUsername).subscribe(
       (senderId: number) =>
       {
         this.httpBackend.refuseFriendRequest(senderId).subscribe(
           () =>
           {
+            const index = this.allRequests.indexOf(senderUsername);
+            this.allRequests.splice(index, 1);
             this.fetchAndUpdateFriendRequests();
           }
         )

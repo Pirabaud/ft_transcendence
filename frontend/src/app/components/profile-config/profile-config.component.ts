@@ -14,7 +14,7 @@ export class ProfileConfigComponent {
   @ViewChild('login') loginElement: ElementRef;
   @ViewChild('fileName') fileNameElement: ElementRef;
 
-  constructor(private httpBackend:HttpService, 
+  constructor(private httpBackend:HttpService,
       private jwtHelper: JwtHelperService,
       private router: Router) {};
   onFileSelected(keycode: KeyboardEvent)
@@ -62,6 +62,11 @@ export class ProfileConfigComponent {
              this.httpBackend.saveNewUsername(usernameValue).subscribe(
                (response: any) =>
                {
+                 if (this.loginElement)
+                 {
+                   this.loginElement.nativeElement.placeholder = usernameValue;
+                   this.loginElement.nativeElement.value = '';
+                 }
                  window.alert('Your username has been successfully changed to ' + response.username)
                })
             }
@@ -80,7 +85,7 @@ export class ProfileConfigComponent {
 
       (response: any) => {
         if (this.loginElement) {
-          this.loginElement.nativeElement.value = response.username;
+          this.loginElement.nativeElement.placeholder = response.username;
         }
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;

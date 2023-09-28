@@ -41,10 +41,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [],
   imports: [
+    NoopAnimationsModule,
+    BrowserAnimationsModule,
     CommonModule,
     MatAutocompleteModule,
     MatCheckboxModule,

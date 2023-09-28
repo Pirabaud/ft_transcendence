@@ -13,10 +13,9 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import { TwoFactorComponent } from './components/two-factor/two-factor.component';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 import { GoogleAuthenticatorComponent } from './components/google-authenticator/google-authenticator.component';
-import {ProfileConfigComponent} from "./components/profile-config/profile-config.component";
-import {FriendsMenuTemporaryComponent} from "./components/friends-menu-temporary/friends-menu-temporary.component";
-import {FriendProfileComponent} from "./components/friend-profile/friend-profile.component";
-import {NavbarComponent} from "./components/navbar/navbar.component";
+import { ProfileConfigComponent } from "./components/profile-config/profile-config.component";
+import { FriendsMenuComponent } from "./components/friends-menu/friends-menu.component";
+import { FriendProfileComponent } from "./components/friend-profile/friend-profile.component";
 
 const routes: Routes = [
   { path: '', component: LoginComponent, title: 'Login' },
@@ -31,7 +30,7 @@ const routes: Routes = [
   { path: 'two-factor-first-co', component: TwoFactorFirstCoComponent, canActivate: [AuthGuard], title: 'Two-Factor' },
   { path: 'google', component: GoogleAuthenticatorComponent, canActivate: [AuthGoogleGuard], title: 'Google Authenticator' },
   { path: 'profileConfig', component: ProfileConfigComponent, canActivate: [AuthGuard], title:'Configure your profile'},
-  { path: 'dsa', component: FriendsMenuTemporaryComponent, canActivate: [AuthGuard], title:'temp'},
+  { path: 'dsa', component: FriendsMenuComponent, canActivate: [AuthGuard], title:'temp'}, /*a enlever*/
   { path: 'friendProfile/:id', component: FriendProfileComponent, canActivate: [AuthGuard], title:'Profile'},
 ];
 
@@ -40,4 +39,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [HttpService, AuthGuard, AuthGoogleGuard]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
