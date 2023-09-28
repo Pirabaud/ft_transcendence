@@ -6,12 +6,16 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class GameService {
+  
   constructor(private socket: GameSocketService) {}
-
+  
   private simulateRecJoinedPlayers = false;
   private joinedViaMatchmaking = false;
   private gameMode = 0;
-
+  
+  getheader(){
+    return this.socket.getConfig();
+  }
   setSimulateRecJoinedPlayers(value: boolean)
   {
     this.simulateRecJoinedPlayers = value;
@@ -23,7 +27,6 @@ export class GameService {
   getJoinedViaMatchmaking(): boolean {
     return this.joinedViaMatchmaking;
   }
-
   setJoinedViaMatchmaking(value: boolean) {
     this.joinedViaMatchmaking = value;
   }
@@ -32,10 +35,6 @@ export class GameService {
   }
   setGameMode(value: number) {
     this.gameMode = value;
-  }
-  disconnectSocket()
-  {
-    this.socket.disconnect();
   }
   accessGame(): void
   {

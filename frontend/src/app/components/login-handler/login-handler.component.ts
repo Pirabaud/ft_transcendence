@@ -8,13 +8,11 @@ import { Router } from "@angular/router";
   styleUrls: ['./login-handler.component.css']
 })
 export class LoginHandlerComponent implements OnInit {
-    private readonly key = 'jwt';
 
   constructor(
      private httpBackend: HttpService,
      private router: Router,
   ) {}
-
 
   ngOnInit() {
     const url = window.location.href;
@@ -23,17 +21,20 @@ export class LoginHandlerComponent implements OnInit {
     if (code) {
       this.httpBackend.getjwt(code).subscribe((response: any) => {
         if (response && response.jwt_token) {
-          localStorage.setItem(this.key, response.jwt_token);
-          if (response.first_connection)
-            this.router.navigate(['/two-factor-first-co']);
-          else
-          {
+          localStorage.setItem('jwt', response.jwt_token);
+          localStorage.setItem('api', "true");
+          if (response.first_connection) {
+				  localStorage.setItem('tfa', "true");
+				  this.router.navigate(['/two-factor-first-co']);
+		  } else {
             this.httpBackend.getTfaStatus().subscribe((response: any) => {
-            if (response == true)
-              this.router.navigate(['/google']);
-            else
-              this.router.navigate(['/home']);
-            });
+            	if (response == true) {
+            	  this.router.navigate(['/google']);
+				} else {
+				  localStorage.setItem('tfa', "true");
+            	  this.router.navigate(['/home']);
+				}
+			});
           }
         } else {
           console.error('Failure to obtain access token');
@@ -42,7 +43,6 @@ export class LoginHandlerComponent implements OnInit {
       });
     }
     else {
-      console.error('Access denied');
       this.router.navigate(['/login']);
     }
 

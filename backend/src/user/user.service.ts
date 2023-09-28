@@ -46,10 +46,16 @@ export class UserService {
     return imagePathObject;
   }
 
-  async updateUserStatus(id: number, statusObject: any) {
+  async updateUserStatus(id: number, statusObject: string) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
-    userToUpdate.status = statusObject.status;
+    
+    if (!userToUpdate) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }  
+    userToUpdate.status = statusObject;
     await this.saveUser(userToUpdate);
+    return true;
   }
 
   async getUserStatus(id: number) {

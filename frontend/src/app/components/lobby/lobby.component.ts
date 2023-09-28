@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import {GameService} from "../../services/game.service";
 import { Router } from "@angular/router";
 import { v4 as uuidv4 } from "uuid"
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
   selector: 'app-lobby',
@@ -10,7 +11,11 @@ import { v4 as uuidv4 } from "uuid"
 })
 
 export class LobbyComponent {
-  constructor(private router:Router, private gameService: GameService) {}
+  constructor(private router:Router, private gameService: GameService, private jwtHelper: JwtHelperService) {}
+  ngOnInit() {
+       if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+          this.router.navigate(['/login']);
+  }
   createGame(gameMode: number)
   {
     let gameId = uuidv4();

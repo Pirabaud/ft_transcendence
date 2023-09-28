@@ -92,6 +92,11 @@ export class NavbarComponent {
   }
 
   navToLogin() {
+    this.httpBackend.updateUserStatus('offline').subscribe((response: any) => {
+      if (!response)
+        console.error("Error while updating status");
+    });
+
     this.httpBackend.getGameStatus().subscribe(
       (gameStatusObj: { gameStatus: number }) =>
       {
@@ -113,8 +118,6 @@ export class NavbarComponent {
 
         }, 100);
       });
-    this.httpBackend.updateUserStatus('offline').subscribe(
-      () => {});
     this.router.navigate(['/login']);
   }
 }

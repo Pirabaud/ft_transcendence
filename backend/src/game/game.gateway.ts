@@ -36,11 +36,11 @@ export class GameGateway {
       matchesService,
     );
   }
+  
   @SubscribeMessage('createGame')
   async handleCreateGame(socket: Socket, gameData: any) {
     const decodedToken = await this.authService.verifyJwt(
-      socket.handshake.headers.authorization,
-    );
+      socket.handshake.headers.authorization);
     const user = await this.userService.findById(decodedToken.sub);
     const userWaiting: UserWaiting = {
       socket: socket,
