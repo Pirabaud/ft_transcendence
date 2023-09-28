@@ -1,8 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { HttpService } from '../../http.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-google-authenticator',
@@ -12,10 +9,7 @@ import { Subscription } from 'rxjs';
 export class GoogleAuthenticatorComponent {
 
   constructor (
-    private route: ActivatedRoute,
-    private router: Router,
     private httpBackend: HttpService,
-    private http: HttpClient,
   ) {}
 
   verifyForm() {
@@ -23,15 +17,15 @@ export class GoogleAuthenticatorComponent {
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-    
+
       const inputText = document.getElementById('inputText') as HTMLInputElement;
-      const valeurInput = inputText.value;
+      const inputValue = inputText.value;
 
       this.httpBackend.getSecret().subscribe((response1: any) => {
         if (response1) {
-          
+
           const obj: any = {
-            input: valeurInput,
+            input: inputValue,
             secret: response1.Secret,
           };
           this.httpBackend.verify2fa(obj).subscribe((response2: any) => {
@@ -39,19 +33,14 @@ export class GoogleAuthenticatorComponent {
               if (response2.success == true) {
 				localStorage.setItem('tfa', "true");
                 window.location.href = 'home';
-              } else {
-                window.alert("Please enter a valid code");
-				// sub.complete();
               }
-            } else {
-              console.error("Error during two-factor authentication verification");
+              else {
+                window.alert("Please enter a valid code");
+              }
             }
           });
-        } else {
-          console.error("Error during Secret Code retrieval");
         }
       });
     });
   }
-
 }

@@ -1,4 +1,4 @@
-import { Injectable, Res, Request } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
@@ -63,6 +63,9 @@ export class AuthService {
           friendList: null,
           friendRequestsNb: 0,
           status: 'offline',
+          gameStatus: 0,
+          currentGameId: '',
+          currentOpponentId: 0,
         };
         await this.userService.saveUser(newUser);
         payload = { sub: newUser.id };
@@ -72,7 +75,7 @@ export class AuthService {
       }
       return {
         jwt_token: await this.jwtService.signAsync(payload),
-        first_connection: first_co
+        first_connection: first_co,
       };
     } catch (error) {
       return null;
@@ -80,7 +83,6 @@ export class AuthService {
   }
 
   async verifyJwt(jwt: string) {
-    console.log(jwt);
     try {
       {
         return this.jwtService.verifyAsync(jwt, {
@@ -89,52 +91,51 @@ export class AuthService {
         });
       }
     } catch (error) {
-      console.log(error);
       return null;
-  }
-}
-
-async generateTFA(@Res() res) {
-  try {
-    // Générer une clé secrète
-    const secret = speakeasy.generateSecret();
-
-    // Générer un URI pour le QR code
-    const otpAuthUrl = speakeasy.otpauthURL({
-      secret: secret.base32,
-      label: 'Transcendence',
-    });
-    
-    // Générer le QR code
-    qrCode.toDataURL(otpAuthUrl, (err: any, imageUrl: string) => {
-      if (err) {
-        return res.status(500).json({ error: 'Erreur lors de la génération du QR code' });
-      }
-
-      // Renvoyer le secret et l'URL du QR code
-      res.json({ secret: secret.base32, imageUrl });
-    });
-    
-  } catch (error) {
-    return res.status(500).json({ error: 'Une erreur est survenue' });
-  }
-}
-
-async verifyTFA(@Res() res, input: string, secret: string) {
-  try {
-    const verified = speakeasy.totp.verify({
-      secret: secret,
-      token: input,
-    });
-
-    if (verified) {
-      return res.json({ success: true });
-    } else {
-      return res.json({ success: false });
     }
-  } catch (error) {
-    return res.status(500).json({ error: 'Une erreur est survenue' });
   }
- }
-}
 
+  async generateTFA(@Res() res) {
+    try {
+      // Générer une clé secrète
+      const secret = speakeasy.generateSecret();
+
+      // Générer un URI pour le QR code
+      const otpAuthUrl = speakeasy.otpauthURL({
+        secret: secret.base32,
+        label: 'Transcendence',
+      });
+
+      // Générer le QR code
+      qrCode.toDataURL(otpAuthUrl, (err: any, imageUrl: string) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ error: 'Erreur lors de la génération du QR code' });
+        }
+
+        // Renvoyer le secret et l'URL du QR code
+        res.json({ secret: secret.base32, imageUrl });
+      });
+    } catch (error) {
+      return res.status(500).json({ error: 'Une erreur est survenue' });
+    }
+  }
+
+  async verifyTFA(@Res() res, input: string, secret: string) {
+    try {
+      const verified = speakeasy.totp.verify({
+        secret: secret,
+        token: input,
+      });
+
+      if (verified) {
+        return res.json({ success: true });
+      } else {
+        return res.json({ success: false });
+      }
+    } catch (error) {
+      return res.status(500).json({ error: 'Une erreur est survenue' });
+    }
+  }
+}

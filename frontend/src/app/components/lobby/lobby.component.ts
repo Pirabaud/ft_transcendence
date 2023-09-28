@@ -24,6 +24,8 @@ export class LobbyComponent {
     this.gameService.getCreateGame().subscribe((newGameId: string) => {
       if (newGameId !== "0")
         gameId = <string>newGameId;
+      this.gameService.setJoinedViaMatchmaking(true);
+      this.gameService.setGameMode(gameMode);
       this.router.navigate(['/game', gameId]);
     });
   }

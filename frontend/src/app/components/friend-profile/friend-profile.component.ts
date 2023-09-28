@@ -21,9 +21,9 @@ export class FriendProfileComponent {
     @ViewChild('statsWin') statsWinElement: ElementRef;
     @ViewChild('statsLose') statsLoseElement: ElementRef;
     @ViewChild('statsElo') statsEloElement: ElementRef;
-  constructor(private route: ActivatedRoute, 
-    private httpBackend: HttpService, 
-    private jwtHelper: JwtHelperService, 
+  constructor(private route: ActivatedRoute,
+    private httpBackend: HttpService,
+    private jwtHelper: JwtHelperService,
     private router: Router,
     private renderer: Renderer2) {
       this.rank = 0;
@@ -86,10 +86,6 @@ export class FriendProfileComponent {
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = profile.img;
         }
-
-      },
-      (error) => {
-        console.error('no data', error);
       }
     );
   }

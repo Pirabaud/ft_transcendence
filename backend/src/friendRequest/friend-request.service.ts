@@ -86,7 +86,6 @@ export class FriendRequestService {
     try {
       return await this.friendRequestRepository.save(friendRequest);
     } catch (error) {
-      console.error('error for save', error);
     }
   }
   async getUsernameWithId(id: number) {
