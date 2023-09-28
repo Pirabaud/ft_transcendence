@@ -6,16 +6,18 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class GameService {
-  
+
   constructor(private socket: GameSocketService) {}
-  
+
   private simulateRecJoinedPlayers = false;
   private joinedViaMatchmaking = false;
   private gameMode = 0;
-  
+
+  /*a supprimer*/
   getheader(){
     return this.socket.getConfig();
   }
+  /*a supprimer*/
   setSimulateRecJoinedPlayers(value: boolean)
   {
     this.simulateRecJoinedPlayers = value;
