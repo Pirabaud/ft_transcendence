@@ -23,6 +23,7 @@ import { FriendProfileComponent } from './components/friend-profile/friend-profi
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 import {MaterialModule} from "./material/material.module";
+import { InvalidComponent } from './components/invalid/invalid.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {MaterialModule} from "./material/material.module";
     ProfileConfigComponent,
     FriendsMenuComponent,
     FriendProfileComponent,
-    TwoFactorFirstCoComponent
+    TwoFactorFirstCoComponent,
+    InvalidComponent,
   ],
   imports: [
     BrowserModule,

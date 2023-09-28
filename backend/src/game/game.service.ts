@@ -226,50 +226,7 @@ export class GameService {
         }
       }, 1000 / 60);
     }
-    const leaveRoomLoop = setInterval(() => {
-      if (game.gameStatus === 0) {
-        socket.leave(gameId);
-        clearInterval(leaveRoomLoop);
-      }
-    }, 3000);
   }
-  pauseGame(server: Server, gameId: string) {
-    const index: number = this.gameUtile.getGameIndex(
-      gameId,
-      'gameId',
-      this.runningGames,
-    );
-    if (index === -1) return;
-    const game = this.runningGames[index];
-    if (game.gameStatus === 2) {
-      game.gameStatus = 0;
-      server.in(gameId).emit('recCancelGame');
-    } else {
-      game.gameStatus = 2;
-      server.in(gameId).emit('recPauseGame');
-      setTimeout(() => {
-        if (game.gameStatus === 2) {
-          game.gameStatus = 0;
-          server.in(gameId).emit('recCancelGame');
-        }
-      }, 30000);
-    }
-  }
-
-  resumeGame(server: Server, socket: Socket, gameId: string) {
-    const index: number = this.gameUtile.getGameIndex(
-      gameId,
-      'gameId',
-      this.runningGames,
-    );
-    const game = this.runningGames[index];
-    const obj: any = this.knownClients.get(socket.id);
-
-    game.gameStatus = 1;
-    socket.emit('recInitId', obj.clientId.toString());
-    server.in(gameId).emit('recResumeGame');
-  }
-
   cancelGame(server: Server, socket: Socket, gameId: string) {
     const index: number = this.gameUtile.getGameIndex(
       gameId,
@@ -288,8 +245,10 @@ export class GameService {
     gameData: { gameId: string; gameMode: number },
   ) {
     socket.leave(gameData.gameId);
-    if (gameData.gameMode === 0) this.waitRoomNormal = [];
-    else this.waitRoomPortal = [];
+    if (gameData.gameMode === 0)
+      this.waitRoomNormal = [];
+    else
+      this.waitRoomPortal = [];
   }
 
   /*Extract data from the client and convert it to the backend template game to make all the calculations, once it is done,
