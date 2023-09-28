@@ -49,10 +49,8 @@ export class UserService {
   async updateUserStatus(id: number, statusObject: string) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     
-    if (!userToUpdate) {
-      console.error('User with ID ${id} not found');
+    if (!userToUpdate)
       return null;
-    }  
     userToUpdate.status = statusObject;
     await this.saveUser(userToUpdate);
     return true;
@@ -134,17 +132,14 @@ export class UserService {
     try {
       await this.userRepository.save(user);
     } catch (error) {
-      console.error('error for save', error);
     }
   }
 
   async turnOnTfa(id: number) {
     const user = await this.userRepository.findOneBy({ id });
 
-    if (!user) {
-      console.error('User with ID ${id} not found');
+    if (!user)
       return null;
-    }
 
     await this.userRepository.delete(id);
     user.tfa = true;
@@ -156,7 +151,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -170,7 +164,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -181,7 +174,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -196,7 +188,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -207,7 +198,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -232,7 +222,6 @@ export class UserService {
   async getGameStatus(id: number) {
     const user = await this.findById(id);
     if (!user) {
-      console.error(`User with ID ${id} not found`);
       return null;
     }
     return { gameStatus: user.gameStatus };
@@ -241,7 +230,6 @@ export class UserService {
   async setGameStatus(gameStatus: number, id: number) {
     const user = await this.findById(id);
     if (!user) {
-      console.error('User with ID ${id} not found');
       return;
     }
     user.gameStatus = gameStatus;
@@ -250,7 +238,6 @@ export class UserService {
   async getCurrentGameId(id: number) {
     const user = await this.findById(id);
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
     return { currentGameId: user.currentGameId };
@@ -258,7 +245,6 @@ export class UserService {
   async setCurrentGameId(gameId: string, id: number) {
     const user = await this.findById(id);
     if (!user) {
-      console.error('User with ID ${id} not found');
       return;
     }
     user.currentGameId = gameId;
@@ -267,7 +253,6 @@ export class UserService {
   async getCurrentOpponentId(id: number) {
     const user = await this.findById(id);
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
     return { currentOpponentId: user.currentOpponentId };
@@ -275,7 +260,6 @@ export class UserService {
   async setCurrentOpponentId(id: number, gameId: string) {
     const user = await this.findById(id);
     if (!user) {
-      console.error('User with ID ${id} not found');
       return;
     }
     const allUsers = await this.findAll();

@@ -16,7 +16,6 @@ url: 'http://localhost:3000', options: {
 export class GameSocketService extends Socket
 {
   constructor(){
-    console.log("socket-jwt", localStorage.getItem('jwt'));
     super(config);
   }
 

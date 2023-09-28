@@ -90,10 +90,7 @@ export class ProfileConfigComponent {
         if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;
         }
-        },
-        (error) => {
-          console.error('no data', error);
-        }
+      }
     );
   }
   isValidURL(url: string): boolean {

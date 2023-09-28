@@ -37,7 +37,6 @@ export class LoginHandlerComponent implements OnInit {
 			});
           }
         } else {
-          console.error('Failure to obtain access token');
           this.router.navigate(['/login']);
         }
       });

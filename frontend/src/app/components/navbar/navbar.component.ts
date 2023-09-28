@@ -92,9 +92,7 @@ export class NavbarComponent {
   }
 
   navToLogin() {
-    this.httpBackend.updateUserStatus('offline').subscribe((response: any) => {
-      if (!response)
-        console.error("Error while updating status");
+    this.httpBackend.updateUserStatus('offline').subscribe(() => {
     });
 
     this.httpBackend.getGameStatus().subscribe(

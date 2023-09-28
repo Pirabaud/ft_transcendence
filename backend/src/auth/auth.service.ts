@@ -83,7 +83,6 @@ export class AuthService {
   }
 
   async verifyJwt(jwt: string) {
-    console.log(jwt);
     try {
       {
         return this.jwtService.verifyAsync(jwt, {
@@ -92,7 +91,6 @@ export class AuthService {
         });
       }
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
