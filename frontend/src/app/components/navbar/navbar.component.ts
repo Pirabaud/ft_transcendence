@@ -33,7 +33,13 @@ export class NavbarComponent {
         (url: any) =>
         {
           if (url[0].path === 'game') {
+            this.httpBackend.getUserStatus().subscribe((statusObj: {status: string}) =>
+            {
+              if (statusObj.status === 'offline')
+                this.httpBackend.updateUserStatus('online').subscribe(() => {});
+              else
                 this.httpBackend.updateUserStatus('in game').subscribe(() => {});
+            })
           }
           else if (url[0].path !== 'login')
           {
@@ -44,8 +50,8 @@ export class NavbarComponent {
                 if (gameStatusObj.gameStatus === 1) {
                   this.httpBackend.getCurrentGameId().subscribe(
                     (gameIdObj: { currentGameId: string }) => {
-                      this.gameService.pauseGame(gameIdObj.currentGameId);
-                      this.httpBackend.setGameStatus(2).subscribe(() => {});
+                      this.gameService.cancelGame(gameIdObj.currentGameId);
+                      this.httpBackend.setGameStatus(0).subscribe(() => {});
                     });
                 }
                 else
@@ -57,9 +63,9 @@ export class NavbarComponent {
     )
     window.addEventListener('beforeunload', () =>
     {
-      this.httpBackend.updateUserStatus('offline').subscribe(() => {});
-      this.httpBackend.setGameStatus(0).subscribe(() => {});
-      this.httpBackend.setCurrentGameId('').subscribe(() => {});
+          this.httpBackend.updateUserStatus('offline').subscribe(() => {});
+          this.httpBackend.setGameStatus(0).subscribe(() => {});
+          this.httpBackend.setCurrentGameId('').subscribe(() => {});
     })
   }
 

@@ -69,16 +69,6 @@ export class GameGateway {
   handleCancelGame(socket: Socket, gameId: string) {
     this.gameModule.cancelGame(this.server, socket, gameId);
   }
-  @SubscribeMessage('pauseGame')
-  handlePauseGame(socket: Socket, gameId: string) {
-    this.gameModule.pauseGame(this.server, gameId);
-  }
-
-  @SubscribeMessage('resumeGame')
-  handleResumeGame(socket: Socket, gameId: string) {
-    this.gameModule.resumeGame(this.server, socket, gameId);
-  }
-
   @SubscribeMessage('updatePaddlePos')
   handlePaddlePosUpdate(socket: Socket, obj: any) {
     this.server

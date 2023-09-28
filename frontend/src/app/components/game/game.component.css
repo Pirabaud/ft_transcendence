@@ -94,18 +94,6 @@ body {
     z-index: 10000;
 }
 
-#disconnection_message
-{
-  position: absolute;
-  color: #00ADB5;
-  font-family: 'Oswald', sans-serif;
-  font-weight: 600;
-  line-height: 30px;
-  font-size: xx-large;
-  z-index: 10000;
-  visibility: hidden;
-}
-
 #start_msg
 {
     background-color: #00ADB5;

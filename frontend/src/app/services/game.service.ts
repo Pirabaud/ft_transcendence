@@ -13,11 +13,6 @@ export class GameService {
   private joinedViaMatchmaking = false;
   private gameMode = 0;
 
-  /*a supprimer*/
-  getheader(){
-    return this.socket.getConfig();
-  }
-  /*a supprimer*/
   setSimulateRecJoinedPlayers(value: boolean)
   {
     this.simulateRecJoinedPlayers = value;
@@ -95,14 +90,6 @@ export class GameService {
   {
     return this.socket.fromEvent<any>("recBallPos");
   }
-  pauseGame(gameId: string)
-  {
-    this.socket.emit('pauseGame', gameId)
-  }
-  getPauseGame(): Observable<any>
-  {
-    return this.socket.fromEvent<any>("recPauseGame");
-  }
   getPaddlePosUpdate(): Observable<any>
   {
     return this.socket.fromEvent<any>("recPaddlePosUpdate");
@@ -127,10 +114,6 @@ export class GameService {
   getStopGame(): Observable<string>
   {
     return this.socket.fromEvent<string>("recStopGame");
-  }
-  resumeGame(gameId: string)
-  {
-    this.socket.emit('resumeGame', gameId)
   }
   getResumeGame(): Observable<void>
   {

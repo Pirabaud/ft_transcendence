@@ -30,7 +30,6 @@ export class GameComponent implements AfterViewInit {
   /*All the necessary variables for one client to run the game*/
   gameId: string;
   clientId: string;
-  gameMode: number;
   fieldRect: any;
   paddle1Rect: any;
   paddle2Rect: any;
@@ -77,7 +76,6 @@ export class GameComponent implements AfterViewInit {
   startCountdownSubscription: Subscription;
   initBallDirSubscription: Subscription;
   ballPosSubscription: Subscription;
-  pauseGameSubscription: Subscription;
   paddlePosSubscription: Subscription;
   cancelGameSubscription: Subscription;
   stopGameSubscription: Subscription;
@@ -143,7 +141,6 @@ export class GameComponent implements AfterViewInit {
     this.startCountdownSubscription = this.gameService.getStartCountdown().subscribe((message: string) => this.countdownElement.nativeElement.innerHTML = message);
     this.initBallDirSubscription = this.gameService.getInitBallDir().subscribe((ball: {directionX: number, directionY: number}) => this.receiveInitBallDir(ball))
     this.ballPosSubscription = this.gameService.getGamePos().subscribe((data: any) => this.receiveBallPos(data));
-    this.pauseGameSubscription = this.gameService.getPauseGame().subscribe(() => this.receivePauseGame());
     this.paddlePosSubscription = this.gameService.getPaddlePosUpdate().subscribe((data: any) => this.receivePaddlePosUpdate(data));
     this.cancelGameSubscription = this.gameService.getCancelGame().subscribe(() => this.receiveCancelGame());
     this.stopGameSubscription = this.gameService.getStopGame().subscribe((player : any) => this.receiveStopGame(player));
@@ -169,6 +166,7 @@ export class GameComponent implements AfterViewInit {
         this.httpBackEnd.setGameStatus(0).subscribe(() => {});
         this.httpBackEnd.setCurrentGameId("").subscribe(() => {});
       }
+      this.router.navigate(['/lobby']);
     })
   }
 
@@ -183,8 +181,6 @@ export class GameComponent implements AfterViewInit {
       this.initBallDirSubscription.unsubscribe();
     if (this.ballPosSubscription)
       this.ballPosSubscription.unsubscribe();
-    if (this.pauseGameSubscription)
-      this.pauseGameSubscription.unsubscribe();
     if (this.paddlePosSubscription)
       this.paddlePosSubscription.unsubscribe();
     if (this.stopGameSubscription)
@@ -213,7 +209,7 @@ export class GameComponent implements AfterViewInit {
         this.ballElement.nativeElement.style.top = this.ballObj.posY + "px";
         if (!this.gameStarted)
         {
-          //stop the ball movement when the game is over or paused
+          //stop the ball movement when the game is over
           cancelAnimationFrame(this.animationId)
           return;
         }
@@ -253,8 +249,6 @@ export class GameComponent implements AfterViewInit {
       (gameStatusObj: {gameStatus: number}) => {
         if (gameStatusObj.gameStatus === 0 && this.gameService.getJoinedViaMatchmaking())
           this.httpBackEnd.setCurrentGameId(this.gameId).subscribe(() => {});
-        else if (gameStatusObj.gameStatus === 2)
-          this.gameService.resumeGame(this.gameId);
       })
     this.initPaddles();
 
@@ -409,12 +403,6 @@ export class GameComponent implements AfterViewInit {
   {
       this.ballObj.directionX = ball.directionX;
       this.ballObj.directionY = ball.directionY;
-  }
-  /*In case of player disconnection, the game is paused*/
-  receivePauseGame() {
-      this.gameStarted = false;
-      this.overlayElement.nativeElement.style.visibility = "visible";
-      this.disconnectionMsgElement.nativeElement.style.visibility = "visible";
   }
   /*After each goal, the game is resumed when this method receives an event*/
   receiveResumeGame()

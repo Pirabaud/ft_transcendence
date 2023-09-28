@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -16,5 +17,4 @@ export class ChatComponent {
     if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
       this.router.navigate(['/login']);
   }
-
 }

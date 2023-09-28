@@ -14,8 +14,8 @@ import { TwoFactorComponent } from './components/two-factor/two-factor.component
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 import { GoogleAuthenticatorComponent } from './components/google-authenticator/google-authenticator.component';
 import { ProfileConfigComponent } from "./components/profile-config/profile-config.component";
-import { FriendsMenuComponent } from "./components/friends-menu/friends-menu.component";
 import { FriendProfileComponent } from "./components/friend-profile/friend-profile.component";
+import {InvalidComponent} from "./components/invalid/invalid.component";
 
 const routes: Routes = [
   { path: '', component: LoginComponent, title: 'Login' },
@@ -26,12 +26,13 @@ const routes: Routes = [
   { path: 'chat', component: ChatComponent, canActivate: [AuthGuard], title: 'Chat'},
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], title: 'Profile'},
   { path: 'game/:id', component: GameComponent, canActivate: [AuthGuard], title:'Game'},
+  { path: 'game', component: LobbyComponent, canActivate: [AuthGuard], title:'Lobby'},
   { path: 'two-factor', component: TwoFactorComponent, canActivate: [AuthGuard], title: 'Two-Factor' },
   { path: 'two-factor-first-co', component: TwoFactorFirstCoComponent, canActivate: [AuthGuard], title: 'Two-Factor' },
   { path: 'google', component: GoogleAuthenticatorComponent, canActivate: [AuthGoogleGuard], title: 'Google Authenticator' },
   { path: 'profileConfig', component: ProfileConfigComponent, canActivate: [AuthGuard], title:'Configure your profile'},
-  { path: 'dsa', component: FriendsMenuComponent, canActivate: [AuthGuard], title:'temp'}, /*a enlever*/
   { path: 'friendProfile/:id', component: FriendProfileComponent, canActivate: [AuthGuard], title:'Profile'},
+  { path: '**', component: InvalidComponent, canActivate: [AuthGuard], title:'Invalid'},
 ];
 
 @NgModule({
