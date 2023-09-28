@@ -1,4 +1,5 @@
 import { Injectable, Res } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
 import { User } from 'src/user/user.entity';
@@ -11,14 +12,13 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
+	private configService: ConfigService,
   ) {}
 
   async getAccessToken(code: string): Promise<string> {
     const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
-    const clientId =
-      'u-s4t2ud-64336f890a3d4b312905d32aa8112365980d82c1510fa0980fd301d76d844dc8';
-    const clientSecret =
-      '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';
+    const clientId = this.configService.get<string>('API_ID');
+    const clientSecret = this.configService.get<string>('API_SECRET');
     const redirectUri = 'http://localhost:4200/login-handler';
 
     try {
@@ -86,7 +86,7 @@ export class AuthService {
     try {
       {
         return this.jwtService.verifyAsync(jwt, {
-          secret: 'prout',
+          secret: this.configService.get<string>('JWT_SECRET'),
           ignoreExpiration: true,
         });
       }

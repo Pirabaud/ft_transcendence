@@ -6,9 +6,9 @@ export class AuthGoogleGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-	const jwt = localStorage.getItem("jwt");
+	const api = localStorage.getItem("api");
 
-	if (jwt) {
+	if (api) {
 		return true;
 	} else {
 		this.router.navigate(['/login']);

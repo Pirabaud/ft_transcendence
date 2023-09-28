@@ -22,4 +22,4 @@ status:
 	@echo "\n"
 	docker network ls
 
-re:	stop clean build start
+re:	stop clean start

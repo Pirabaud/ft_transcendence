@@ -34,6 +34,9 @@ export class GoogleAuthenticatorComponent {
 				localStorage.setItem('tfa', "true");
                 window.location.href = 'home';
               }
+              else {
+                window.alert("Please enter a valid code");
+              }
             }
           });
         }
