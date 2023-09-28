@@ -46,11 +46,4 @@ export class HomepageComponent {
     );
   }
 
-  navToChat() {
-    this.router.navigate(['/chat']);
-  }
-
-  navToLobby() {
-    this.router.navigate(['/lobby']);
-  }
 }
