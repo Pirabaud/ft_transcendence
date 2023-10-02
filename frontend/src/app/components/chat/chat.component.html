@@ -1,2 +1,131 @@
 <app-navbar></app-navbar>
-<p>chat works!</p>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <nav class="navbar navbar-default">
+              <div>
+                <h3 class="text-left">LE QUOICOUCHAAAT</h3>
+              </div>
+              <div *ngIf="connected" class="profile">
+                <span>{{username}}</span>
+                <span><img src="{{avatar}}" alt="User avatar"/></span>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content" role="main">
+      
+        <div class="container">
+      
+          <div *ngIf="!connected">
+            <div class="form-group">
+              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="nom du channel" [(ngModel)]="roomId">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="utilisateur" [(ngModel)]="username">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="mot de passe" [(ngModel)]="avatar">
+            </div>
+            <div class="form-group">
+              <button type="button" [disabled]="!roomId || !username || !avatar" class="btn btn-primary connection_btn"
+                      (click)="navigateToRoom()">
+                Connection
+              </button>
+            </div>
+          </div>
+      
+          <div *ngIf="connected" class="messaging">
+            <div class="inbox_msg">
+              <div class="inbox_people">
+                <div class="headind_srch">
+                  <div class="channel_heading">
+                    <h4> {{roomId}}</h4>
+                  </div>
+                </div>
+                <div class="inbox_chat">
+                  <div class="channels" *ngFor="let key of userAvatarsMap.keys()">
+                    <div class="chat_list">
+                      <div class="chat_people">
+                        <div class="chat_ib">
+                          <div>
+                            <img class="chat_img" src="{{userAvatarsMap.get(key)?.avatar}}" alt="User avatar"/>
+                          </div>
+                          <h4>{{key}}</h4>
+                          <div
+                            *ngIf="userAvatarsMap.get(key)?.connected; then icon_connected; else icon_disconnected"></div>
+                          <ng-template #icon_connected>
+                            
+                            <!-- <img class="chat_status_img"
+                                 src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Green-icon.png"
+                                 alt="User avatar"/> -->
+                          </ng-template>
+                          <ng-template #icon_disconnected>
+                            <!-- <img class="chat_status_img"
+                                 src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Red-icon.png"
+                                 alt="User avatar"/> -->
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mesgs">
+                <div class="msg_history">
+                  <li class="message" *ngFor="let message of messages">
+                    <div
+                      *ngIf="
+                        message.username !== username;
+                        then incoming_msg;
+                        else outgoing_msg
+                      "
+                    ></div>
+                    <ng-template #incoming_msg>
+                      <div class="incoming_msg">
+                        <div class="incoming_msg_img">
+                          <img src="{{userAvatarsMap.get(message.username)?.avatar}}" alt="User avatar"/>
+                        </div>
+                        <div class="received_msg">
+                          <div class="received_withd_msg">
+                            <p>{{ message.content }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <ng-template #outgoing_msg>
+                      <div class="outgoing_msg">
+                        <div class="sent_msg">
+                          <p>{{ message.content }}</p>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </li>
+                </div>
+                <div class="type_msg">
+                  <form class="input_msg_write" (keydown.enter)="sendMessage()">
+                    <input
+                      type="text"
+                      class="write_msg"
+                      placeholder="Ecrit chef"
+                      name="newMessage"
+                      [(ngModel)]="messageContent"
+                    />
+                    <button matInput class="msg_send_btn" type="button" (click)="sendMessage()" (keyup.enter)="sendMessage()">
+                      <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+          
+</body>

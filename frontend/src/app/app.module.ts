@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import { FriendProfileComponent } from './components/friend-profile/friend-profi
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 
+const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +49,9 @@ import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-
     AppRoutingModule,
     HttpClientModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
+    SocketIoModule.forRoot(config),
+    // RouterModule.forRoot([]),
   ],
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },JwtHelperService],
   bootstrap: [AppComponent]

@@ -63,6 +63,7 @@ export class AuthService {
           friendList: null,
           friendRequestsNb: 0,
           status: 'offline',
+          blockUser: null,
         };
         await this.userService.saveUser(newUser);
         payload = { sub: newUser.id };

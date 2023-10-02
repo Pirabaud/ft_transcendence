@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
-    "allowJs": true
+    "allowJs": true,
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
   }
 }
