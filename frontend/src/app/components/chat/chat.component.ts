@@ -1,148 +1,81 @@
-import { JwtHelperService } from '@auth0/angular-jwt';
-import {Component, OnInit} from '@angular/core';
-import {ChatService, MessageEventDto} from '../../services/chat.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
-interface Participant {
-  avatar: string;
-  connected: string;
-}
-
-interface ParticipantEvent extends Participant{
-  username: string;
-}
+import { KickComponent } from '../chat/room_service/kick/kick.component';
+import { BanComponent } from '../chat/room_service/ban/ban.component';
+import { MuteComponent } from '../chat/room_service/mute/mute.component';
+import { SetPasswordComponent } from '../chat/room_service/set-password/set-password.component';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent {
+  // Définissez une variable pour garder un compte des divs ajoutées
+  roomCount: number = 0;
+  users: string[] = [];
 
-  title = 'chat-app';
+  constructor(private dialog: MatDialog) {}
 
-  public connected = false;
-  public roomId = '';
-  public username = '';
-  public avatar = '';
-  public messages: MessageEventDto[] = [];
-  public userAvatarsMap = new Map<string, Participant>();
-  public messageContent = '';
+  // Fonction pour ajouter une nouvelle div
+  addRoom() {
+    this.roomCount++;
+    const newDiv = document.createElement('div');
+    newDiv.textContent = `Room ${this.roomCount}`;
+    
+    // Ajoutez la classe "room-item" à la nouvelle div
+    newDiv.classList.add('room-item');
+    
+    // Ajoutez la nouvelle div à la classe .all_room_name
+    const allRoomName = document.querySelector('.all_room_name');
+    if (allRoomName) {
+      allRoomName.appendChild(newDiv);
+    }
+  }
+  
+  addUser() {
 
-  constructor(private jwtHelper: JwtHelperService, private router: Router, private chatService: ChatService, private route: ActivatedRoute) {}
+    
+    this.users.push("ksncjelopsmr");
 
-  ngOnInit()
-  {
-    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-      this.router.navigate(['/chat']);
+    // const contenuHTML = `
+    //   <div class="avatar_on_off">
+    //     <div class="avatar_user">
+    //       <img class="img_meter" src="https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Bernese-Mountain-Dog-icon.png" alt="avatar">
+    //     </div>
+    //     <div class="online_offline">
+    //         <img src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Green-icon.png" alt="">
+    //     </div>
+    //   </div>
+    //   <div class="name_user">
+    //       <p>Luserbghkjokoku</p>
+    //   </div>
+    //   <div class="sidebar_user">
+    //   </div>
+    // `;
+    // const newDiv = document.createElement('div');
+    // newDiv.classList.add('room-avatar'); // Assurez-vous d'utiliser la même classe que dans le contenu HTML
+    // newDiv.innerHTML = contenuHTML;
+  
+    // // Ajoutez la nouvelle div à la classe .column_user (vous avez utilisé ".column_user" au lieu de ".column_user" dans votre code)
+    // const columnUser = document.querySelector('#column_user');
+    // if (columnUser) {
+    //   columnUser.appendChild(newDiv);
+    // }
+  }
+  
+  openDataKick() {
+    const dialogRef = this.dialog.open(KickComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '300px',
+    });
 
-    this.route.queryParams.subscribe(params => {
-      const roomId = params['room'];
-      const username = params['user'];
-      const avatar = params['avatar'];
-      if (roomId && username && avatar) {
-        this.roomId = roomId;
-        this.username = username;
-        this.avatar = avatar;
-        this.connection();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        /*Ici tu recuperes la data que tu as save (result)*/
       }
     });
-
   }
 
-    // private connection() {
-  //   console.log('Connecting user: %s to room: %s', this.username, this.roomId);
-  //   this.chatService.getMessage()
-  //     .subscribe({
-  //       next: (messages) => {
-  //         this.initConnection(messages);
-  //       },
-  //       error: (error) => {
-  //         console.log("la room : ", this.roomId);
-  //         // console.error(error);
-  //         alert(' T NULLLLLLLLLLLLLLLLLLLL');
-  //       },
-  //     });
-  // }
-  
-  private connection() {
-    console.log('Connecting user: %s to room: %s', this.username, this.roomId);
-    this.chatService.createRoom();
-    this.messages = this.chatService.getAllMessage();
-    if (this.messages)
-      this.initConnection(this.messages);
-    else
-      alert(' T NULLLLLLLLLLLLLLLLLLLL');
-      // .subscribe({
-      //   next: (messages) => {
-      //     console.log(messages);
-      //     this.initConnection(messages);
-      //   },
-      //   error: (error) => {
-      //     console.log("TURERE : ", this.roomId);
-      //     // console.error(error);
-      //     alert(' T NULLLLLLLLLLLLLLLLLLLL');
-      //   },
-      // });
-      // console.log("FAIL");
-  }
-
-  private initConnection(messages: MessageEventDto[]) {
-    console.log("caca");
-    this.messages = messages
-    this.chatService.participate(this.roomId, this.username, this.avatar);
-    this.chatService.receiveEvent(this.roomId).subscribe((message: MessageEventDto) => {
-      console.debug('received message event: ', message);
-      this.messages.push(message)
-    });
-    this.chatService.receiveEvent(`participants/${this.roomId}`).subscribe((participants: ParticipantEvent[]) => {
-      console.debug('received participants event: ', participants);
-      this.userAvatarsMap = this.toUserAvatarsMap(participants);
-    });
-    this.connected = true;
-  }
-
-  private toUserAvatarsMap(participants: ParticipantEvent[]): Map<string, Participant> {
-    const mp = new Map<string, Participant>();
-    participants.forEach(p => mp.set(p.username, {avatar: p.avatar, connected: p.connected}));
-    return mp;
-  }
-
-  // createRoom() {
-  
-  //   this.chatService.createRoom(this.roomId, this.username, this.avatar).subscribe(
-  //     (response) => {
-  //       console.log('Room created successfully', response);
-  //       // Traitez la réponse si nécessaire
-  //     },
-  //     (error) => {
-  //       console.error('Error creating room', error);
-  //       // Gérez l'erreur
-  //     }
-  //   );
-  // }
-
-  sendMessage(): void {
-    if (this.messageContent.trim().length === 0) {
-      return;
-    }
-    const message = {
-      roomId: this.roomId,
-      username: this.username,
-      content: this.messageContent,
-      createdAt: new Date()
-    } as MessageEventDto;
-
-    console.log('Posting message event: ', message);
-    this.chatService.sendMessage(message);
-    this.messageContent = '';
-  }
-
-  navigateToRoom(): void {
-    if (this.roomId && this.username && this.avatar) {
-      this.connection();
-    } else {
-      alert('All fields are required.');
-    }
-  }
 }

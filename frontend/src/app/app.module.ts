@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,7 +23,24 @@ import { FriendProfileComponent } from './components/friend-profile/friend-profi
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
+import { ChatLobbyComponent } from './components/chat/chat-lobby/chat-lobby.component';
+import { CreateRoomComponent } from './components/chat/room_service/create-room/create-room.component';
+import { JoinRoomComponent } from './components/chat/room_service/join-room/join-room.component';
+import { KickComponent } from './components/chat/room_service/kick/kick.component';
+import { BanComponent } from './components/chat/room_service/ban/ban.component';
+import { MuteComponent } from './components/chat/room_service/mute/mute.component';
+import { SetPasswordComponent } from './components/chat/room_service/set-password/set-password.component';
+
 const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,13 +58,26 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     ProfileConfigComponent,
     FriendsMenuTemporaryComponent,
     FriendProfileComponent,
-    TwoFactorFirstCoComponent
+    TwoFactorFirstCoComponent,
+    ChatLobbyComponent,
+    CreateRoomComponent,
+    JoinRoomComponent,
+    KickComponent,
+    BanComponent,
+    MuteComponent,
+    SetPasswordComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     MatSlideToggleModule,
+    MatDialogModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatSelectModule,
     FormsModule,
     SocketIoModule.forRoot(config),
     // RouterModule.forRoot([]),

@@ -1,131 +1,171 @@
-<app-navbar></app-navbar>
-
 <body>
 
-    <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            <nav class="navbar navbar-default">
-              <div>
-                <h3 class="text-left">LE QUOICOUCHAAAT</h3>
-              </div>
-              <div *ngIf="connected" class="profile">
-                <span>{{username}}</span>
-                <span><img src="{{avatar}}" alt="User avatar"/></span>
-              </div>
-            </nav>
-          </div>
-        </div>
-      </div>
-      
-      <div class="content" role="main">
-      
-        <div class="container">
-      
-          <div *ngIf="!connected">
-            <div class="form-group">
-              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="nom du channel" [(ngModel)]="roomId">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="utilisateur" [(ngModel)]="username">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="mot de passe" [(ngModel)]="avatar">
-            </div>
-            <div class="form-group">
-              <button type="button" [disabled]="!roomId || !username || !avatar" class="btn btn-primary connection_btn"
-                      (click)="navigateToRoom()">
-                Connection
-              </button>
-            </div>
-          </div>
-      
-          <div *ngIf="connected" class="messaging">
-            <div class="inbox_msg">
-              <div class="inbox_people">
-                <div class="headind_srch">
-                  <div class="channel_heading">
-                    <h4> {{roomId}}</h4>
-                  </div>
-                </div>
-                <div class="inbox_chat">
-                  <div class="channels" *ngFor="let key of userAvatarsMap.keys()">
-                    <div class="chat_list">
-                      <div class="chat_people">
-                        <div class="chat_ib">
-                          <div>
-                            <img class="chat_img" src="{{userAvatarsMap.get(key)?.avatar}}" alt="User avatar"/>
-                          </div>
-                          <h4>{{key}}</h4>
-                          <div
-                            *ngIf="userAvatarsMap.get(key)?.connected; then icon_connected; else icon_disconnected"></div>
-                          <ng-template #icon_connected>
-                            
-                            <!-- <img class="chat_status_img"
-                                 src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Green-icon.png"
-                                 alt="User avatar"/> -->
-                          </ng-template>
-                          <ng-template #icon_disconnected>
-                            <!-- <img class="chat_status_img"
-                                 src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Red-icon.png"
-                                 alt="User avatar"/> -->
-                          </ng-template>
-                        </div>
-                      </div>
+<div id="container">
+
+
+            <div id="column_room_user">
+
+                <div id="name_room_user">
+
+                    <div class="room_name">
+                        <p>Channels</p>
                     </div>
-                  </div>
+
+                    <div class="room_user">
+                        <p>Users</p>
+                    </div>
+
                 </div>
-              </div>
-              <div class="mesgs">
-                <div class="msg_history">
-                  <li class="message" *ngFor="let message of messages">
-                    <div
-                      *ngIf="
-                        message.username !== username;
-                        then incoming_msg;
-                        else outgoing_msg
-                      "
-                    ></div>
-                    <ng-template #incoming_msg>
-                      <div class="incoming_msg">
-                        <div class="incoming_msg_img">
-                          <img src="{{userAvatarsMap.get(message.username)?.avatar}}" alt="User avatar"/>
+
+                <div id="row_room_user">
+
+                    <div id="column_room">
+                        
+                        <div id="row_room_name_bnt">
+
+                            <div class="all_room_name">
+                            </div>
+    
+    
+                            <div class="bnt_create_join">
+    
+                                <div class="bnt_create">
+                                    <button class="button" id="buttonPortalGame" (click)="addUser()">Create Room</button>
+                                </div>
+                                <div class="bnt_join">
+                                    <button class="button" id="buttonNormalGame" (click)="addRoom()">Join Room</button>
+                                </div>
+        
+                            </div>
+
                         </div>
-                        <div class="received_msg">
-                          <div class="received_withd_msg">
-                            <p>{{ message.content }}</p>
-                          </div>
+ 
+                    </div>
+
+                    <div id="column_user" *ngFor="let user of users">
+
+                        <div class="room-avatar">
+
+                            <div class="avatar_on_off">
+                                <div class="avatar_user">
+                                    <img class="img_meter" src="https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Bernese-Mountain-Dog-icon.png" alt="avatar">
+                                </div>
+                                <div class="online_offline">
+                                    <img src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Green-icon.png" alt="">
+                                </div>
+                                </div>
+                                <div class="name_user">
+
+                                    <div class="use_name_user">
+                                        <p>{{ user }}</p>
+                                    </div>
+
+                                </div>
+                                <div class="sidebar_user">
+                                    <div class="triple_bnt">
+
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                            <mat-icon>more_vert</mat-icon>
+                                          </button>
+                                          <mat-menu #menu="matMenu">
+                                            <button mat-menu-item>
+                                              <mat-icon>block</mat-icon>
+                                              <span>Block</span>
+                                            </button>
+                                            <button mat-menu-item>
+                                                <mat-icon>person_add</mat-icon>
+                                                <span>Send Private Message</span>
+                                              </button>
+                                            <button mat-menu-item>
+                                                <mat-icon>sports_esports</mat-icon>
+                                                <span>Play Game</span>
+                                              </button>
+                                          </mat-menu>
+
+                                    </div>
+                                </div>
+
                         </div>
-                      </div>
-                    </ng-template>
-                    <ng-template #outgoing_msg>
-                      <div class="outgoing_msg">
-                        <div class="sent_msg">
-                          <p>{{ message.content }}</p>
-                        </div>
-                      </div>
-                    </ng-template>
-                  </li>
+                    </div>
+
                 </div>
-                <div class="type_msg">
-                  <form class="input_msg_write" (keydown.enter)="sendMessage()">
-                    <input
-                      type="text"
-                      class="write_msg"
-                      placeholder="Ecrit chef"
-                      name="newMessage"
-                      [(ngModel)]="messageContent"
-                    />
-                    <button matInput class="msg_send_btn" type="button" (click)="sendMessage()" (keyup.enter)="sendMessage()">
-                      <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                    </button>
-                  </form>
-                </div>
-              </div>
+
             </div>
-          </div>
-      
-        </div>
-      </div>
-          
+
+
+
+            <div id="column_chat">
+
+                <div class="content_msg">
+
+                    <div class="top_bar_msg">
+
+                        <div class="channel_name">
+                            <p>Calicoba</p>
+                        </div>
+
+                        <div class="settings">
+            
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item>
+                                <mat-icon>do_not_disturb_on_total_silence</mat-icon>
+                                    <span>Mute</span>
+                                  </button>
+                                  <button mat-menu-item>
+                                    <mat-icon>close</mat-icon>
+                                    <span>Ban</span>
+                                  </button>
+                                  <button mat-menu-item (click)="openDataKick()">
+                                    <mat-icon>remove</mat-icon>
+                                    <span>Kick</span>
+                                  </button>
+                                  <button mat-menu-item>
+                                    <mat-icon>lock</mat-icon>
+                                    <span>Set Password</span>
+                                  </button>
+                                  <button mat-menu-item>
+                                    <mat-icon>admin_panel_settings</mat-icon>
+                                    <span>Add Admin</span>
+                                  </button>
+                                  <button mat-menu-item>
+                                    <mat-icon>logout</mat-icon>
+                                    <span>Remove Admin</span>
+                                  </button>
+                            </mat-menu>
+                        </div>
+                    </div>
+                  
+                  <!-- <div>
+                    <h1>Liste des utilisateurs</h1>
+                    <ul>
+                      <li *ngFor="let user of users">{{ user }}</li>
+                    </ul>
+                  </div> -->
+
+                </div>
+                
+                <div class="write_bar" >
+
+                    <div class="type_msg">
+                        <form class="input_msg_write">
+                          <input
+                            type="text"
+                            class="write_msg"
+                            placeholder="Ecrit chef"
+                            name="newMessage"
+                          />
+                          <button matInput class="msg_send_btn" type="button">
+                            <img class="send_msg" src="../../assets/img/send.png" alt="send">
+                          </button>
+                        </form>
+                      </div>
+
+                </div>
+                  
+            </div>
+
+    </div>
 </body>
