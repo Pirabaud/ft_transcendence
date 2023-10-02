@@ -20,26 +20,26 @@ export interface ChatDto extends MessageDto {
     avatar: string;
 }
 
-// export interface Participant {
-//     roomId: string;
-//     username: string;
-//     avatar: string;
-//     connected: boolean;
-// }
+export interface Participant {
+    roomId: string;
+    username: string;
+    avatar: string;
+    connected: boolean;
+}
 
-// export class RoomData {
-//     createdBy: string;
-//     createdDate: Date;
-//     messages: Array<MessageDto>;
-//     participants: Map<string, Participant>; // sockedId => Participant
+export class RoomData {
+    createdBy: string;
+    createdDate: Date;
+    messages: Array<MessageDto>;
+    participants: Map<string, Participant>; // sockedId => Participant
 
-//     constructor(createdBy: string) {
-//         this.createdBy = createdBy;
-//         this.createdDate = new Date();
-//         this.messages = new Array<MessageDto>();
-//         this.participants = new Map();
-//     }
-// }
+    constructor(createdBy: string) {
+        this.createdBy = createdBy;
+        this.createdDate = new Date();
+        this.messages = new Array<MessageDto>();
+        this.participants = new Map();
+    }
+}
 
 export class RoomDto {
     @IsNotEmpty()

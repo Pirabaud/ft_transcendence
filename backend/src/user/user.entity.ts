@@ -41,8 +41,8 @@ export class User {
   @Column({ nullable: true })
   status: string;
 
-  // Chat
-  @Column()
-  blockUser: Array<number>;
+  // // Chat
+  // @Column()
+  // blockUser: Array<number>;
 
 }

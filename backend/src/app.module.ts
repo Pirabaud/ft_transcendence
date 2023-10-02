@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { GameModule } from './game/game.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { GameHistory } from './game/game.entity';
@@ -17,6 +18,7 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     AuthModule,
+    ChatModule,
     HttpModule,
     ConfigModule.forRoot({
       isGlobal: true,
