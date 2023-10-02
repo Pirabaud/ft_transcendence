@@ -42,7 +42,7 @@ export class User {
   status: string;
 
   // Chat
-  @Column() ({ nullable: true })
-  blockUser: Array<string>;
+  @Column()
+  blockUser: Array<number>;
 
 }

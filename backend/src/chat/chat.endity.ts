@@ -9,20 +9,23 @@ export class RoomData {
   @Column()
   createdBy: string;
 
-  @Column()
-  createdDate: Date;
+  // @Column()
+  // createdDate: Date;
 
 	@Column()
 	setPassword: string;
 
 	@Column({ nullable: true })
-  password?: string;
+  password?: boolean;
 
   @Column()
   messages: Array<MessageDto>;
 
   @Column()
   participants: Array<number>; // id of Users
+
+  @Column()
+  admin: Array<number>;
 
 	@Column()
   ban: Array<number>; // id of Users
