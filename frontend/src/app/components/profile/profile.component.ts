@@ -56,7 +56,7 @@ export class ProfileComponent {
         {
           for(let i = 0; i < response.length; ++i)
           {
-              this.addPlayerToLeaderboard(response[i].elo, response[i].user);
+              this.addPlayerToLeaderboard(response[i].elo, response[i].user, response[i].id);
           }
         }
       }
@@ -161,7 +161,7 @@ export class ProfileComponent {
 
   /*meme chose que addGameToHistory*/
   /*Trier par ordre du classement des points*/
-  addPlayerToLeaderboard(elo: number, user: string)
+  addPlayerToLeaderboard(elo: number, user: string, id: number)
   {
     ++this.rank;
     const newListItem = this.renderer.createElement('li');
@@ -180,6 +180,9 @@ export class ProfileComponent {
     this.renderer.addClass(loginElement, 'login');
     const loginText = this.renderer.createText(user);//playerName a la place
     this.renderer.appendChild(loginElement, loginText);
+    this.renderer.listen(loginElement, 'click', () => {
+      this.router.navigate(['/friendProfile', id.toString()])
+    });
 
     const eloElement = this.renderer.createElement('p');
     this.renderer.addClass(eloElement, 'elo');

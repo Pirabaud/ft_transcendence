@@ -127,10 +127,6 @@ export class FriendsMenuComponent {
       );
     }
   }
-  viewFriendProfile(id: string)
-  {
-    this.router.navigate(['/friendProfile', id]);
-  }
   private fetchAndUpdateFriendRequests()
   {
     this.httpBackend.getFriendRequests().subscribe(

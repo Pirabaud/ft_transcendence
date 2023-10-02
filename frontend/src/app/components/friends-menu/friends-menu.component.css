@@ -92,7 +92,7 @@ mat-list-item
   box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align: right;
+  text-align: center;
 }
 
 #friend-requests-list

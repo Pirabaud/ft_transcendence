@@ -24,7 +24,6 @@
       <mat-list id="friendlist-list">
         <mat-list-item *ngFor="let friend of allFriends; let i = index" [id]="friend.status">
           {{ friend.username }}
-          <button [id]="friend.id" (click)="viewFriendProfile(allFriends[i].id)" mat-button><mat-icon>face</mat-icon></button>
           <button [id]="friend.id" (click)="removeFriend(allFriends[i].id)" mat-button><mat-icon>clear</mat-icon></button>
         </mat-list-item>
       </mat-list>

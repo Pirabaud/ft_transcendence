@@ -21,6 +21,12 @@
   margin: 0;
 }
 
+.login:hover
+{
+  cursor: pointer;
+  color: #EEEDF2FF;
+}
+
 #no-match-history
 {
   position: absolute;
@@ -106,6 +112,7 @@
   flex-grow: 1;
   padding: 7px 7px;
   justify-content: space-between;
+  align-items: center;
 }
 
 .match-history-small-img

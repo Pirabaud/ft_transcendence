@@ -36,7 +36,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('updateStatus')
-  updateUserStatus(@Body() statusObject: { status: string}, @Request() req) {
+  updateUserStatus(@Body() statusObject: { status: string }, @Request() req) {
     return this.userService.updateUserStatus(req.user.sub, statusObject.status);
   }
 
@@ -56,10 +56,19 @@ export class UserController {
   }
   @UseGuards(JwtAuthGuard)
   @Post('userExists')
-  async checkUserExists(@Body() usernameObject: any) {
+  async checkUserExists(@Body() usernameObject: { username: string }) {
     const users = await this.userService.findAll();
     for (let i = 0; i < users.length; ++i) {
       if (users[i].username === usernameObject.username) return true;
+    }
+    return false;
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('idExists')
+  async checkIdExists(@Body() idObject: { id: string }) {
+    const users = await this.userService.findAll();
+    for (let i = 0; i < users.length; ++i) {
+      if (users[i].id === parseInt(idObject.id)) return true;
     }
     return false;
   }
@@ -114,7 +123,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('leaderBoard')
+  @Get('leaderboard')
   async getLeaderBoard() {
     return await this.userService.getLeaderBoard();
   }
@@ -146,6 +155,9 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Post('currentOpponentId')
   setCurrentOpponentId(@Body() gameIdObj: { gameId: string }, @Request() req) {
-    return this.userService.setCurrentOpponentId(req.user.sub, gameIdObj.gameId);
+    return this.userService.setCurrentOpponentId(
+      req.user.sub,
+      gameIdObj.gameId,
+    );
   }
 }

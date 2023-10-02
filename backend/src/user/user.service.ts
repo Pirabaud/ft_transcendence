@@ -215,6 +215,7 @@ export class UserService {
       leaderBoard[i] = {
         elo: allUser[i].elo,
         user: allUser[i].username,
+        id: allUser[i].id,
       };
     }
     return leaderBoard;

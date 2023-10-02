@@ -33,6 +33,7 @@ const routes: Routes = [
   { path: 'profileConfig', component: ProfileConfigComponent, canActivate: [AuthGuard], title:'Configure your profile'},
   { path: 'friendProfile/:id', component: FriendProfileComponent, canActivate: [AuthGuard], title:'Profile'},
   { path: '**', component: InvalidComponent, canActivate: [AuthGuard], title:'Invalid'},
+  { path: 'invalid', component: InvalidComponent, canActivate: [AuthGuard], title:'Invalid'},
 ];
 
 @NgModule({

@@ -57,6 +57,10 @@ export class HttpService {
     {
      return this.http.post<any>("http://localhost:3000/user/userExists", { username });
     }
+    checkIdExists(id: string): Observable<any>
+    {
+     return this.http.post<any>("http://localhost:3000/user/idExists", { id });
+    }
 
     checkValidUrl(url: string): Observable<any>
     {
