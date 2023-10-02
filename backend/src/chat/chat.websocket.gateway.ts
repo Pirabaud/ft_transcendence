@@ -9,7 +9,7 @@ import {
 import {Socket} from 'socket.io';
 import {ConflictException, ForbiddenException, NotFoundException} from '@nestjs/common';
 import {Participant, ChatDto, toMessageDto, RoomData, RoomDto, MessageDto} from "./chat.dto";
-import {chatService} from "./chat.service";
+import {ChatService} from "./chat.service";
 
 // INCROYABLE A NE PAS PERDRE 
 @WebSocketGateway({
@@ -103,11 +103,11 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             console.error('Failed to initiate room', e);
             throw e;
         }
-        // return chatService.getMessages("oui");
-        this.server.emit("fill data", chatService.getMessages("oui"));
+        // return ChatService.getMessages("oui");
+        // this.server.emit("fill data", ChatService.getMessages("oui"));
         //         try {
-        //     // return chatService.getMessages(roomId, fromIndex, toIndex);
-        //     return chatService.getMessages("roomid");
+        //     // return ChatService.getMessages(roomId, fromIndex, toIndex);
+        //     return ChatService.getMessages("roomid");
         // // } catch (e) {
         // //     console.error('Failed to get room messages', e);
         // //     throw new ForbiddenException({code: 'access-forbidden', message: 'The access is forbidden'});

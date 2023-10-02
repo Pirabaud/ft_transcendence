@@ -19,7 +19,7 @@ export class ChatService {
   dataArray: any[] = [];
   // private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private socket: Socket, private httpClient: HttpClient) {
+  constructor(private socket: Socket, private http: HttpClient) {
 
   }
 
@@ -91,4 +91,42 @@ export class ChatService {
     })
     return this.dataArray;
   }
+
+
+
+
+  // FONCTIONS POUR LE BACK DE REMI
+
+  // getUsers(): Observable<any> {
+  //   return this.http.get<any>("http://localhost:3000/chat/getUsers");
+  // }
+
+  // getAdmins(): Observable<any> {
+  //   return this.http.get<any>("http://localhost:3000/chat/getAdmins");
+  // }
+
+  // IsThereAPassword(): Observable<any> {
+  //   return this.http.get<any>("http://localhost:3000/chat/IsThereAPassword");
+  // }
+
+  // savePassword(password: string): Observable<any> {
+  //   return this.http.post<any>("http://localhost:3000/chat/savePassword", {password});
+  // }
+
+  // comparePassword(password: string): Observable<any> {
+  //   return this.http.post<any>("http://localhost:3000/chat/comparePassword", {password});
+  // }
+
+  // saveMessage(message: MessageEventDto): Observable<any> {
+  //   return this.http.post<any>("http://localhost:3000/chat/saveMessage", message);
+  // }
+
+  // kick(userId: string): Observable<any> {
+  //   return this.http.post<any>("http://localhost:3000/chat/kick", {userId});
+  // }
+
+  // ban(userId: string): Observable<any> {
+  //   return this.http.post<any>("http://localhost:3000/chat/ban", {userId});
+  // }
+
 }
