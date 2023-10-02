@@ -179,7 +179,12 @@ body
   /* transition: 0.5s; */
   /* border-bottom: 1px solid #EEEDF2FF; */
   /* justify-content: center; */
-  align-items: center;
+  /* align-items: center; */
+}
+
+.room_name_user .room_name_channel {
+  position: relative;
+  bottom: 10px;
 }
 
 /* .room_user:hover .room_name:hover {
@@ -278,6 +283,8 @@ body
   font: 20px 'Oswald', sans-serif;
   text-align: center;
   flex: auto;
+  position: relative;
+  bottom: 20px;
 }
 
 .settings {
@@ -309,7 +316,7 @@ text-align: center;
 
 .use_name_user {
   position: relative;
-  top: 9px;
+  bottom: 10px;
 }
 .sidebar_user {
 flex: 0.1;

@@ -1,3 +1,18 @@
-body{
+/* body{
   background-color: #EEEDF2FF;
+} */
+
+html, body { height: 100%; background-color: #EEEDF2FF; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.room-item {
+  width: 93%;
+  text-align: center;
+  height: 22px;
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: #FEEAA1;
+  color: grey;
+  border-radius: 7px;
 }
