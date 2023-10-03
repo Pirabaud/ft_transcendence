@@ -39,6 +39,8 @@ import { BanComponent } from './components/chat/room_service/ban/ban.component';
 import { MuteComponent } from './components/chat/room_service/mute/mute.component';
 import { SetPasswordComponent } from './components/chat/room_service/set-password/set-password.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
 
 @NgModule({
@@ -69,6 +71,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     MatSlideToggleModule,
