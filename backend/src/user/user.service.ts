@@ -24,6 +24,17 @@ export class UserService {
     return User.matchHistory;
   }
 
+  async getUsername(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return user.username;
+  }
+
   async findOneByUsername(username: string): Promise<User | null> {
     const usersList = await this.findAll();
     for (let i = 0; i < usersList.length; ++i) {

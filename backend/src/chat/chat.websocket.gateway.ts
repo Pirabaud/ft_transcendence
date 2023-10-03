@@ -8,8 +8,11 @@ import {
 
 import {Socket} from 'socket.io';
 import {ConflictException, ForbiddenException, NotFoundException} from '@nestjs/common';
-import {Participant, ChatDto, toMessageDto, RoomData, RoomDto, MessageDto} from "./chat.dto";
+import {Participant, ChatDto, toMessageDto, newRoom, MessageDto} from "./chat.dto";
+
 import {ChatService} from "./chat.service";
+import { RoomData } from 'src/chat/chat.entity';
+import {UserService} from 'src/user/user.service';
 
 // INCROYABLE A NE PAS PERDRE 
 @WebSocketGateway({
@@ -23,29 +26,31 @@ import {ChatService} from "./chat.service";
 @WebSocketGateway()
 export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
+    constructor (private chatService: ChatService, private userService: UserService) {}
+
     @WebSocketServer() server;
 
-    private static rooms: Map<string, RoomData> = new Map();
-    private static participants: Map<string, string> = new Map(); // sockedId => roomId
+    // private static rooms: Map<string, RoomData> = new Map();
+    // private static participants: Map<string, string> = new Map(); // sockedId => roomId
 
     handleConnection(socket: Socket): void {
         const socketId = socket.id;
         console.log(`New connecting... socket id:`, socketId);
-        ChatWebsocketGateway.participants.set(socketId, '');
+        // ChatWebsocketGateway.participants.set(socketId, '');
     }
 
     handleDisconnect(socket: Socket): void {
         const socketId = socket.id;
         console.log(`Disconnection... socket id:`, socketId);
-        const roomId = ChatWebsocketGateway.participants.get(socketId);
-        const room = ChatWebsocketGateway.rooms.get(roomId);
-        if (room) {
-            room.participants.get(socketId).connected = false;
-            this.server.emit(
-                `participants/${roomId}`,
-                Array.from(room.participants.values()),
-            );
-        }
+        // const roomId = ChatWebsocketGateway.participants.get(socketId);
+        // const room = ChatWebsocketGateway.rooms.get(roomId);
+        // if (room) {
+        //     room.participants.get(socketId).connected = false;
+        //     this.server.emit(
+        //         `participants/${roomId}`,
+        //         Array.from(room.participants.values()),
+        //     );
+        // }
     }
 
     @SubscribeMessage('participants')
@@ -58,21 +63,21 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         );
 
         const roomId = participant.roomId;
-        if (!ChatWebsocketGateway.rooms.has(roomId)) {
-            console.error('Room with id: %s was not found, disconnecting the participant', roomId);
-            socket.disconnect();
-            throw new ForbiddenException('The access is forbidden');
-        }
+        // if (!ChatWebsocketGateway.rooms.has(roomId)) {
+        //     console.error('Room with id: %s was not found, disconnecting the participant', roomId);
+        //     socket.disconnect();
+        //     throw new ForbiddenException('The access is forbidden');
+        // }
 
-        const room = ChatWebsocketGateway.rooms.get(roomId);
-        ChatWebsocketGateway.participants.set(socketId, roomId);
-        participant.connected = true;
-        room.participants.set(socketId, participant);
-        // when received new participant we notify the chatter by room
-        this.server.emit(
-            `participants/${roomId}`,
-            Array.from(room.participants.values()),
-        );
+        // const room = ChatWebsocketGateway.rooms.get(roomId);
+        // ChatWebsocketGateway.participants.set(socketId, roomId);
+        // participant.connected = true;
+        // room.participants.set(socketId, participant);
+        // // when received new participant we notify the chatter by room
+        // this.server.emit(
+        //     `participants/${roomId}`,
+        //     Array.from(room.participants.values()),
+        // );
     }
 
     @SubscribeMessage('exchanges')
@@ -84,25 +89,49 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             socketId,
             message,
         );
-        const roomId = message.roomId;
-        const roomData = ChatWebsocketGateway.rooms.get(roomId);
-        message.order = roomData.messages.length + 1;
-        roomData.messages.push(message);
-        ChatWebsocketGateway.rooms.set(roomId, roomData);
-        // when received message we notify the chatter by room
-        this.server.emit(roomId, toMessageDto(message));
+        // const roomId = message.roomId;
+        // const roomData = ChatWebsocketGateway.rooms.get(roomId);
+        // message.order = roomData.messages.length + 1;
+        // roomData.messages.push(message);
+        // ChatWebsocketGateway.rooms.set(roomId, roomData);
+        // // when received message we notify the chatter by room
+        // this.server.emit(roomId, toMessageDto(message));
     }
 
     @SubscribeMessage('room')
-    async newRoom(roomDto: RoomDto) {
+    async newRoom(socket: Socket, room: newRoom) {
+
+        var pass: boolean = false;
+        var setPass: string = '';
+        if (await this.chatService.IsThereARoom(room.channel) == false)
+            return ;
+
         console.log("Creating chat room...");
-        try {
-            ChatWebsocketGateway.createRoom(roomDto);
-            console.log("All is Good");
-        } catch (e) {
-            console.error('Failed to initiate room', e);
-            throw e;
+        if (await this.chatService.thereArePassword(room.password) == true)
+        {
+            pass = true;
+            setPass = await this.chatService.savePassword(room.password);
         }
+        console.log(socket.id);
+
+        const newData: RoomData = {
+            roomId: room.channel,
+            createdBy: "edee",
+            setPassword: setPass,
+            password: pass,
+            messages: null,
+            participants: null,
+            admin: null,
+            ban: null,
+          };
+        await this.chatService.saveRoom(newData);
+        // try {
+        //     ChatWebsocketGateway.createRoom(socket, room);
+        //     console.log("All is Good");
+        // } catch (e) {
+        //     console.error('Failed to initiate room', e);
+        //     throw e;
+        // }
         // return ChatService.getMessages("oui");
         // this.server.emit("fill data", ChatService.getMessages("oui"));
         //         try {
@@ -114,24 +143,32 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         // // }
     }
 
-    static get(roomId: string): RoomData {
-        return this.rooms.get(roomId);
-    }
+    // static get(roomId: string): RoomData {
+    //     return this.rooms.get(roomId);
+    // }
 
-    static createRoom(roomDto: RoomDto): void {
-        const roomId = "oui";
-        roomDto.creatorUsername = "luserbu";
-        roomDto.roomId = "oui";
-        if (this.rooms.has(roomId)) {
-            throw new ConflictException({code: 'room.conflict', message: `Room with '${roomId}' already exists`})
-        }
-        this.rooms.set(roomId, new RoomData(roomDto.creatorUsername));
-    }
+    // async createRoom(socket: Socket, room: newRoom) {
+    //     // if (this.rooms.has(roomId)) {
+    //     //     throw new ConflictException({code: 'room.conflict', message: `Room with '${roomId}' already exists`})}
+    //     const roomData: RoomData = {
+    //         id: room.channel,
+    //         createdBy: await this.userService.getUsername(socket.id),
+    //         setPassword: await this.chatService.savePassword(room.channel, room.password),
+    //         password: await this.chatService.thereArePassword(room.password),
+    //         messages: 0,
+    //         participants: 0,
+    //         admin: 0,
+    //         ban: 0,
+    //       };
+    //     // this.rooms.set(roomId, new RoomData(roomDto.creatorUsername));
+    // }
 
-    static close(roomId: string) {
-        if (!this.rooms.has(roomId)) {
-            throw new NotFoundException({code: 'room.not-fond', message: `Room with '${roomId}' not found`})
-        }
-        this.rooms.delete(roomId);
-    }
+    // static close(roomId: string) {
+    //     if (!this.rooms.has(roomId)) {
+    //         throw new NotFoundException({code: 'room.not-fond', message: `Room with '${roomId}' not found`})
+    //     }
+    //     this.rooms.delete(roomId);
+    // }
+
+    
 }

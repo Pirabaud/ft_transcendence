@@ -22,8 +22,8 @@ export class ChatController {
   }
 
   @Post('savePassword')
-  async savePassword(@Body() obj: { id: string, password: string }) {
-    return this.chatService.savePassword(obj.id, obj.password);
+  async savePassword(@Body() obj: { password: string }) {
+    return this.chatService.savePassword(obj.password);
   }
 
   @Post('verifyPassword')

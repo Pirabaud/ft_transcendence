@@ -15,11 +15,23 @@ export class ChatService {
     findAllRoom(): Promise<RoomData[]> {
         return this.roomRepository.find();
     }
-
+    
     async remove(id: string): Promise<void> {
         await this.roomRepository.delete(id);
     }
 
+    // async setRoomId(roomId: string) {
+
+    // }
+
+    async saveRoom(room: RoomData) {
+        try {
+          await this.roomRepository.save(room);
+        } catch (error) {
+          console.error('Error while saving a room', error);
+        }
+    }
+    
     async getUsers(id: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
@@ -42,6 +54,22 @@ export class ChatService {
         return room.admin;
     }
 
+    async thereArePassword(id: string) {
+        if (!id)
+            return false;
+        return true;
+    }
+
+    async IsThereARoom(id: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+
+        if (!room) {
+            return false;
+        }
+
+        return true;
+    }
+
     async IsThereAPassword(id: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
@@ -53,26 +81,27 @@ export class ChatService {
         return room.password;
     }
 
-    async savePassword(id: string, password: string) {
-        const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+    async savePassword(password: string) {
+        // const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         
-        if (!room) {
-            console.error('Room with ID ${id} not found');
-            return null;
-        }
+        return hashedPassword;
+        // if (!room) {
+        //     console.error('Room with ID ${id} not found');
+        //     return null;
+        // }
 
-        await this.roomRepository.delete(id);
+        // await this.roomRepository.delete(id);
 
-        if (password == null) {
-            room.password = false;
-        } else {
-            room.password = true;
-            room.setPassword = hashedPassword;
-        }
+        // if (password == null) {
+        //     room.password = false;
+        // } else {
+        //     room.password = true;
+        //     room.setPassword = hashedPassword;
+        // }
 
-        await this.roomRepository.save(room);
+        // await this.roomRepository.save(room);
         return true;
     }
 
