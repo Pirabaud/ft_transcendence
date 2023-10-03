@@ -13,6 +13,11 @@ export class ChatController {
     return this.chatService.findAllRoom();
   }
 
+  @Get('getAllRoom')
+  async getAllRoom() {
+    return this.chatService.getAllRoom();
+  }
+
   // @Get('getUsers')
   // async getUsers(@Body() id: { id: string }) {
   //   return this.chatService.getUsers(id.id);

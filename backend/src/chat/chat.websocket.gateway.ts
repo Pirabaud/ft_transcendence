@@ -100,13 +100,30 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         // this.server.emit(roomId, toMessageDto(message));
     }
 
-    @SubscribeMessage('room')
+    @SubscribeMessage('joinRoom')
+    async joinRoom(channel: any, room: any) {
+
+        console.log(room.channel);
+        console.log(room.password);
+
+        if (await this.chatService.IsThereARoom(room.channel) == false) {
+            console.log("THIS ROOM DOESN'T EXIST");
+            return 1;
+        }
+        
+        console.log("THIS ROOM ALREADY EXIST");
+        
+        const verify = await this.chatService.verifyPassword(room.channel, room.password);
+        
+        if (verify.verify == false)
+            return 2
+
+        return 3;
+    }
+
+    @SubscribeMessage('newRoom')
     async newRoom(channel: any, room: any) {
         
-        console.log("chan:",  room.channel);
-        console.log("pass:",  room.password);
-        console.log("user:",  room.username);
-
         var pass: boolean = false;
         var hashedPassword: string = '';
         const saltRounds = 10;
@@ -115,7 +132,7 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         
         if (await this.chatService.IsThereARoom(room.channel) == true) {
             console.log("THIS ROOM ALREADY EXIST");
-            return ;
+            return null;
         }
 
         console.log("Creating chat room...");
@@ -139,6 +156,7 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
           };
         await this.chatService.saveRoom(newData);
 
+        return true;
 
         // try {
         //     ChatWebsocketGateway.createRoom(socket, room);

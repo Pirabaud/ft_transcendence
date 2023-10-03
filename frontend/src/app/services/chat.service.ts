@@ -3,6 +3,7 @@ import {Socket} from 'ngx-socket-io';
 import {Observable} from 'rxjs';
 import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
+import { Router } from '@angular/router';
 
 
 export interface MessageEventDto {
@@ -20,7 +21,7 @@ export class ChatService {
   dataArray: any[] = [];
   // private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private socket: Socket, private http: HttpClient, private httpService: HttpService) {
+  constructor(private socket: Socket, private http: HttpClient, private httpService: HttpService, private router: Router) {
 
   }
 
@@ -74,22 +75,44 @@ export class ChatService {
   // createRoom(): Observable<MessageEventDto[]> {
   //   return this.socket.emit('room');
   // }
+
+  findAllRoom(): Observable<any> {
+    return this.http.get<any>("http://localhost:3000/chat/findAllRoom");
+  }
+
+  getAllRoom(): Observable<any> {
+    return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
+  }
   
-  createRoom(channel: string, password: string): void {
-    this.httpService.getUsername().subscribe((response: any) => {
-      console.log(response);
+  async createRoom(channel: string, password: string) {
+    await this.httpService.getUsername().subscribe((response: any) => {
       if (response) {
         const room = {
           channel: channel,
           password: password,
           username: response.Username,
         };
-        this.socket.emit('room', room);
+        this.socket.emit('newRoom', room);
       } else {
         console.error("Error receiving username");
       }
     });
-      
+  }
+
+  joinRoom(channel: string, password: string): void {
+    const room = {
+      channel: channel,
+      password: password,
+    }
+    this.socket.emit('joinRoom', room, (response: any) => {
+      if (response == 1) {
+        window.alert("This room doesn't exist!");
+      } else if (response == 2) {
+        window.alert("Wrong password!");
+      } else if (response == 3) {
+        window.alert("Bravo!");
+      }
+  });
   }
   
   getAllMessage(): MessageEventDto[] {

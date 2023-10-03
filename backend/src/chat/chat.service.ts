@@ -15,7 +15,6 @@ export class ChatService {
     async findAllRoom() {
         try {
             const result: RoomData[] = await this.roomRepository.find();
-            console.log("ROOMDATA:", result);
             if (!result[0])
                 return false;
         } catch (error) {
@@ -23,6 +22,17 @@ export class ChatService {
             return null;
         }
         return true;
+    }
+
+    async getAllRoom() {
+        var result: RoomData[];
+        try {
+            result = await this.roomRepository.find();
+        } catch (error) {
+            console.log("Error while retrieving rooms");
+            return null;
+        }
+        return result;
     }
     
     async remove(id: string): Promise<void> {
@@ -118,7 +128,9 @@ export class ChatService {
             return null;
         }
         
-        return await bcrypt.compare(password, room.setPassword);
+        const result = await bcrypt.compare(password, room.setPassword);
+        console.log("result", result);
+        return { verify: result };
     }
 
     // async saveMessage(id: string, message: MessageEventDto) {
