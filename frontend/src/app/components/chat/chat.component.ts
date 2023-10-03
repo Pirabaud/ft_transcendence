@@ -35,34 +35,7 @@ export class ChatComponent {
   }
   
   addUser() {
-
-    
     this.users.push("ksncjelopsmr");
-
-    // const contenuHTML = `
-    //   <div class="avatar_on_off">
-    //     <div class="avatar_user">
-    //       <img class="img_meter" src="https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Bernese-Mountain-Dog-icon.png" alt="avatar">
-    //     </div>
-    //     <div class="online_offline">
-    //         <img src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Green-icon.png" alt="">
-    //     </div>
-    //   </div>
-    //   <div class="name_user">
-    //       <p>Luserbghkjokoku</p>
-    //   </div>
-    //   <div class="sidebar_user">
-    //   </div>
-    // `;
-    // const newDiv = document.createElement('div');
-    // newDiv.classList.add('room-avatar'); // Assurez-vous d'utiliser la même classe que dans le contenu HTML
-    // newDiv.innerHTML = contenuHTML;
-  
-    // // Ajoutez la nouvelle div à la classe .column_user (vous avez utilisé ".column_user" au lieu de ".column_user" dans votre code)
-    // const columnUser = document.querySelector('#column_user');
-    // if (columnUser) {
-    //   columnUser.appendChild(newDiv);
-    // }
   }
   
   openDataKick() {
