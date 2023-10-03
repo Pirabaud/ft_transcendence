@@ -77,6 +77,7 @@ export class ChatService {
   
   createRoom(channel: string, password: string): void {
     this.httpService.getUsername().subscribe((response: any) => {
+      console.log(response);
       if (response) {
         const room = {
           channel: channel,

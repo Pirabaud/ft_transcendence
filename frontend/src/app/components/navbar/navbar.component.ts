@@ -45,7 +45,7 @@ export class NavbarComponent {
   }
 
   navToChat() {
-    this.router.navigate(['/chat']);
+    this.router.navigate(['/chat-lobby']);
   }
 
   navToLobby() {

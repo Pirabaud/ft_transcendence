@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import {MessageDto} from "./chat.dto";
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+import {MessageDto, Participant} from "./chat.dto";
 
 @Entity()
 export class RoomData {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   roomId: string;
   
   @Column()
@@ -15,22 +15,22 @@ export class RoomData {
 	@Column({ nullable: true })
   password?: boolean;
   
-  @Column()
-  messages: Array<MessageDto>;
+  // @Column({ nullable: true })
+  // messages: MessageDto[];
   
-  @Column()
-  participants: Array<number>; // id of Users
+  // @Column({ nullable: true })
+  // participants: Participant[]; // id of Users
   
-  @Column()
-  admin: Array<number>;
+  // @Column({ nullable: true })
+  // admin: number[];
 
-	@Column()
-  ban: Array<number>; // id of Users
+	// @Column({ nullable: true })
+  // ban: number[]; // id of Users
   
+}
   // @Column()
   // createdDate: Date;
 
   // @Column()
   // mute: Array<string>;
 
-}

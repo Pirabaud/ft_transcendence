@@ -8,10 +8,11 @@ import {
 
 import {Socket} from 'socket.io';
 import {ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
-import {Participant, ChatDto, toMessageDto, newRoom, MessageDto} from "./chat.dto";
+import {Participant, ChatDto, toMessageDto, MessageDto} from "./chat.dto";
 
 import {ChatService} from "./chat.service";
 import { RoomData } from 'src/chat/chat.entity';
+import * as bcrypt from 'bcrypt';
 
 // INCROYABLE A NE PAS PERDRE 
 @WebSocketGateway({
@@ -25,7 +26,9 @@ import { RoomData } from 'src/chat/chat.entity';
 @WebSocketGateway()
 export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
-    constructor (private chatService: ChatService) {}
+    constructor (
+        private chatService: ChatService
+    ) {}
 
     @WebSocketServer() server;
 
@@ -61,7 +64,7 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             participant,
         );
 
-        const roomId = participant.roomId;
+        // const roomId = participant.roomId;
         // if (!ChatWebsocketGateway.rooms.has(roomId)) {
         //     console.error('Room with id: %s was not found, disconnecting the participant', roomId);
         //     socket.disconnect();
@@ -100,38 +103,43 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     @SubscribeMessage('room')
     async newRoom(channel: any, room: any) {
         
-        // console.log("chan:",  room.channel);
-        // console.log("pass:",  room.password);
-        // console.log("user:",  room.username);
+        console.log("chan:",  room.channel);
+        console.log("pass:",  room.password);
+        console.log("user:",  room.username);
 
         var pass: boolean = false;
-        var setPass: string = '';
+        var hashedPassword: string = '';
+        const saltRounds = 10;
        
 
         
-        if (await this.chatService.IsThereARoom(room.channel) == false)
+        if (await this.chatService.IsThereARoom(room.channel) == true) {
+            console.log("THIS ROOM ALREADY EXIST");
             return ;
-        
+        }
+
         console.log("Creating chat room...");
-        if (await this.chatService.thereArePassword(room.password) == true)
+        if (room.password != "")
         {
             pass = true;
-            setPass = await this.chatService.savePassword(room.password);
+            hashedPassword = await bcrypt.hash(room.password, saltRounds);
         }
+
+        console.log("PASS", pass);
 
         const newData: RoomData = {
             roomId: room.channel,
             createdBy: room.username,
-            setPassword: setPass,
+            setPassword: hashedPassword,
             password: pass,
-            messages: null,
-            participants: null,
-            admin: null,
-            ban: null,
+            // messages: [],
+            // participants: [],
+            // admin: [],
+            // ban: [],
           };
         await this.chatService.saveRoom(newData);
 
-        
+
         // try {
         //     ChatWebsocketGateway.createRoom(socket, room);
         //     console.log("All is Good");

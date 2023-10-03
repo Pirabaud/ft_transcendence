@@ -21,17 +21,16 @@ export interface ChatDto extends MessageDto {
 }
 
 export interface Participant {
-    roomId: string;
     username: string;
     avatar: string;
     connected: boolean;
 }
 
-export interface newRoom {
-    channel: string;
-    password: string;
-    username: string;
-}
+// export interface newRoom {
+//     channel: string;
+//     password: string;
+//     username: string;
+// }
 
 // export class RoomData {
 //     createdBy: string;

@@ -102,4 +102,10 @@ export class HttpService {
     getUsername(): Observable<any> {
       return this.http.get<any>("http://localhost:3000/user/getUsername");
     }
+    getPic(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/user/getPic");
+    }
+    findAllRoom(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/chat/findAllRoom");
+    }
 }

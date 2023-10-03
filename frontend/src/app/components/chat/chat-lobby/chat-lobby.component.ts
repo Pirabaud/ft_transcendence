@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateRoomComponent } from "../room_service/create-room/create-room.component";
 import { JoinRoomComponent } from "../room_service/join-room/join-room.component";
 import { ChatService } from "../../../services/chat.service"
+import { HttpService } from '../../../http.service';
 
 @Component({
   selector: 'app-chat-lobby',
@@ -15,7 +16,16 @@ import { ChatService } from "../../../services/chat.service"
 })
 export class ChatLobbyComponent {
   
-  constructor(private chatService: ChatService, private dialog: MatDialog, private router: Router) {}
+  constructor(private chatService: ChatService, private dialog: MatDialog, private router: Router, private httpBackend: HttpService) {}
+
+  ngOnInit() {
+    this.httpBackend.findAllRoom().subscribe((Response) => {
+      console.log(Response);
+      if (Response == true) {
+        this.router.navigate(['chat']);
+      }
+    });
+  }
 
   openDataJoinRoom() {
     const dialogRef = this.dialog.open(JoinRoomComponent, {
