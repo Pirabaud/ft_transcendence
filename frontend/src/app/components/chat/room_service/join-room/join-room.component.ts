@@ -7,7 +7,7 @@ import { MatDialogRef } from "@angular/material/dialog";
   styleUrls: ['./join-room.component.css']
 })
 export class JoinRoomComponent {
-  data: string = '';
+  data: {name: string; password: string;} = { name: '', password: '' };
 
   constructor(private dialogRef: MatDialogRef<JoinRoomComponent>) {}
 

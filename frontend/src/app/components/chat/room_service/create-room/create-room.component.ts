@@ -7,7 +7,7 @@ import { MatDialogRef } from "@angular/material/dialog";
   styleUrls: ['./create-room.component.css']
 })
 export class CreateRoomComponent {
-  data: string = '';
+  data: {name: string; password: string;} = { name: '', password: '' };
 
   constructor(private dialogRef: MatDialogRef<CreateRoomComponent>) {}
 

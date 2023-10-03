@@ -74,14 +74,8 @@ export class ChatService {
   //   return this.socket.emit('room');
   // }
 
-  createRoom(): void { 
-      this.socket.emit('room'); // Émet l'événement WebSocket
-      // this.socket.fromEvent('roomResponse').subscribe((data) => {
-      //   observer.next(data); // Émet les données reçues à l'observateur
-      //   observer.complete(); // Termine l'Observable lorsque c'est nécessaire
-      // });
-
-      // Gérer les erreurs ici si nécessaire
+  createRoom(channel: string, password: string): void { 
+      this.socket.emit('room', channel, password);
   }
   
   getAllMessage(): MessageEventDto[] {
@@ -92,6 +86,7 @@ export class ChatService {
     return this.dataArray;
   }
 
+  
 
 
 

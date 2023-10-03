@@ -12,6 +12,7 @@ import { JwtInterceptor } from './http.interceptor';
 import { GameComponent } from './components/game/game.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ChatLobbyComponent } from './components/chat/chat-lobby/chat-lobby.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
@@ -23,6 +24,8 @@ import { FriendProfileComponent } from './components/friend-profile/friend-profi
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
@@ -31,7 +34,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
-import { ChatLobbyComponent } from './components/chat/chat-lobby/chat-lobby.component';
 import { CreateRoomComponent } from './components/chat/room_service/create-room/create-room.component';
 import { JoinRoomComponent } from './components/chat/room_service/join-room/join-room.component';
 import { KickComponent } from './components/chat/room_service/kick/kick.component';
@@ -74,6 +76,8 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatSlideToggleModule,
     MatDialogModule,
     MatIconModule,

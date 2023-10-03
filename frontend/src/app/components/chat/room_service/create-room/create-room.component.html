@@ -3,10 +3,10 @@
 <!--  Moi j'ai mis un form ici mais tu as peut etre autre chose pour recuperer l'input de l'utilisateur-->
   <form (submit)="saveData()">
     <mat-form-field>
-      <input matInput placeholder="channel name" [(ngModel)]="data">
+      <input matInput placeholder="channel name" [(ngModel)]="data.name" name="channel">
     </mat-form-field>
     <mat-form-field>
-        <input matInput placeholder="password (optional)" [(ngModel)]="data">
+        <input matInput placeholder="password (optional)" [(ngModel)]="data.password" name="password">
     </mat-form-field>
   </form>
 </div>
