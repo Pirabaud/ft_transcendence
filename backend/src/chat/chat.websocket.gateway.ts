@@ -7,12 +7,11 @@ import {
 } from '@nestjs/websockets';
 
 import {Socket} from 'socket.io';
-import {ConflictException, ForbiddenException, NotFoundException} from '@nestjs/common';
+import {ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import {Participant, ChatDto, toMessageDto, newRoom, MessageDto} from "./chat.dto";
 
 import {ChatService} from "./chat.service";
 import { RoomData } from 'src/chat/chat.entity';
-import {UserService} from 'src/user/user.service';
 
 // INCROYABLE A NE PAS PERDRE 
 @WebSocketGateway({
@@ -26,7 +25,7 @@ import {UserService} from 'src/user/user.service';
 @WebSocketGateway()
 export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
-    constructor (private chatService: ChatService, private userService: UserService) {}
+    constructor (private chatService: ChatService) {}
 
     @WebSocketServer() server;
 
@@ -99,24 +98,30 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     }
 
     @SubscribeMessage('room')
-    async newRoom(socket: Socket, room: newRoom) {
+    async newRoom(channel: any, room: any) {
+        
+        // console.log("chan:",  room.channel);
+        // console.log("pass:",  room.password);
+        // console.log("user:",  room.username);
 
         var pass: boolean = false;
         var setPass: string = '';
+       
+
+        
         if (await this.chatService.IsThereARoom(room.channel) == false)
             return ;
-
+        
         console.log("Creating chat room...");
         if (await this.chatService.thereArePassword(room.password) == true)
         {
             pass = true;
             setPass = await this.chatService.savePassword(room.password);
         }
-        console.log(socket.id);
 
         const newData: RoomData = {
             roomId: room.channel,
-            createdBy: "edee",
+            createdBy: room.username,
             setPassword: setPass,
             password: pass,
             messages: null,
@@ -125,6 +130,8 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             ban: null,
           };
         await this.chatService.saveRoom(newData);
+
+        
         // try {
         //     ChatWebsocketGateway.createRoom(socket, room);
         //     console.log("All is Good");

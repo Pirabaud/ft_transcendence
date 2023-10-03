@@ -32,7 +32,7 @@ export class UserService {
       return null;
     }
 
-    return user.username;
+    return { Username: user.username };
   }
 
   async findOneByUsername(username: string): Promise<User | null> {
@@ -152,7 +152,7 @@ export class UserService {
       console.error('User with ID ${id} not found');
       return null;
     }
-    
+
     await this.userRepository.delete(id);
     user.tfa = true;
     await this.userRepository.save(user);

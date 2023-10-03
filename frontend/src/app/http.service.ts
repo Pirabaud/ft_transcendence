@@ -99,4 +99,7 @@ export class HttpService {
     getLeaderBoard(): Observable<any> {
       return this.http.get<any>("http://localhost:3000/user/leaderboard")
     }
+    getUsername(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/user/getUsername");
+    }
 }

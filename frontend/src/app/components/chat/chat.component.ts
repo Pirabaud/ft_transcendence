@@ -35,7 +35,7 @@ export class ChatComponent {
   }
   
   addUser() {
-    this.users.push("ksncjelopsmr");
+    this.users.push();
   }
   
   openDataKick() {

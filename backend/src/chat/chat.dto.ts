@@ -30,6 +30,7 @@ export interface Participant {
 export interface newRoom {
     channel: string;
     password: string;
+    username: string;
 }
 
 // export class RoomData {

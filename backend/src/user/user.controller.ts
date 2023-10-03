@@ -107,4 +107,10 @@ export class UserController {
     return await this.userService.getLeaderBoard();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('getUsername')
+  async getUsername(@Request() req) {
+    return await this.userService.getUsername(req.user.sub);
+  }
+
 }

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Socket} from 'ngx-socket-io';
 import {Observable} from 'rxjs';
 import {HttpClient} from "@angular/common/http";
+import { HttpService } from '../http.service';
 
 
 export interface MessageEventDto {
@@ -19,7 +20,7 @@ export class ChatService {
   dataArray: any[] = [];
   // private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private socket: Socket, private http: HttpClient) {
+  constructor(private socket: Socket, private http: HttpClient, private httpService: HttpService) {
 
   }
 
@@ -73,9 +74,21 @@ export class ChatService {
   // createRoom(): Observable<MessageEventDto[]> {
   //   return this.socket.emit('room');
   // }
-
-  createRoom(channel: string, password: string): void { 
-      this.socket.emit('room', channel, password);
+  
+  createRoom(channel: string, password: string): void {
+    this.httpService.getUsername().subscribe((response: any) => {
+      if (response) {
+        const room = {
+          channel: channel,
+          password: password,
+          username: response.Username,
+        };
+        this.socket.emit('room', room);
+      } else {
+        console.error("Error receiving username");
+      }
+    });
+      
   }
   
   getAllMessage(): MessageEventDto[] {

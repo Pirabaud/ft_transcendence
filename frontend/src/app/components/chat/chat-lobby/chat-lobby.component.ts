@@ -40,9 +40,9 @@ export class ChatLobbyComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.name) {
-        console.log(result.name);
-        console.log(result.password);
-        this.chatService.createRoom(result.name, result.password);
+        const name = result.name;
+        const password = result.password;
+        this.chatService.createRoom(name, password);
         this.router.navigate(['/chat']);
         // console.log(result);
         /*Ici tu recuperes la data que tu as save (result)*/

@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import {MessageDto} from "./chat.dto";
 
 @Entity()
 export class RoomData {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   roomId: string;
   
   @Column()
