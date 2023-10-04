@@ -164,6 +164,12 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         return true;
     }
 
+    @SubscribeMessage('leaveRoom')
+    async leaveRoom(channel: any, room: any) {
+        
+        await this.chatService.kickParticipant(room.channel, room.user);
+    }
+
     
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {

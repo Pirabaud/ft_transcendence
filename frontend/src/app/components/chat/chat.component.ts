@@ -38,6 +38,9 @@ export class ChatComponent {
   users: Participant[] = [];
   messages: MessageEvent[] = [];
   myUserId: number = 0;
+  currentRoomId: string = "";
+  settingsVisible = false;
+  boutonsAdminVisible = false;
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router, private jwtHelper: JwtHelperService) {}
 
@@ -76,10 +79,6 @@ export class ChatComponent {
     });
   }
 
- //  <button class="close-button">
- //    <div class="close-icon">&#10006;</div>
- //  </button>
-
   // Fonction pour ajouter une nouvelle div
   addRoom(roomId: string) {
     this.roomCount++;
@@ -91,6 +90,25 @@ export class ChatComponent {
 
     // Ajoutez un gestionnaire d'événement de clic à la div
     newDiv.addEventListener('click', () => {
+
+      this.currentRoomId = roomId;
+
+      this.settingsVisible = true;
+
+      const divChannelName = document.querySelector(".channel_name");
+
+      if (divChannelName) {
+        const paragraphe = divChannelName.querySelector("p");
+
+        if (paragraphe) {
+          paragraphe.textContent = roomId;
+        } else {
+          console.error("Paragraphe introuvable dans le div.");
+        }
+
+      } else {
+        console.error("Div avec la classe 'channel_name' introuvable.");
+      }
 
       this.removeAllUser();
 
@@ -105,6 +123,7 @@ export class ChatComponent {
       });
 
     });
+
     // Ajoutez la nouvelle div à la classe .all_room_name
     const allRoomName = document.querySelector('.all_room_name');
     if (allRoomName) {
@@ -176,7 +195,20 @@ export class ChatComponent {
     
   
   }
-    
+
+  leaveRoom() {
+    this.chatService.leaveRoom(this.currentRoomId, this.myUserId);
+
+    this.removeAllUser();
+
+    const roomItems = document.querySelectorAll('.room-item');
+
+    roomItems.forEach((div) => {
+      if (div.textContent === this.currentRoomId) {
+        div.remove();
+      }
+    });
+  }
   
   openDataKick() {
     const dialogRef = this.dialog.open(KickComponent, {

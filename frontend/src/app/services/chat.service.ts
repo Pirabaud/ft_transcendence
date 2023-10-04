@@ -64,9 +64,6 @@ export class ChatService {
       
   // }
 
-  // createRoom(): Observable<MessageEventDto[]> {
-  //   return this.socket.emit('room');
-  // }
 
   getAllRoom(): Observable<any> {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
@@ -120,6 +117,15 @@ export class ChatService {
         }
       });
     });
+  }
+
+  leaveRoom(channel: string, userId: number) {
+    const room = {
+      channel: channel,
+      user: userId,
+    };
+    this.socket.emit('leaveRoom', room);
+    alert("This user leave the room " + channel);
   }
   
   getAllParticipants(channel: string): Observable<Array<number>> {

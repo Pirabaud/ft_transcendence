@@ -5,6 +5,7 @@ import { AppComponent } from "../../app.component";
 import { GameService } from "../../services/game.service";
 import {Subscription} from "rxjs";
 import { GameComponent } from "../game/game.component";
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,7 @@ import { GameComponent } from "../game/game.component";
 })
 export class NavbarComponent {
   private joinGameSubscription: Subscription;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private httpBackend: HttpService, private appService: AppComponent, private gameService: GameService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private httpBackend: HttpService, private chatService: ChatService, private appService: AppComponent, private gameService: GameService) {
   };
   @ViewChild(GameComponent) gameComponent: GameComponent;
 
@@ -83,7 +84,39 @@ export class NavbarComponent {
   }
 
   navToChat() {
-    this.router.navigate(['/chat-lobby']);
+
+    var ok: boolean = false;
+    var myUserId: number = 0;
+
+    this.httpBackend.getUserId().subscribe((response: any) => {
+      if (response) {
+        myUserId = response.UserId;
+      }
+    });
+
+    this.chatService.getAllRoom().subscribe((Response) => {
+      if (Response) {
+        var i = 0;
+        while (Response[i]) {
+          var j = 0;
+          while (Response[i].participants[j]) {
+            if (Response[i].participants[j] == myUserId) {
+              ok = true;
+            }
+            j++;
+          }
+          i++;
+        }
+        if (ok) {
+          this.router.navigate(['/chat']);
+        } else {
+          this.router.navigate(['/chat-lobby']);
+        }
+      } else {
+        console.error("Error while retreiving all Rooms");
+      }
+    });
+
   }
 
   navToLobby() {
