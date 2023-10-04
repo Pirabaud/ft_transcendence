@@ -144,7 +144,6 @@ export class UserController {
     return await this.userService.getStatus(username.username);
   }
 
-}
   @UseGuards(JwtAuthGuard)
   @Get('gameStatus')
   getGameStatus(@Request() req) {
