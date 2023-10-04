@@ -16,17 +16,6 @@
   padding: 10px;
 }
 
-.login, .elo, .rank
-{
-  margin: 0;
-}
-
-.login:hover
-{
-  cursor: pointer;
-  color: #EEEDF2FF;
-}
-
 #no-match-history
 {
   position: absolute;
@@ -165,7 +154,7 @@
   margin: 0 0 0 15%;
 }
 
-.username, .elo, .rank
+.login, .elo, .rank
 {
   flex-grow: 1;
   text-align: center;
@@ -173,6 +162,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 5px;
+  margin: 0;
+}
+
+.login:hover
+{
+  cursor: pointer;
+  color: #EEEDF2FF;
 }
 
 #profile-pic

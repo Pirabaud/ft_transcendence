@@ -33,15 +33,11 @@ export class GameService {
   setGameMode(value: number) {
     this.gameMode = value;
   }
-  accessGame(): void
-  {
-    this.socket.emit("accessGame");
-  }
-  createGame(gameId: string, gameMode: number): void
+  createGame(gameId: string, gameMode: number)
   {
     let obj = {
       gameId: gameId,
-      gameMode: gameMode
+      gameMode: gameMode,
     }
     this.socket.emit("createGame", obj);
   }

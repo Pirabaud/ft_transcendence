@@ -128,19 +128,17 @@ export class GameService {
   }
 
   /*Places a player in the waiting room if it is the first one for this mode, otherwise, creates a game with the player waiting and the one who just joined*/
-  checkGameAvailability(
-    server: Server,
-    gameMode: number,
-    userWaiting: UserWaiting,
-  ) {
+  checkGameAvailability(server: Server, gameMode: number, userWaiting: UserWaiting) {
     let res: string;
 
     const waitRoomLength: number =
       gameMode === 0 ? this.waitRoomNormal.length : this.waitRoomPortal.length;
     if (waitRoomLength === 0) {
       this.addNewClient(userWaiting.socket, userWaiting.gameId);
-      if (gameMode === 0) this.waitRoomNormal.push(userWaiting);
-      else this.waitRoomPortal.push(userWaiting);
+      if (gameMode === 0)
+        this.waitRoomNormal.push(userWaiting);
+      else
+        this.waitRoomPortal.push(userWaiting);
       res = '0';
       /*loops every 2 seconds to check if another player joined*/
       const gameReadyCheck = setInterval(() => {
@@ -157,8 +155,10 @@ export class GameService {
     } else {
       /*if the player joining is the second one, the waitRoom is emptied and a Game is created with this client
      and the one waiting in the waiting room, the gameId of the first player is then emitted to make it the same for both clients*/
-      if (gameMode === 0) res = this.waitRoomNormal[0].gameId;
-      else res = this.waitRoomPortal[0].gameId;
+      if (gameMode === 0)
+        res = this.waitRoomNormal[0].gameId;
+      else
+        res = this.waitRoomPortal[0].gameId;
       this.addNewClient(userWaiting.socket, res);
       if (gameMode === 0) {
         this.runningGames.push(
