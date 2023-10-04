@@ -40,7 +40,7 @@ export class ChatComponent {
   myUserId: number = 0;
   currentRoomId: string = "";
   settingsVisible = false;
-  boutonsAdminVisible = false;
+  boutonsAdminVisible = true;
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router, private jwtHelper: JwtHelperService) {}
 
@@ -210,18 +210,62 @@ export class ChatComponent {
     });
   }
   
-  openDataKick() {
+  async openDataKick() {
     const dialogRef = this.dialog.open(KickComponent, {
       /*Ouvre le dialog et definit la taille*/
       width: '300px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    await dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const name = result.name;
-        console.log(name);
-        // this.chatService.kick();
-      }
+        var UserId: number;
+        var ok: boolean = false;
+
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            UserId = response1.id;
+
+            this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
+              if (Response) {
+                var i = 0;
+                while ( Response[i] ) {
+                  if (Response[i] == UserId) {
+                    ok = true;
+                  }
+                  i++;
+                }
+
+                if (ok) {
+
+                  this.chatService.kickRoom(this.currentRoomId, UserId);
+                  alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
+                
+                  this.removeAllUser();
+
+                  this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
+                    if (Response) {
+                      var i = 0;
+                      while ( Response[i] ) {
+                        this.addUser(Response[i]);
+                        i++;
+                      }
+                    } else {console.log("error3")}
+                  });
+                
+                } else {
+                  alert("This user isn't in the room!")
+                }
+              } else {console.log("error2")}
+            });
+
+          } else {
+            alert("This user doesn't exist!");
+          }
+        });
+
+
+      } else {console.log("error1")}
     });
   }
 

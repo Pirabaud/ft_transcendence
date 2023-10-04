@@ -127,6 +127,14 @@ export class ChatService {
     this.socket.emit('leaveRoom', room);
     alert("This user leave the room " + channel);
   }
+
+  kickRoom(channel: string, userId: number) {
+    const room = {
+      channel: channel,
+      user: userId,
+    };
+    this.socket.emit('leaveRoom', room);
+  }
   
   getAllParticipants(channel: string): Observable<Array<number>> {
     const room = { channel: channel };
@@ -138,6 +146,10 @@ export class ChatService {
         observer.complete(); // Indiquez que l'observable est terminé
       });
     });
+  }
+
+  getUserId(username: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/getUserIdfromUsername", {username});
   }
 
   getUsername(userId: number): Observable<any> {

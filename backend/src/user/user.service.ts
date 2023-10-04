@@ -28,6 +28,17 @@ export class UserService {
     return User.matchHistory;
   }
 
+  async getUserIdfromUsername(username: string) {
+    const user = await this.userRepository.findOne({ where: { username: username, }, });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { id: user.id };
+  }
+
   async getUsername(id: number) {
     const user = await this.userRepository.findOneBy({ id });
 

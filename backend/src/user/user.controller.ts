@@ -134,6 +134,11 @@ export class UserController {
     return { UserId: req.user.sub } ;
   }
 
+  @Post('getUserIdfromUsername')
+  async getUserIdfromUsername(@Body() username: { username: string }) {
+    return await this.userService.getUserIdfromUsername(username.username);
+  }
+
   @Post('getUsername')
   async getUsername(@Body() userId: { userId: number }) {
     return await this.userService.getUsername(userId.userId);
