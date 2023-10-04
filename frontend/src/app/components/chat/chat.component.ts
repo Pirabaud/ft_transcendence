@@ -24,7 +24,6 @@ export interface Participant {
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent {
-  // Définissez une variable pour garder un compte des divs ajoutées
   roomCount: number = 0;
   users: Participant[] = [];
 

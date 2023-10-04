@@ -32,7 +32,7 @@ body
   /* background-color: yellow; */
   /* width: 60%;
   height: 100%; */
-  flex: auto;
+  flex: 0.6;
   padding: 2px;
   border-left: 1px solid #EEEDF2FF;
   margin-left: 2px;
