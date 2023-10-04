@@ -21,6 +21,7 @@ export class ChatLobbyComponent {
     this.chatService.findAllRoom().subscribe((Response) => {
       if (Response == true) {
         window.location.href = 'chat';
+        // faire en fonction de chaque USer
       }
     });
   }

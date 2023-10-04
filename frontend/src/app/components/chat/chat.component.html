@@ -81,7 +81,11 @@
                                               </button>
                                             <button mat-menu-item>
                                                 <mat-icon>sports_esports</mat-icon>
-                                                <span>Play Game</span>
+                                                <span>Classic Game</span>
+                                              </button>
+                                            <button mat-menu-item>
+                                                <mat-icon>gamepad</mat-icon>
+                                                <span>Portal Game</span>
                                               </button>
                                           </mat-menu>
 
@@ -98,8 +102,6 @@
 
 
             <div id="column_chat">
-
-                <div class="content_msg">
 
                     <div class="top_bar_msg">
 
@@ -139,17 +141,46 @@
                                   </button>
                             </mat-menu>
                         </div>
-                    </div>
-                  
-                  <!-- <div>
-                    <h1>Liste des utilisateurs</h1>
-                    <ul>
-                      <li *ngFor="let user of users">{{ user }}</li>
-                    </ul>
-                  </div> -->
 
-                </div>
-                
+                      </div>
+
+                    <div class="content_msg">
+  
+                        <div class="msg_history">
+                  
+                          <li class="message" *ngFor="let message of messages">
+      
+                            <!-- En fonction de la personne qui envoie le msg -->
+                            <!-- <div *ngIf="message.username !== username; then incoming_msg; else outgoing_msg">
+                            </div> -->
+      
+                            <ng-template #incoming_msg>
+                              <div class="incoming_msg">
+                                <div class="incoming_msg_img">
+                                  <!-- il faut mettre l'avatar de la persone qui parle -->
+                                  <!-- <img src="" alt="User avatar"/> -->
+                                </div>
+                                <div class="received_msg">
+                                  <div class="received_withd_msg">
+                                    <p>{{ message.content }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-template>
+                            <ng-template #outgoing_msg>
+                              <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                  <p>{{ message.content }}</p>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </li>
+                        </div>
+                    
+
+                    </div>
+
+
                 <div class="write_bar" >
 
                     <div class="type_msg">

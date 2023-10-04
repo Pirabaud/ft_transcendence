@@ -18,6 +18,13 @@ export interface Participant {
   status: string;
 }
 
+export interface MessageEvent {
+  socketId: string;
+  roomId: string;
+  username: string;
+  content: string;
+}
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -27,6 +34,7 @@ export class ChatComponent {
   // Définissez une variable pour garder un compte des divs ajoutées
   roomCount: number = 0;
   users: Participant[] = [];
+  messages: MessageEvent[] = [];
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private router: Router, private jwtHelper: JwtHelperService) {}
 
@@ -110,7 +118,7 @@ export class ChatComponent {
               this.users.push({
                 username: pseudo,
                 avatar: pic,
-                status: "../../../assets/images/Button-Blank-Green-icon.png", // A REMPLACER PAR UNE ICONE ROUGE
+                status: "../../../assets/images/Button-Blank-Red-icon.png", // A REMPLACER PAR UNE ICONE ROUGE
               });
             }
           }

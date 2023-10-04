@@ -24,7 +24,7 @@ body
 
 #column_room_user {
   /* display: flex; */
-  flex: 0.40;
+  flex: 0.35;
 }
 
 
@@ -32,7 +32,7 @@ body
   /* background-color: yellow; */
   /* width: 60%;
   height: 100%; */
-  flex: 0.6;
+  flex: 0.65;
   padding: 2px;
   border-left: 1px solid #EEEDF2FF;
   margin-left: 2px;
@@ -143,14 +143,14 @@ body
   /* border-color: grey; */
   justify-content: center;
   
-  flex: 0.60;
+  flex: 0.65;
   padding: 2px;
 }
 .room_name {
   background-color: #27A64BFF;
   color: white;
-  font: 15px 'Oswald', sans-serif;
-  flex: 0.40;
+  font: 18px 'Oswald', sans-serif;
+  flex: 0.38;
   text-align: center;
   /* border-right: 1px solid #EEEDF2FF; */
   padding: 2px;
@@ -167,8 +167,8 @@ body
   background-color: #5583F1FF;
   /* display: flex; */
   color: white;
-  font: 15px 'Oswald', sans-serif;
-  flex: 0.60;
+  font: 18px 'Oswald', sans-serif;
+  flex: 0.62;
   text-align: center;
   padding: 2px;
   margin: 2px;
@@ -298,7 +298,9 @@ body
   height: 40px;
   padding: 5px;
   font-size: 18px;
+  margin-top: 3px;
   margin-bottom: 5px;
+  margin-left: 2px;
   background-color: #FEEAA1;
   color: grey;
   border-radius: 7px;
@@ -351,17 +353,68 @@ bottom: 18px;
 left: 27px;
 }
 
+/* Message */
 
-.example-container {
-  width: 400px;
-  height: 200px;
-  margin: 12px;
-  border: 1px solid #555;
+.received_msg {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
 }
 
-mat-drawer-content {
-  padding: 12px;
+.received_withd_msg p {
+  background: #ebebeb none repeat scroll 0 0;
+  border-radius: 3px;
+  color: #646464;
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+
+.incoming_msg {
+  padding: 0 0 5px 5px;
+}
+
+.incoming_msg_img {
+  display: inline-block;
+  width: 25px;
+}
+
+
+.sent_msg p {
+  background: #05728f none repeat scroll 0 0;
+  border-radius: 3px;
+  font-size: 14px;
+  margin: 0;
+  color: #fff;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+
+.outgoing_msg {
+  text-align: right;
+  overflow: hidden;
+}
+
+/* .messaging {
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  padding: 7px;
+  width: 80vw;
+  height: 70vh;
+  min-height: 400px;
+  min-width: 1000px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 15px 0 rgba(0, 0, 0, 0.1);
+} */
+
+.msg_history {
+  height: 516px;
+  overflow-y: auto;
+}
+
+.message {
+  list-style-type: none;
 }
