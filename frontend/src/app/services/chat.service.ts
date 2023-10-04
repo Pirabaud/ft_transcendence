@@ -152,12 +152,6 @@ export class ChatService {
     });
   }
 
-  
-
-
-
-  // FONCTIONS POUR LE BACK DE REMI
-
   getUsername(userId: number): Observable<any> {
     return this.http.post<any>("http://localhost:3000/user/getUsername", {userId});
   }

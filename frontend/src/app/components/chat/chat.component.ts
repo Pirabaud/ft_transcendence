@@ -11,6 +11,7 @@ import { CreateRoomComponent } from "./room_service/create-room/create-room.comp
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { HttpService } from '../../http.service';
 
 export interface Participant {
   userId: number;
@@ -36,17 +37,37 @@ export class ChatComponent {
   roomCount: number = 0;
   users: Participant[] = [];
   messages: MessageEvent[] = [];
+  myUserId: number = 0;
 
-  constructor(private dialog: MatDialog, private chatService: ChatService, private router: Router, private jwtHelper: JwtHelperService) {}
+  constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router, private jwtHelper: JwtHelperService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     // if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
       // this.router.navigate(['/login']);
-    this.chatService.getAllRoom().subscribe((Response) => {
+    var ok: boolean;
+
+    await this.httpService.getUserId().subscribe((response: any) => {
+      if (response) {
+        this.myUserId = response.UserId;
+      }
+    });
+
+    
+    await this.chatService.getAllRoom().subscribe((Response) => {
       if (Response) {
         var i = 0;
         while (Response[i]) {
-          this.addRoom(Response[i].roomId);
+          ok = false;
+          var j = 0;
+          while (Response[i].participants[j]) {
+            if (Response[i].participants[j] == this.myUserId) {
+              ok = true;
+            }
+            j++;
+          }
+          if (ok) {
+            this.addRoom(Response[i].roomId);
+          }
           i++;
         }
       } else {
@@ -67,11 +88,12 @@ export class ChatComponent {
     // Ajoutez un gestionnaire d'événement de clic à la div
     newDiv.addEventListener('click', () => {
 
+      this.removeAllUser();
+
       this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
         if (Response) {
           var i = 0;
           while ( Response[i] ) {
-            console.log("userID lol:", Response[i]);
             this.addUser(Response[i]);
             i++;
           }
@@ -84,6 +106,16 @@ export class ChatComponent {
     const allRoomName = document.querySelector('.all_room_name');
     if (allRoomName) {
       allRoomName.appendChild(newDiv);
+    }
+  }
+
+  removeAllUser() {
+    var i = 0;
+
+    this.users.pop();
+    while (this.users[i]) {
+      this.users.pop();
+      i++;
     }
   }
   
