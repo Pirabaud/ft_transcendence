@@ -41,19 +41,19 @@ export class ChatComponent {
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router, private jwtHelper: JwtHelperService) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     // if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
       // this.router.navigate(['/login']);
     var ok: boolean;
 
-    await this.httpService.getUserId().subscribe((response: any) => {
+    this.httpService.getUserId().subscribe((response: any) => {
       if (response) {
         this.myUserId = response.UserId;
       }
     });
 
     
-    await this.chatService.getAllRoom().subscribe((Response) => {
+    this.chatService.getAllRoom().subscribe((Response) => {
       if (Response) {
         var i = 0;
         while (Response[i]) {
@@ -75,6 +75,10 @@ export class ChatComponent {
       }
     });
   }
+
+ //  <button class="close-button">
+ //    <div class="close-icon">&#10006;</div>
+ //  </button>
 
   // Fonction pour ajouter une nouvelle div
   addRoom(roomId: string) {
@@ -101,6 +105,14 @@ export class ChatComponent {
       });
 
     });
+
+    // Créez le bouton de fermeture
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('close-button');
+    closeButton.innerHTML = '<div class="close-icon">&#10006;</div>';
+
+    // Ajoutez le bouton de fermeture à la div
+    newDiv.appendChild(closeButton);
     
     // Ajoutez la nouvelle div à la classe .all_room_name
     const allRoomName = document.querySelector('.all_room_name');
@@ -183,7 +195,9 @@ export class ChatComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        /*Ici tu recuperes la data que tu as save (result)*/
+        const name = result.name;
+        console.log(name);
+        // this.chatService.kick();
       }
     });
   }
