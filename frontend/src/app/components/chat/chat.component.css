@@ -226,7 +226,7 @@ body
 .content_msg {
   flex: 0.9;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 .write_bar {
@@ -273,7 +273,7 @@ body
 .channel_name {
   font: 20px 'Oswald', sans-serif;
   text-align: center;
-  flex: auto;
+  flex: 0.93;
   position: relative;
   bottom: 20px;
 }
