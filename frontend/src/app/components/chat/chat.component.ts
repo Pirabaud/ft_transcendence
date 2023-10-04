@@ -196,7 +196,7 @@ export class ChatComponent {
     });
   }
 
-  viewProfilUser() {
-    this.router.navigate(['/friendProfile']);
+  viewProfilUser(id: number) {
+    this.router.navigate(['/friendProfile', id.toString()]);
   }
 }
