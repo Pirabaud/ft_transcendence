@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateRoomComponent } from "../room_service/create-room/create-room.component";
 import { JoinRoomComponent } from "../room_service/join-room/join-room.component";
 import { ChatService } from '../../../services/chat.service';
+import { HttpService } from '../../../http.service';
 
 @Component({
   selector: 'app-chat-lobby',
@@ -15,13 +16,38 @@ import { ChatService } from '../../../services/chat.service';
 })
 export class ChatLobbyComponent {
   
-  constructor(private chatService: ChatService, private dialog: MatDialog, private router: Router) {}
+  myUserId: number = 0;
+  
+  constructor(private chatService: ChatService, private httpService: HttpService, private dialog: MatDialog, private router: Router) {}
 
   ngOnInit() {
-    this.chatService.findAllRoom().subscribe((Response) => {
-      if (Response == true) {
-        window.location.href = 'chat';
-        // faire en fonction de chaque USer
+
+    var ok: boolean = false;
+
+    this.httpService.getUserId().subscribe((response: any) => {
+      if (response) {
+        this.myUserId = response.UserId;
+      }
+    });
+
+    this.chatService.getAllRoom().subscribe((Response) => {
+      if (Response) {
+        var i = 0;
+        while (Response[i]) {
+          var j = 0;
+          while (Response[i].participants[j]) {
+            if (Response[i].participants[j] == this.myUserId) {
+              ok = true;
+            }
+            j++;
+          }
+          i++;
+        }
+        if (ok) {
+          window.location.href = 'chat';
+        }
+      } else {
+        console.error("Error while retreiving all Rooms");
       }
     });
   }
@@ -34,9 +60,15 @@ export class ChatLobbyComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.name) {
-        console.log(result.name);
-        console.log(result.password);
-        /*Ici tu recuperes la data que tu as save (result)*/
+        const name = result.name;
+        const password = result.password;
+        this.chatService.joinRoom(name, password).subscribe(result2 => {
+          if (result2) {
+            window.location.href = 'chat';
+          } else {
+            // Opération échouée
+          }
+        });
       }
     });
   }
@@ -53,8 +85,7 @@ export class ChatLobbyComponent {
         const password = result.password;
         this.chatService.createRoom(name, password);
         window.location.href = 'chat';
-        // console.log(result);
-        /*Ici tu recuperes la data que tu as save (result)*/
+       
       }
       else
         alert("Channel can't be NULL");

@@ -8,11 +8,6 @@ import { RoomData } from './chat.entity';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Get('findAllRoom')
-  async findAllRoom() {
-    return this.chatService.findAllRoom();
-  }
-
   @Get('getAllRoom')
   async getAllRoom() {
     return this.chatService.getAllRoom();
