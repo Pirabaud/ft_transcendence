@@ -21,9 +21,9 @@ export class FriendProfileComponent {
     @ViewChild('statsWin') statsWinElement: ElementRef;
     @ViewChild('statsLose') statsLoseElement: ElementRef;
     @ViewChild('statsElo') statsEloElement: ElementRef;
-  constructor(private route: ActivatedRoute, 
-    private httpBackend: HttpService, 
-    private jwtHelper: JwtHelperService, 
+  constructor(private route: ActivatedRoute,
+    private httpBackend: HttpService,
+    private jwtHelper: JwtHelperService,
     private router: Router,
     private renderer: Renderer2) {
       this.rank = 0;
@@ -32,66 +32,64 @@ export class FriendProfileComponent {
   {
     if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
       this.router.navigate(['/login']);
-
     this.userId = this.route.snapshot.paramMap.get('id')!;
-
-      this.httpBackend.getMatchesHistoryById(this.userId).subscribe(
-          (response: any) => {
+    this.httpBackend.checkIdExists(this.userId).subscribe(
+      (response: boolean) =>
+      {
+        if (response === false)
+          this.router.navigate(['/invalid']);
+        else {
+          this.httpBackend.getMatchesHistoryById(this.userId).subscribe(
+            (response: any) => {
               if (response.length === 0)
               {
-                  this.matchHistoryListContainerElement.nativeElement.style.visibility = 'hidden';
-                  this.noMatchHistoryElement.nativeElement.style.visibility = 'visible'
+                this.matchHistoryListContainerElement.nativeElement.style.visibility = 'hidden';
+                this.noMatchHistoryElement.nativeElement.style.visibility = 'visible'
               }
-
               for (var i = 0; i < response.length; i++)
               {
-                  if(response[i] !== null)
-                      this.addGameToHistory(
-                          response[i].yourImg,
-                          response[i].oppImg,
-                          response[i].yourScore,
-                          response[i].oppScore,
-                          response[i].victory);
+                if(response[i] !== null)
+                  this.addGameToHistory(
+                    response[i].yourImg,
+                    response[i].oppImg,
+                    response[i].yourScore,
+                    response[i].oppScore,
+                    response[i].victory);
               }
-          },
-      );
-    this.httpBackend.getLeaderBoard().subscribe(
-      (response: any) => {
-        if (response !== null)
-        {
-          for(let i = 0; i < response.length; ++i)
-          {
-            this.addPlayerToLeaderboard(response[i].elo, response[i].user);
-          }
+            });
+          this.httpBackend.getLeaderBoard().subscribe(
+            (response: any) => {
+              if (response !== null) {
+                for (let i = 0; i < response.length; ++i) {
+                  this.addPlayerToLeaderboard(response[i].elo, response[i].user);
+                }
+              }
+            })
+          this.httpBackend.getProfileById(this.userId).subscribe(
+            (profile: any) => {
+              if(this.statsWinElement)
+              {
+                this.statsWinElement.nativeElement.innerHTML = profile.win;
+              }
+              if(this.statsLoseElement)
+              {
+                this.statsLoseElement.nativeElement.innerHTML = profile.lose;
+              }
+              if(this.statsEloElement)
+              {
+                this.statsEloElement.nativeElement.innerHTML = profile.elo;
+              }
+              if (this.usernameElement) {
+                this.usernameElement.nativeElement.innerHTML = profile.username;
+              }
+              if (this.profilePicElement) {
+                this.profilePicElement.nativeElement.src = profile.img;
+              }
+            }
+          );
         }
       }
     )
-    this.httpBackend.getProfileById(this.userId).subscribe(
-      (profile: any) => {
-        if(this.statsWinElement)
-        {
-          this.statsWinElement.nativeElement.innerHTML = profile.win;
-        }
-        if(this.statsLoseElement)
-        {
-          this.statsLoseElement.nativeElement.innerHTML = profile.lose;
-        }
-        if(this.statsEloElement)
-        {
-          this.statsEloElement.nativeElement.innerHTML = profile.elo;
-        }
-        if (this.usernameElement) {
-          this.usernameElement.nativeElement.innerHTML = profile.username;
-        }
-        if (this.profilePicElement) {
-          this.profilePicElement.nativeElement.src = profile.img;
-        }
-
-      },
-      (error) => {
-        console.error('no data', error);
-      }
-    );
   }
     addGameToHistory(myImg: string, oppImg: string, myscore: number, oppScore: number, result: boolean)
     {

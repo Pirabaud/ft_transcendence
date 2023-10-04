@@ -26,6 +26,7 @@
   font-size: large;
   top: 50%;
   visibility: hidden;
+  font-family: 'Oswald', sans-serif;
 }
 
 #match-history-list-container
@@ -98,7 +99,9 @@
 .center-content {
   display: flex;
   flex-grow: 1;
+  padding: 7px 7px;
   justify-content: space-between;
+  align-items: center;
 }
 
 .match-history-small-img
@@ -142,16 +145,16 @@
 .win
 {
   color: green;
-  margin: 20%;
+  margin: 0 0 0 15%;
 }
 
 .lose
 {
   color: red;
-  margin: 20%;
+  margin: 0 0 0 15%;
 }
 
-.username, .elo, .rank
+.login, .elo, .rank
 {
   flex-grow: 1;
   text-align: center;
@@ -159,6 +162,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 5px;
+  margin: 0;
+}
+
+.login:hover
+{
+  cursor: pointer;
+  color: #EEEDF2FF;
 }
 
 #profile-pic
@@ -180,7 +190,7 @@
   background-color: white;
   border: solid 1px white;
   border-radius: 14px;
-  padding: 17px 17px;
+  padding: 7px 7px;
   width: 8vw;
   box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
   z-index: 9999;
@@ -210,7 +220,7 @@
   background-color: white;
   border: hidden 1px;
   border-radius: 14px;
-  padding: 17px 17px;
+  padding: 7px 7px;
   width: 12vw;
   font-size: 1vw;
   box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;

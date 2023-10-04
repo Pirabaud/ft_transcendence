@@ -23,9 +23,4 @@ export class GameSocketService extends Socket
   constructor(){
     super(config);
   }
-
-  getConfig() {
-    return config;
-  }
-
  }

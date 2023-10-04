@@ -1,0 +1,34 @@
+<button #friendsMenuButton id="friends-menu-button" matBadge="{{this.nbRequests.toString()}}" matBadgePosition="below" (click)=drawer.toggle()><mat-icon >supervised_user_circle</mat-icon></button>
+<mat-drawer-container id="drawer-container" autosize>
+  <mat-drawer #drawer id="sidenav" mode="side" position="end">
+    <div #requestsContainer id="requests-container">
+      <input #friendUsername placeholder="Search for users here" id="friend-username-field" (keydown)="sendFriendRequest($event)">
+      Requests :
+      <p #noRequests id="no-requests">
+        No pending requests
+      </p>
+      <mat-list id="friend-requests-list">
+        <mat-list-item *ngFor="let request of allRequests;">
+            {{ request }}
+          <button (click)="acceptFriendRequest(request)" mat-button><mat-icon>done</mat-icon></button>
+          <button (click)="refuseFriendRequest(request)" mat-button><mat-icon>clear</mat-icon></button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <mat-divider></mat-divider>
+    <div #friendListContainer id="friendlist-container">
+        Your friends :
+        <p #noFriends id="no-friends">
+          You don't have any friends :(
+        </p>
+      <mat-list id="friendlist-list">
+        <mat-list-item *ngFor="let friend of allFriends; let i = index" [id]="friend.status">
+          {{ friend.username }}
+          <button [id]="friend.id" (click)="removeFriend(allFriends[i].id)" mat-button><mat-icon>clear</mat-icon></button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-drawer>
+
+</mat-drawer-container>
+

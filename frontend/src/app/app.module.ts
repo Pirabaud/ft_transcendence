@@ -19,10 +19,12 @@ import { HomepageComponent } from './components/homepage/homepage.component';
 import { TwoFactorComponent } from './components/two-factor/two-factor.component';
 import { GoogleAuthenticatorComponent } from './components/google-authenticator/google-authenticator.component';
 import { ProfileConfigComponent } from './components/profile-config/profile-config.component';
-import { FriendsMenuTemporaryComponent } from './components/friends-menu-temporary/friends-menu-temporary.component';
+import { FriendsMenuComponent } from './components/friends-menu/friends-menu.component';
 import { FriendProfileComponent } from './components/friend-profile/friend-profile.component'
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
+import {MaterialModule} from "./material/material.module";
+import { InvalidComponent } from './components/invalid/invalid.component';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -60,7 +62,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     TwoFactorComponent,
     GoogleAuthenticatorComponent,
     ProfileConfigComponent,
-    FriendsMenuTemporaryComponent,
+    FriendsMenuComponent,
     FriendProfileComponent,
     TwoFactorFirstCoComponent,
     ChatLobbyComponent,
@@ -70,6 +72,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     BanComponent,
     MuteComponent,
     SetPasswordComponent,
+    InvalidComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +91,8 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     FormsModule,
     SocketIoModule.forRoot(config),
     // RouterModule.forRoot([]),
+    FormsModule,
+    MaterialModule
   ],
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },JwtHelperService],
   bootstrap: [AppComponent]

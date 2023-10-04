@@ -16,6 +16,11 @@
   padding: 10px;
 }
 
+.login, .elo, .rank
+{
+  margin: 0;
+}
+
 #no-match-history
 {
   position: absolute;
@@ -95,10 +100,13 @@
   font-family: 'Oswald', sans-serif;
 }
 
+
 .center-content {
   display: flex;
   flex-grow: 1;
+  padding: 7px 7px;
   justify-content: space-between;
+  align-items: center;
 }
 
 .match-history-small-img

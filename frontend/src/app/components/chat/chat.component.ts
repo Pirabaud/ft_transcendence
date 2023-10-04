@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -9,7 +10,7 @@ import { ChatService } from '../../services/chat.service';
 import { CreateRoomComponent } from "./room_service/create-room/create-room.component";
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
-
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 export interface Participant {
   username: string;
@@ -27,9 +28,11 @@ export class ChatComponent {
   roomCount: number = 0;
   users: Participant[] = [];
 
-  constructor(private dialog: MatDialog, private chatService: ChatService, private router: Router) {}
+  constructor(private dialog: MatDialog, private chatService: ChatService, private router: Router, private jwtHelper: JwtHelperService) {}
 
   ngOnInit() {
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+      this.router.navigate(['/login']);
     this.chatService.getAllRoom().subscribe((Response) => {
       if (Response) {
         var i = 0;
@@ -169,5 +172,4 @@ export class ChatComponent {
         alert("Channel can't be NULL");
     });
   }
-
 }

@@ -1,0 +1,116 @@
+#friends-menu-button {
+  position: absolute;
+  color: black;
+  cursor: pointer;
+  display: inline-block;
+  right: 20px;
+  border: solid 1px white;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  border-radius: 50%;
+  background-color: white;
+}
+
+#friend-username-field
+{
+  width: 90%;
+  border: 3px solid #00B4CC;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px;
+}
+
+#no-requests
+{
+  text-align: center;
+  color: #74747a;
+  font-style: italic;
+  visibility: visible;
+  max-height: 0;
+  margin: 0;
+}
+
+#no-friends
+{
+  text-align: center;
+  color: #74747a;
+  font-style: italic;
+  visibility: visible;
+  max-height: 0;
+  margin: 0;
+}
+
+mat-icon:hover
+{
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+mat-icon
+{
+  font-size: 50px;
+  width: 50px;
+  height: 50px;
+  transition: 0.5s;
+}
+
+#drawer-container {
+  position: absolute;
+  top: 90px;
+  right: 0;
+  width: 250px;
+  height: 90%;
+  background-color: transparent;
+  transition: 0.5s;
+  z-index: 1000000;
+  justify-content: center;
+  align-items: center;
+  font: 15px 'Oswald', sans-serif;
+}
+#sidenav {
+  display: flex;
+  height: 95%;
+}
+
+#requests-container
+{
+  padding: 7px;
+}
+
+#friendlist-container
+{
+  padding: 10px;
+}
+
+mat-list-item
+{
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
+  padding: 7px;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#friend-requests-list
+{
+  padding: 7px;
+}
+
+#online
+{
+  --mdc-list-list-item-label-text-color: green;
+}
+
+#in-game
+{
+  --mdc-list-list-item-label-text-color: blue;
+}
+
+#offline
+{
+  --mdc-list-list-item-label-text-color: red;
+}

@@ -1,8 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { HttpService } from '../../http.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-two-factor',
@@ -11,30 +8,25 @@ import { Subscription } from 'rxjs';
 })
 export class TwoFactorComponent {
   isChecked = false;
-  
+
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private httpBackend: HttpService,
-    private http: HttpClient,
     ) {}
-    
+
     ngOnInit() {
       this.httpBackend.getTfaStatus().subscribe((response1: any) => {
       if (response1 == true) {
         this.isChecked = true;
-        
+
         this.httpBackend.getQRcode().subscribe((response2: any) => {
           if (response2) {
             const QRcodeSRC = response2.QRcode;
-            
+
             const QRcodeImageElement: HTMLImageElement | null = document.getElementById("QR-Code-image") as HTMLImageElement;
-            
+
             if (QRcodeImageElement) {
               QRcodeImageElement.src = QRcodeSRC;
             }
-          } else {
-            console.error("Error during QR code retrieval");
           }
         });
       } else {
@@ -50,8 +42,6 @@ export class TwoFactorComponent {
       this.httpBackend.setTfaTrue().subscribe((response1: any) => {
         if (response1) {
           this.GenerateQRcode();
-        } else {
-          console.error("Error while activating 2FA");
         }
       });
     } else {
@@ -60,8 +50,6 @@ export class TwoFactorComponent {
           if (QRcodeImageElement) {
             QRcodeImageElement.src = "./assets/images/caneton.jpg";
           }
-        } else {
-          console.error("Error while deactivating 2FA");
         }
       });
     }
@@ -70,23 +58,17 @@ export class TwoFactorComponent {
   GenerateQRcode() {
     this.httpBackend.generate2fa().subscribe((response2: any) => {
       if (response2) {
-        this.httpBackend.postGoogle(response2).subscribe((response3: any) => {
-          if (response3 == null)
-            console.error("Error while saving 2FA infos");
+        this.httpBackend.postGoogle(response2).subscribe(() => {
         });
-        
+
         const QRcodeSRC = response2.imageUrl;
-        
+
         const QRcodeImageElement: HTMLImageElement | null = document.getElementById("QR-Code-image") as HTMLImageElement;
-        
+
         if (QRcodeImageElement) {
           QRcodeImageElement.src = QRcodeSRC;
         }
-        
-      } else {
-        console.error("Error while generating QRcode 2FA");
       }
     });
   }
-
 }

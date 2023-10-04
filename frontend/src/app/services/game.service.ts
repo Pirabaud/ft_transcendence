@@ -6,20 +6,38 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class GameService {
+
   constructor(private socket: GameSocketService) {}
-  getheader(){
-    return this.socket.getConfig();
-  }
-  accessGame(): void
+
+  private simulateRecJoinedPlayers = false;
+  private joinedViaMatchmaking = false;
+  private gameMode = 0;
+
+  setSimulateRecJoinedPlayers(value: boolean)
   {
-    this.socket.emit("accessGame");
+    this.simulateRecJoinedPlayers = value;
   }
-  createGame(gameId: string, gameMode: number): void
+  getSimulateRecJoinedPlayers()
   {
-    console.log(localStorage.getItem('jwt'));
+    return this.simulateRecJoinedPlayers;
+  }
+  getJoinedViaMatchmaking(): boolean {
+    return this.joinedViaMatchmaking;
+  }
+  setJoinedViaMatchmaking(value: boolean) {
+    this.joinedViaMatchmaking = value;
+  }
+  getGameMode(): number {
+    return this.gameMode;
+  }
+  setGameMode(value: number) {
+    this.gameMode = value;
+  }
+  createGame(gameId: string, gameMode: number)
+  {
     let obj = {
       gameId: gameId,
-      gameMode: gameMode
+      gameMode: gameMode,
     }
     this.socket.emit("createGame", obj);
   }
@@ -60,17 +78,13 @@ export class GameService {
   {
     return this.socket.fromEvent<string>("recStartCountdown")
   }
-  getInitBallDir(): Observable<number>
+  getInitBallDir(): Observable<{directionX: number, directionY: number}>
   {
-    return this.socket.fromEvent<number>("recInitBallDir")
+    return this.socket.fromEvent<{directionX: number, directionY: number}>("recInitBallDir")
   }
   getGamePos(): Observable<any>
   {
     return this.socket.fromEvent<any>("recBallPos");
-  }
-  getPauseGame(): Observable<any>
-  {
-    return this.socket.fromEvent<any>("recPauseGame");
   }
   getPaddlePosUpdate(): Observable<any>
   {
@@ -79,6 +93,19 @@ export class GameService {
   getGoalScored(): Observable<any>
   {
     return this.socket.fromEvent<any>("recGoalScored");
+  }
+  cancelMatchmaking(gameMode: number, gameId: string)
+  {
+    const gameData = {gameId: gameId, gameMode: gameMode};
+    this.socket.emit('cancelMatchmaking', gameData);
+  }
+  cancelGame(gameId: string)
+  {
+    this.socket.emit('cancelGame', gameId);
+  }
+  getCancelGame(): Observable<string>
+  {
+    return this.socket.fromEvent<string>("recCancelGame");
   }
   getStopGame(): Observable<string>
   {

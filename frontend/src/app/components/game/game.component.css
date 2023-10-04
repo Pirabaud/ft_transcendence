@@ -235,8 +235,8 @@ body {
   width: 10%;
   height: 20%;
   position: absolute;
-  top: 0px;/*corriger l'offset au moment de calculer la position*/
-  left: 0px;/*idem*/
+  top: 0;
+  left: 0;
   overflow: hidden;
   visibility: hidden;
   z-index: 10000;
@@ -280,4 +280,27 @@ body {
   height: 60%;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+#cancelButton
+{
+  position: absolute;
+  top: 60vh;
+  background-color: #00ADB5;
+  border: solid 1px #00ADB5;
+  border-radius: 14px;
+  padding: 7px;
+  box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
+  z-index: 10000;
+  cursor: pointer;
+  transition: 0.5s;
+  visibility: visible;
+  font: 15px 'Oswald', sans-serif;
+  color: white;
+}
+
+#cancelButton:hover
+{
+  font: 18px 'Oswald', sans-serif;
+  color: #EEEDF2FF;
 }

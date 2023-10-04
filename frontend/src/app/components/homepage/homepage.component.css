@@ -66,10 +66,10 @@ h1
   display: inline;
 }
 
-#pong-demo-container
+#left-gif-container
 {
-  top: 30%;
-  left: 5%;
+  top: 23%;
+  left: 11%;
   margin-left: auto;
   margin-right: auto;
   width: 30vw;
@@ -78,17 +78,7 @@ h1
   display: inline;
 }
 
-#pong-gif
-{
-  object-fit: cover;
-  height: 15vw;
-  width:  30vw;
-  display: block;
-  border: solid 3px black;
-  border-radius: 10px;
-}
-
-#chat-demo-container
+#right-gif-container
 {
   top: 23%;
   right: 11%;
@@ -100,7 +90,7 @@ h1
   display: inline;
 }
 
-#chat-gif
+#gif
 {
   object-fit: cover;
   height: 25vw;

@@ -10,8 +10,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 
 export class HomepageComponent {
-  constructor(private router: Router, 
-    private httpBackend:HttpService, 
+  constructor(private router: Router,
+    private httpBackend:HttpService,
     private jwtHelper: JwtHelperService) {};
 
   @ViewChild('profilePic') profilePicElement: ElementRef;
@@ -42,19 +42,8 @@ export class HomepageComponent {
          if (this.profilePicElement) {
           this.profilePicElement.nativeElement.src = response.img;
         }
-
-      },
-      (error) => {
-        console.error('no data', error);
       }
     );
   }
 
-  navToChat() {
-    this.router.navigate(['/chat']);
-  }
-
-  navToLobby() {
-    this.router.navigate(['/lobby']);
-  }
 }

@@ -8,7 +8,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe()); // new
   await app.listen(3000, '0.0.0.0');
   {
-    console.log('server up');
   }
 }
 bootstrap();
