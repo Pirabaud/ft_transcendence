@@ -52,7 +52,7 @@ export class ChatLobbyComponent {
         const name = result.name;
         const password = result.password;
         this.chatService.createRoom(name, password);
-        this.router.navigate(['/chat']);
+        window.location.href = 'chat';
         // console.log(result);
         /*Ici tu recuperes la data que tu as save (result)*/
       }
