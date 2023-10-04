@@ -49,16 +49,16 @@
 
                             <div class="avatar_on_off">
                                 <div class="avatar_user">
-                                    <img class="img_meter" src="https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Bernese-Mountain-Dog-icon.png" alt="avatar">
+                                    <img class="img_meter" src="{{ user.avatar }}" alt="avatar">
                                 </div>
                                 <div class="online_offline">
-                                    <img src="https://icons.iconarchive.com/icons/hopstarter/soft-scraps/16/Button-Blank-Green-icon.png" alt="">
+                                    <img src="{{ user.status }}" alt="">
                                 </div>
                                 </div>
                                 <div class="name_user">
 
                                     <div class="use_name_user">
-                                        <p>{{ user }}</p>
+                                        <p>{{ user.username }}</p>
                                     </div>
 
                                 </div>

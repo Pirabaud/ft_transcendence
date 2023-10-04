@@ -11,6 +11,12 @@ import { JoinRoomComponent } from "./room_service/join-room/join-room.component"
 import { Router } from '@angular/router';
 
 
+export interface Participant {
+  username: string;
+  avatar: string;
+  status: string;
+}
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -19,7 +25,7 @@ import { Router } from '@angular/router';
 export class ChatComponent {
   // Définissez une variable pour garder un compte des divs ajoutées
   roomCount: number = 0;
-  users: string[] = [];
+  users: Participant[] = [];
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private router: Router) {}
 
@@ -69,10 +75,47 @@ export class ChatComponent {
   }
   
   addUser(pseudo: string) {
-    const index = this.users.indexOf(pseudo);
-    if (!(index > -1))
-      this.users.push(pseudo);
+
+    var ok: boolean = true;
+    var i = 0;
+    while (this.users[i]) {
+      if (this.users[i].username == pseudo) {
+        ok = false;
+        break;
+      }
+      i++;
+    }
+
+    if (!ok)
+      return;
+  
+    var status: boolean;
+    
+    this.chatService.getPic(pseudo).subscribe((response1: any) => {
+      if (response1) {
+        const pic: string = response1.Img;
+
+        this.chatService.getStatus(pseudo).subscribe((response2: any) => {
+          if (response2) {
+            if (response2.Status == "online") {
+              this.users.push({
+                username: pseudo,
+                avatar: pic,
+                status: "../../../assets/images/Button-Blank-Green-icon.png",
+              });
+            } else {
+              this.users.push({
+                username: pseudo,
+                avatar: pic,
+                status: "../../../assets/images/Button-Blank-Green-icon.png", // A REMPLACER PAR UNE ICONE ROUGE
+              });
+            }
+          }
+        });
+      }
+    });
   }
+    
   
   openDataKick() {
     const dialogRef = this.dialog.open(KickComponent, {

@@ -158,36 +158,12 @@ export class ChatService {
 
   // FONCTIONS POUR LE BACK DE REMI
 
-  // getUsers(): Observable<any> {
-  //   return this.http.get<any>("http://localhost:3000/chat/getUsers");
-  // }
+  getPic(username: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/getPic", {username});
+  }
 
-  // getAdmins(): Observable<any> {
-  //   return this.http.get<any>("http://localhost:3000/chat/getAdmins");
-  // }
-
-  // IsThereAPassword(): Observable<any> {
-  //   return this.http.get<any>("http://localhost:3000/chat/IsThereAPassword");
-  // }
-
-  // savePassword(password: string): Observable<any> {
-  //   return this.http.post<any>("http://localhost:3000/chat/savePassword", {password});
-  // }
-
-  // comparePassword(password: string): Observable<any> {
-  //   return this.http.post<any>("http://localhost:3000/chat/comparePassword", {password});
-  // }
-
-  // saveMessage(message: MessageEventDto): Observable<any> {
-  //   return this.http.post<any>("http://localhost:3000/chat/saveMessage", message);
-  // }
-
-  // kick(userId: string): Observable<any> {
-  //   return this.http.post<any>("http://localhost:3000/chat/kick", {userId});
-  // }
-
-  // ban(userId: string): Observable<any> {
-  //   return this.http.post<any>("http://localhost:3000/chat/ban", {userId});
-  // }
+  getStatus(username: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/getStatus", {username});
+  }
 
 }
