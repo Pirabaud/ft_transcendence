@@ -44,6 +44,11 @@ import { MuteComponent } from './components/chat/room_service/mute/mute.componen
 import { SetPasswordComponent } from './components/chat/room_service/set-password/set-password.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BlockComponent } from './components/chat/user_service/block/block.component';
+import { ProfilComponent } from './components/chat/user_service/profil/profil.component';
+import { PrivateMessageComponent } from './components/chat/user_service/private-message/private-message.component';
+import { ClassicGameComponent } from './components/chat/user_service/classic-game/classic-game.component';
+import { PortalGameComponent } from './components/chat/user_service/portal-game/portal-game.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
 
@@ -73,6 +78,11 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     MuteComponent,
     SetPasswordComponent,
     InvalidComponent,
+    BlockComponent,
+    ProfilComponent,
+    PrivateMessageComponent,
+    ClassicGameComponent,
+    PortalGameComponent,
   ],
   imports: [
     BrowserModule,

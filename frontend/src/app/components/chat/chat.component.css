@@ -150,41 +150,32 @@ body
   background-color: #27A64BFF;
   color: white;
   font: 18px 'Oswald', sans-serif;
-  flex: 0.38;
+  flex: 0.4;
+  min-width: 150px;
+  max-width: 173px;
+  display: flex;
   text-align: center;
-  /* border-right: 1px solid #EEEDF2FF; */
   padding: 2px;
   margin: 2px;
-  /* border-top-left-radius: 7px;
-  border-bottom-left-radius: 7px; */
   border-radius: 7px;
   box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
-  /* transition: 0.5s; */
-  /* justify-content: center; */
+  justify-content: center;
+  align-items: center;
 }
 
 .room_user {
   background-color: #5583F1FF;
-  /* display: flex; */
   color: white;
   font: 18px 'Oswald', sans-serif;
-  flex: 0.62;
+  flex: 0.6;
   text-align: center;
+  display: flex;
   padding: 2px;
   margin: 2px;
-  /* border-top-right-radius: 7px; */
-  /* border-bottom-right-radius: 7px; */
   border-radius: 7px;
   box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
-  /* transition: 0.5s; */
-  /* border-bottom: 1px solid #EEEDF2FF; */
-  /* justify-content: center; */
-  /* align-items: center; */
-}
-
-.room_name_user .room_name_channel {
-  position: relative;
-  bottom: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 /* .room_user:hover .room_name:hover {

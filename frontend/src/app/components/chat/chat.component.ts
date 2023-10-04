@@ -180,4 +180,8 @@ export class ChatComponent {
         alert("Channel can't be NULL");
     });
   }
+
+  viewProfilUser() {
+    this.router.navigate(['/friendProfile']);
+  }
 }

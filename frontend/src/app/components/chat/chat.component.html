@@ -8,11 +8,11 @@
                 <div id="name_room_user">
 
                     <div class="room_name">
-                        <p class="room_name_channel">Channels</p>
+                        <p>Channels</p>
                     </div>
 
                     <div class="room_user">
-                        <p class="room_name_user">Users</p>
+                        <p >Users</p>
                     </div>
 
                 </div>
@@ -71,9 +71,9 @@
                                             <mat-icon>more_vert</mat-icon>
                                           </button>
                                           <mat-menu #menu="matMenu">
-                                            <button mat-menu-item>
-                                              <mat-icon>block</mat-icon>
-                                              <span>Block</span>
+                                            <button mat-menu-item (click)="viewProfilUser()">
+                                              <mat-icon>account_circle</mat-icon>
+                                              <span>View Profil</span>
                                             </button>
                                             <button mat-menu-item>
                                                 <mat-icon>person_add</mat-icon>
@@ -87,8 +87,11 @@
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
+                                              <button mat-menu-item>
+                                                <mat-icon>block</mat-icon>
+                                                <span>Block</span>
+                                              </button>
                                           </mat-menu>
-
                                     </div>
                                   </div>
                             
@@ -112,7 +115,7 @@
                         <div class="settings">
             
                             <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
+                                <mat-icon>settings</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
                                 <button mat-menu-item>
