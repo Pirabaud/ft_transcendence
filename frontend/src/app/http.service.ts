@@ -78,18 +78,22 @@ export class HttpService {
     {
      return this.http.post<any>("http://localhost:3000/friendRequest/idWithUsername", { username });
     }
-    updateUserStatus(status: string): Observable<any>
+    
+    updateUserStatus(status: string): Observable<string>
     {
-      return this.http.post<any>("http://localhost:3000/user/updateStatus", { status });
+      return this.http.post<string>("http://localhost:3000/user/updateStatus", { status });
     }
+
     getUserStatus()
     {
       return this.http.get<{status: string}>("http://localhost:3000/user/updateStatus");
     }
+
     acceptFriendRequest(senderId: number): Observable<any>
     {
       return this.http.post<any>("http://localhost:3000/friendRequest/acceptFR", { senderId });
     }
+
     refuseFriendRequest(senderId: number): Observable<any>
     {
      return this.http.post<any>("http://localhost:3000/friendRequest/refuseFR", { senderId })
@@ -107,14 +111,14 @@ export class HttpService {
     getLeaderBoard(): Observable<any> {
       return this.http.get<any>("http://localhost:3000/user/leaderboard");
     }
-    getGameStatus(): Observable<{gameStatus: number}> {
-      return this.http.get<{gameStatus: number}>("http://localhost:3000/user/gameStatus");
+    getGameStatus(): Observable<boolean> {
+      return this.http.get<boolean> ("http://localhost:3000/user/gameStatus");
     }
-    setGameStatus(status: number): Observable<any> {
+    setGameStatus(status: boolean): Observable<any> {
       return this.http.post<any>("http://localhost:3000/user/gameStatus", { status });
     }
-    getCurrentGameId(): Observable<{currentGameId: string}> {
-      return this.http.get<{currentGameId: string}>("http://localhost:3000/user/currentGameId");
+    getCurrentGameId(): Observable<string> {
+      return this.http.get<string>("http://localhost:3000/user/currentGameId");
     }
     setCurrentGameId(gameId: string): Observable<any> {
       return this.http.post<any>("http://localhost:3000/user/currentGameId", { gameId });

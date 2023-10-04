@@ -63,7 +63,7 @@ export class AuthService {
           friendList: null,
           friendRequestsNb: 0,
           status: 'offline',
-          gameStatus: 0,
+          gameStatus: false,
           currentGameId: '',
           currentOpponentId: 0,
         };

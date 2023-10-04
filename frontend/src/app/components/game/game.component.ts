@@ -149,9 +149,9 @@ export class GameComponent implements AfterViewInit {
     this.resumeGameSubscription = this.gameService.getResumeGame().subscribe(() => this.receiveResumeGame());
     this.backLobbySubscription =   this.gameService.getBackLobby().subscribe(() => this.router.navigate(["/lobby"]));
     this.httpBackEnd.getCurrentGameId().subscribe(
-      (gameIdObj: {currentGameId: string}) =>
+      (currentGameId: string) =>
     {
-      if (!this.gameService.getJoinedViaMatchmaking() || (gameIdObj.currentGameId !== '' && gameIdObj.currentGameId !== this.gameId))
+      if (!this.gameService.getJoinedViaMatchmaking() || (currentGameId !== '' && currentGameId !== this.gameId))
       {
         this.httpBackEnd.updateUserStatus('offline').subscribe(() => {});
         this.router.navigate(["/login"]);
@@ -163,7 +163,7 @@ export class GameComponent implements AfterViewInit {
       this.cancelMatchmaking();
       if (this.gameStarted === true) {
         this.gameService.cancelGame(this.gameId);
-        this.httpBackEnd.setGameStatus(0).subscribe(() => {});
+        this.httpBackEnd.setGameStatus(false).subscribe(() => {});
         this.httpBackEnd.setCurrentGameId("").subscribe(() => {});
       }
       this.router.navigate(['/lobby']);
@@ -246,8 +246,8 @@ export class GameComponent implements AfterViewInit {
     if (this.gameService.getSimulateRecJoinedPlayers())
       this.receiveJoinedPlayers();
     this.httpBackEnd.getGameStatus().subscribe(
-      (gameStatusObj: {gameStatus: number}) => {
-        if (gameStatusObj.gameStatus === 0 && this.gameService.getJoinedViaMatchmaking())
+      (gameStatus: boolean) => {
+        if (gameStatus === false && this.gameService.getJoinedViaMatchmaking())
           this.httpBackEnd.setCurrentGameId(this.gameId).subscribe(() => {});
       })
     this.initPaddles();
@@ -315,7 +315,7 @@ export class GameComponent implements AfterViewInit {
   /*Handle game canceled*/
   receiveCancelGame() {
     this.gameStarted = false;
-    this.httpBackEnd.setGameStatus(0).subscribe(() => {});
+    this.httpBackEnd.setGameStatus(false).subscribe(() => {});
     this.httpBackEnd.setCurrentGameId('').subscribe(() => {});
     this.gameService.setSimulateRecJoinedPlayers(false);
     this.gameService.setJoinedViaMatchmaking(false);
@@ -345,7 +345,7 @@ export class GameComponent implements AfterViewInit {
     setTimeout(() => {
       this.p1VictoryMessageElement.nativeElement.style.visibility = "hidden";
       document.documentElement.style.cursor = 'auto';
-      this.httpBackEnd.setGameStatus(0).subscribe(() => {});
+      this.httpBackEnd.setGameStatus(false).subscribe(() => {});
       this.httpBackEnd.setCurrentGameId('').subscribe(() => {});
       this.router.navigate(['/lobby']);
       }, 2500);
@@ -407,7 +407,7 @@ export class GameComponent implements AfterViewInit {
   /*After each goal, the game is resumed when this method receives an event*/
   receiveResumeGame()
   {
-    this.httpBackEnd.setGameStatus(1).subscribe(() => {});
+    this.httpBackEnd.setGameStatus(true).subscribe(() => {});
     this.gameStarted = true;
     this.moveBall();
     this.initPaddles();
@@ -449,7 +449,7 @@ export class GameComponent implements AfterViewInit {
     this.matchmakingMsgElement.nativeElement.style.visibility = "hidden";
     this.overlayElement.nativeElement.style.visibility = "hidden";
     this.gameService.startGame(this.gameId);
-    this.httpBackEnd.setGameStatus(1).subscribe(() => {});
+    this.httpBackEnd.setGameStatus(true).subscribe(() => {});
     this.gameStarted = true;
     setTimeout(() => {
       this.moveBall();

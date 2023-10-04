@@ -42,7 +42,7 @@ export class User {
   status: string;
 
   @Column({ nullable: true })
-  gameStatus: number;
+  gameStatus: boolean;
 
   @Column({ nullable: true })
   currentGameId: string;
