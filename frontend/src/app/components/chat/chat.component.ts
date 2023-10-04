@@ -97,9 +97,14 @@ export class ChatComponent {
       if (result.name) {
         const name = result.name;
         const password = result.password;
-        this.chatService.joinRoom(name, password);
-        // this.addRoom(name);
-        // window.location.href = 'chat';
+        this.chatService.joinRoom(name, password).subscribe(result2 => {
+          if (result2) {
+            // Opération réussie, utilisez la valeur ici
+            this.addRoom(name);
+          } else {
+            // Opération échouée
+          }
+        });
       }
     });
   }

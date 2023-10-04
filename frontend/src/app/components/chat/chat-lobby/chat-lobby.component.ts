@@ -20,7 +20,7 @@ export class ChatLobbyComponent {
   ngOnInit() {
     this.chatService.findAllRoom().subscribe((Response) => {
       if (Response == true) {
-        this.router.navigate(['chat']);
+        window.location.href = 'chat';
       }
     });
   }

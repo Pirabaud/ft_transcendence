@@ -105,22 +105,27 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     @SubscribeMessage('joinRoom')
     async joinRoom(channel: any, room: any) {
 
-        console.log(room.channel);
-        console.log(room.password);
-
         if (await this.chatService.IsThereARoom(room.channel) == false) {
-            console.log("THIS ROOM DOESN'T EXIST");
+            // THIS ROOM DOESN'T EXIST
             return 1;
         }
         
-        console.log("THIS ROOM ALREADY EXIST");
-        
         const verify = await this.chatService.verifyPassword(room.channel, room.password);
         
-        if (verify.verify == false)
+        if (verify.verify == false) {
+            // WRONG PASSWORD
             return 2
+        }
 
-        return 3;
+        if (await this.chatService.IsParticipantInTheRoom(room.channel, room.username)) {
+            // YOU'RE ALREADY IN THE ROOM
+            return 3;
+        }
+
+        // Add the participant
+        await this.chatService.addParticipant(room.channel, room.username);
+
+        return 4;
     }
 
     @SubscribeMessage('newRoom')

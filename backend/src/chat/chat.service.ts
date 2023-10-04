@@ -99,6 +99,9 @@ export class ChatService {
             console.error('Room with ID ${id} not found');
             return null;
         }
+
+        if (room.password == false)
+            return { verify: true };
         
         const result = await bcrypt.compare(password, room.setPassword);
         console.log("result", result);
@@ -130,6 +133,19 @@ export class ChatService {
         room.participants.push(User);
         await this.roomRepository.save(room);
         return true;
+    }
+
+    async IsParticipantInTheRoom(id: string, User: string) {
+        const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
+        
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
+        const index =room.participants.indexOf(User);
+        if (index > -1)
+            return true;
+        return false;
     }
 
     // async kick(id: string, User: Participant) {

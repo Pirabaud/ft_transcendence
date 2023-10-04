@@ -105,20 +105,39 @@ export class ChatService {
     });
   }
 
-  joinRoom(channel: string, password: string): void {
-    const room = {
-      channel: channel,
-      password: password,
-    }
-    this.socket.emit('joinRoom', room, (response: any) => {
-      if (response == 1) {
-        window.alert("This room doesn't exist!");
-      } else if (response == 2) {
-        window.alert("Wrong password!");
-      } else if (response == 3) {
-        window.alert("Bravo!");
-      }
-  });
+  joinRoom(channel: string, password: string): Observable<boolean> {
+    return new Observable<boolean>(observer => {
+      this.httpService.getUsername().subscribe((response: any) => {
+        if (response) {
+          const room = {
+            channel: channel,
+            password: password,
+            username: response.Username,
+          };
+  
+          this.socket.emit('joinRoom', room, (response: any) => {
+            if (response == 1) {
+              window.alert("This room doesn't exist!");
+              observer.next(false);
+            } else if (response == 2) {
+              window.alert("Wrong password!");
+              observer.next(false);
+            } else if (response == 3) {
+              window.alert("You're already in the room!");
+              observer.next(false);
+            } else {
+              window.alert("Bravo!");
+              observer.next(true);
+            }
+            observer.complete();
+          });
+        } else {
+          console.error("Error receiving username");
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
   
   getAllParticipants(channel: string): Observable<Array<string>> {
