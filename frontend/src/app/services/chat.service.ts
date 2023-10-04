@@ -91,12 +91,12 @@ export class ChatService {
   }
   
   async createRoom(channel: string, password: string) {
-    await this.httpService.getUsername().subscribe((response: any) => {
+    await this.httpService.getUserId().subscribe((response: any) => {
       if (response) {
         const room = {
           channel: channel,
           password: password,
-          username: response.Username,
+          userId: response.UserId,
         };
         this.socket.emit('newRoom', room);
       } else {
@@ -107,12 +107,12 @@ export class ChatService {
 
   joinRoom(channel: string, password: string): Observable<boolean> {
     return new Observable<boolean>(observer => {
-      this.httpService.getUsername().subscribe((response: any) => {
-        if (response) {
+      this.httpService.getUserId().subscribe((response: any) => {
+      if (response) {
           const room = {
             channel: channel,
             password: password,
-            username: response.Username,
+            user: response.UserId,
           };
   
           this.socket.emit('joinRoom', room, (response: any) => {
@@ -140,12 +140,12 @@ export class ChatService {
     });
   }
   
-  getAllParticipants(channel: string): Observable<Array<string>> {
+  getAllParticipants(channel: string): Observable<Array<number>> {
     const room = { channel: channel };
-    return new Observable<string[]>(observer => {
+    return new Observable<number[]>(observer => {
       const room = { channel: channel };
       
-      this.socket.emit('getAllParticipants', room, (response: string[]) => {
+      this.socket.emit('getAllParticipants', room, (response: number[]) => {
         observer.next(response); // Émettez la réponse lorsque les données sont disponibles
         observer.complete(); // Indiquez que l'observable est terminé
       });
@@ -158,12 +158,16 @@ export class ChatService {
 
   // FONCTIONS POUR LE BACK DE REMI
 
-  getPic(username: string): Observable<any> {
-    return this.http.post<any>("http://localhost:3000/user/getPic", {username});
+  getUsername(userId: number): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/getUsername", {userId});
   }
 
-  getStatus(username: string): Observable<any> {
-    return this.http.post<any>("http://localhost:3000/user/getStatus", {username});
+  getPic(userId: number): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/getPic", {userId});
+  }
+
+  getStatus(userId: number): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/user/getStatus", {userId});
   }
 
 }

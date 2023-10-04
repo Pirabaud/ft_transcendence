@@ -39,27 +39,25 @@ export class UserService {
     return { Username: user.username };
   }
 
-  async getPic(username: string) {
-    console.log("USERNAME", username);
-    const user = await this.userRepository.findOne({ where: { username: username, }, });
+  async getPic(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       console.error('User with ID ${id} not found');
       return null;
     }
-
+    
     return { Img: user.img };
   }
 
-  async getStatus(username: string) {
-    console.log("USERNAME", username);
-    const user = await this.userRepository.findOne({ where: { username: username, }, });
+  async getStatus(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       console.error('User with ID ${id} not found');
       return null;
     }
-
+    
     return { Status: user.status };
   }
 

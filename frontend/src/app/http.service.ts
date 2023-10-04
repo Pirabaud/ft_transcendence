@@ -125,7 +125,7 @@ export class HttpService {
     setCurrentOpponentId(gameId: string): Observable<any> {
       return this.http.post<any>("http://localhost:3000/user/currentOpponentId", { gameId });
     }
-    getUsername(): Observable<any> {
-      return this.http.get<any>("http://localhost:3000/user/getUsername");
+    getUserId(): Observable<any> {
+      return this.http.get<any>("http://localhost:3000/user/getUserId");
     }
 }

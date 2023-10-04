@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 export interface Participant {
+  userId: number;
   username: string;
   avatar: string;
   status: string;
@@ -66,10 +67,11 @@ export class ChatComponent {
     // Ajoutez un gestionnaire d'événement de clic à la div
     newDiv.addEventListener('click', () => {
 
-      this.chatService.getAllParticipants(roomId).subscribe((Response: Array<string>) => {
+      this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
         if (Response) {
           var i = 0;
           while ( Response[i] ) {
+            console.log("userID lol:", Response[i]);
             this.addUser(Response[i]);
             i++;
           }
@@ -85,12 +87,13 @@ export class ChatComponent {
     }
   }
   
-  addUser(pseudo: string) {
+  addUser(userID: number) {
 
     var ok: boolean = true;
+
     var i = 0;
     while (this.users[i]) {
-      if (this.users[i].username == pseudo) {
+      if (this.users[i].userId == userID) {
         ok = false;
         break;
       }
@@ -99,32 +102,44 @@ export class ChatComponent {
 
     if (!ok)
       return;
-  
-    var status: boolean;
-    
-    this.chatService.getPic(pseudo).subscribe((response1: any) => {
-      if (response1) {
-        const pic: string = response1.Img;
 
-        this.chatService.getStatus(pseudo).subscribe((response2: any) => {
+    var status: boolean;
+    var username: string;
+    var pic: string;
+
+    this.chatService.getUsername(userID).subscribe((response1: any) => {
+      if (response1) {
+        username = response1.Username;
+        
+        this.chatService.getPic(userID).subscribe((response2: any) => {
           if (response2) {
-            if (response2.Status == "online") {
-              this.users.push({
-                username: pseudo,
-                avatar: pic,
-                status: "../../../assets/images/Button-Blank-Green-icon.png",
-              });
-            } else {
-              this.users.push({
-                username: pseudo,
-                avatar: pic,
-                status: "../../../assets/images/Button-Blank-Red-icon.png", // A REMPLACER PAR UNE ICONE ROUGE
-              });
-            }
+            pic = response2.Img;
+    
+            this.chatService.getStatus(userID).subscribe((response3: any) => {
+              if (response3) {
+                if (response3.Status == "online") {
+                  this.users.push({
+                    userId: userID,
+                    username: username,
+                    avatar: pic,
+                    status: "../../../assets/images/Button-Blank-Green-icon.png",
+                  });
+                } else {
+                  this.users.push({
+                    userId: userID,
+                    username: username,
+                    avatar: pic,
+                    status: "../../../assets/images/Button-Blank-Red-icon.png",
+                  });
+                }
+              }
+            });
           }
         });
       }
     });
+    
+  
   }
     
   
