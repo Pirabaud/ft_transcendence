@@ -7,7 +7,7 @@ export class RoomData {
   roomId: string;
   
   @Column()
-  createdBy: string;
+  createdBy: number;
 
 	@Column()
 	setPassword: string;
@@ -16,7 +16,7 @@ export class RoomData {
   password?: boolean;
   
   @Column('simple-array', { nullable: true })
-  participants: Array<string>;
+  participants: Array<number>;
 }
   
   // @Column({ nullable: true })

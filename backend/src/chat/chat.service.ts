@@ -32,6 +32,7 @@ export class ChatService {
             console.log("Error while retrieving rooms");
             return null;
         }
+        console.log(result);
         return result;
     }
     
@@ -54,7 +55,7 @@ export class ChatService {
             console.error('Room with ID ${id} not found');
             return null;
         }
-        const username: string = room.participants[0];
+
         return room.participants;
     }
 
@@ -104,7 +105,6 @@ export class ChatService {
             return { verify: true };
         
         const result = await bcrypt.compare(password, room.setPassword);
-        console.log("result", result);
         return { verify: result };
     }
 
@@ -122,7 +122,7 @@ export class ChatService {
     //     return true;
     // }
 
-    async addParticipant(id: string, User: string) {
+    async addParticipant(id: string, User: number) {
         const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
         
         if (!room) {
@@ -135,16 +135,22 @@ export class ChatService {
         return true;
     }
 
-    async IsParticipantInTheRoom(id: string, User: string) {
+    async IsParticipantInTheRoom(id: string, User: number) {
         const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
         
         if (!room) {
             console.error('Room with ID ${id} not found');
             return null;
         }
-        const index =room.participants.indexOf(User);
-        if (index > -1)
-            return true;
+       
+        var i = 0;
+        while (room.participants[i]) {
+            if (room.participants[i] == User) {
+                return true;
+            }
+            i++;
+        }
+
         return false;
     }
 

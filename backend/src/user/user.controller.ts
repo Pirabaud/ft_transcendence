@@ -129,19 +129,24 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('getUsername')
-  async getUsername(@Request() req) {
-    return await this.userService.getUsername(req.user.sub);
+  @Get('getUserId')
+  async getUserId(@Request() req) {
+    return { UserId: req.user.sub } ;
+  }
+
+  @Post('getUsername')
+  async getUsername(@Body() userId: { userId: number }) {
+    return await this.userService.getUsername(userId.userId);
   }
 
   @Post('getPic')
-  async getPic(@Body() username: { username: string }) {
-    return await this.userService.getPic(username.username);
+  async getPic(@Body() userId: { userId: number }) {
+    return await this.userService.getPic(userId.userId);
   }
 
   @Post('getStatus')
-  async getStatus(@Body() username: { username: string }) {
-    return await this.userService.getStatus(username.username);
+  async getStatus(@Body() userId: { userId: number }) {
+    return await this.userService.getStatus(userId.userId);
   }
 
   @UseGuards(JwtAuthGuard)

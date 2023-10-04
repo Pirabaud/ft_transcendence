@@ -117,13 +117,14 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             return 2
         }
 
-        if (await this.chatService.IsParticipantInTheRoom(room.channel, room.username)) {
+        const ok: boolean = await this.chatService.IsParticipantInTheRoom(room.channel, room.user);
+        if (ok) {
             // YOU'RE ALREADY IN THE ROOM
             return 3;
         }
 
         // Add the participant
-        await this.chatService.addParticipant(room.channel, room.username);
+        await this.chatService.addParticipant(room.channel, room.user);
 
         return 4;
     }
@@ -134,8 +135,6 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         var pass: boolean = false;
         var hashedPassword: string = '';
         const saltRounds = 10;
-       
-
         
         if (await this.chatService.IsThereARoom(room.channel) == true) {
             console.log("THIS ROOM ALREADY EXIST");
@@ -151,10 +150,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         
         const newData: RoomData = {
             roomId: room.channel,
-            createdBy: room.username,
+            createdBy: room.userId,
             setPassword: hashedPassword,
             password: pass,
-            participants: [room.username,],
+            participants: [room.userId,],
             // messages: [],
             // admin: [],
             // ban: [],
@@ -167,9 +166,9 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
     
     @SubscribeMessage('getAllParticipants')
-    async getAllParticipants(channel: any, room: any): Promise<Array<string>> {
+    async getAllParticipants(channel: any, room: any): Promise<Array<number>> {
 
-        const Users: Array<string> = await this.chatService.getUsers(room.channel);
+        const Users: Array<number> = await this.chatService.getUsers(room.channel);
 
         return Users;
     }
