@@ -105,15 +105,6 @@ export class ChatComponent {
       });
 
     });
-
-    // Créez le bouton de fermeture
-    const closeButton = document.createElement('button');
-    closeButton.classList.add('close-button');
-    closeButton.innerHTML = '<div class="close-icon">&#10006;</div>';
-
-    // Ajoutez le bouton de fermeture à la div
-    newDiv.appendChild(closeButton);
-    
     // Ajoutez la nouvelle div à la classe .all_room_name
     const allRoomName = document.querySelector('.all_room_name');
     if (allRoomName) {
