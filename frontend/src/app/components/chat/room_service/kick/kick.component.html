@@ -7,7 +7,7 @@
       <form (submit)="saveData()">
           <img class="width" src="https://thenounproject.com/api/private/icons/882198/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="">
         <mat-form-field>
-          <input matInput placeholder="Who !?" [(ngModel)]="data">
+          <input matInput placeholder="Who !?" [(ngModel)]="data.name" name="name">
         </mat-form-field>
         <!-- <iframe src="https://giphy.com/embed/l2QE2CQyK2ZyVEGJy" width="480" height="267" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/taylor-swift-behind-the-scenes-l2QE2CQyK2ZyVEGJy">via GIPHY</a></p> -->
       </form>

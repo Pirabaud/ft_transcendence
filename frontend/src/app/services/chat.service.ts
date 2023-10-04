@@ -24,22 +24,8 @@ export interface Participant {
   providedIn: 'root'
 })
 export class ChatService {
-  dataArray: any[] = [];
-  // private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private socket: Socket, private http: HttpClient, private httpService: HttpService, private router: Router) {
-
-  }
-
-  // Méthode pour créer une salle
-  // createRoom(roomId: string, username: string, avatar: string) {
-  //   const body = {
-  //     roomId: roomId,
-  //     username: username,
-  //   };
-
-  //   return this.httpClient.post(`${this.apiUrl}/rooms`, body);
-  // }
+  constructor(private socket: Socket, private http: HttpClient, private httpService: HttpService, private router: Router) {}
 
   connected(): boolean {
     return this.socket.ioSocket.connected;
@@ -151,12 +137,6 @@ export class ChatService {
       });
     });
   }
-
-  
-
-
-
-  // FONCTIONS POUR LE BACK DE REMI
 
   getUsername(userId: number): Observable<any> {
     return this.http.post<any>("http://localhost:3000/user/getUsername", {userId});

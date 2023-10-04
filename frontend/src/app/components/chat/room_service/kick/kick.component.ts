@@ -7,7 +7,7 @@ import { MatDialogRef } from "@angular/material/dialog";
   styleUrls: ['./kick.component.css']
 })
 export class KickComponent {
-  data: string = '';
+  data: {name: string} = {name: ''};
 
   constructor(private dialogRef: MatDialogRef<KickComponent>) {}
 
