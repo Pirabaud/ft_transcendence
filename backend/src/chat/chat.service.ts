@@ -12,18 +12,6 @@ export class ChatService {
         private roomRepository: Repository<RoomData>,
     ) {}
 
-    async findAllRoom() {
-        try {
-            const result: RoomData[] = await this.roomRepository.find();
-            if (!result[0])
-                return false;
-        } catch (error) {
-            console.log("Error while retrieving rooms");
-            return null;
-        }
-        return true;
-    }
-
     async getAllRoom() {
         var result: RoomData[];
         try {

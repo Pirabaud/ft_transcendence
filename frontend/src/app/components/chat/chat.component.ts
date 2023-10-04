@@ -84,7 +84,6 @@ export class ChatComponent {
   addRoom(roomId: string) {
     this.roomCount++;
     const newDiv = document.createElement('div');
-    // const cross = document.createElement('');
     newDiv.textContent = roomId;
     
     // Ajoutez la classe "room-item" à la nouvelle div

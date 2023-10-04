@@ -68,10 +68,6 @@ export class ChatService {
   //   return this.socket.emit('room');
   // }
 
-  findAllRoom(): Observable<any> {
-    return this.http.get<any>("http://localhost:3000/chat/findAllRoom");
-  }
-
   getAllRoom(): Observable<any> {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
   }
