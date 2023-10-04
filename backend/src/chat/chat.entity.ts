@@ -15,11 +15,12 @@ export class RoomData {
 	@Column({ nullable: true })
   password?: boolean;
   
-  // @Column({ nullable: true })
-  // messages: MessageDto[];
+  @Column('simple-array', { nullable: true })
+  participants: Array<string>;
+}
   
   // @Column({ nullable: true })
-  // participants: Participant[]; // id of Users
+  // messages: MessageDto[];
   
   // @Column({ nullable: true })
   // admin: number[];
@@ -27,7 +28,6 @@ export class RoomData {
 	// @Column({ nullable: true })
   // ban: number[]; // id of Users
   
-}
   // @Column()
   // createdDate: Date;
 

@@ -8,10 +8,11 @@ import {
 
 import {Socket} from 'socket.io';
 import {ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
-import {Participant, ChatDto, toMessageDto, MessageDto} from "./chat.dto";
-
+import {Participant, ChatDto, toMessageDto, MessageDto, MessageEventDto} from "./chat.dto";
+import { UserService } from 'src/user/user.service';
 import {ChatService} from "./chat.service";
 import { RoomData } from 'src/chat/chat.entity';
+import { User } from 'src/user/user.entity';
 import * as bcrypt from 'bcrypt';
 
 // INCROYABLE A NE PAS PERDRE 
@@ -27,7 +28,8 @@ import * as bcrypt from 'bcrypt';
 export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
     constructor (
-        private chatService: ChatService
+        private chatService: ChatService,
+        private userService: UserService,
     ) {}
 
     @WebSocketServer() server;
@@ -141,67 +143,30 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             pass = true;
             hashedPassword = await bcrypt.hash(room.password, saltRounds);
         }
-
-        console.log("PASS", pass);
-
+        
         const newData: RoomData = {
             roomId: room.channel,
             createdBy: room.username,
             setPassword: hashedPassword,
             password: pass,
+            participants: [room.username,],
             // messages: [],
-            // participants: [],
             // admin: [],
             // ban: [],
-          };
+        };
         await this.chatService.saveRoom(newData);
 
-        return true;
 
-        // try {
-        //     ChatWebsocketGateway.createRoom(socket, room);
-        //     console.log("All is Good");
-        // } catch (e) {
-        //     console.error('Failed to initiate room', e);
-        //     throw e;
-        // }
-        // return ChatService.getMessages("oui");
-        // this.server.emit("fill data", ChatService.getMessages("oui"));
-        //         try {
-        //     // return ChatService.getMessages(roomId, fromIndex, toIndex);
-        //     return ChatService.getMessages("roomid");
-        // // } catch (e) {
-        // //     console.error('Failed to get room messages', e);
-        // //     throw new ForbiddenException({code: 'access-forbidden', message: 'The access is forbidden'});
-        // // }
+        return true;
     }
 
-    // static get(roomId: string): RoomData {
-    //     return this.rooms.get(roomId);
-    // }
+    
+    @SubscribeMessage('getAllParticipants')
+    async getAllParticipants(channel: any, room: any): Promise<Array<string>> {
 
-    // async createRoom(socket: Socket, room: newRoom) {
-    //     // if (this.rooms.has(roomId)) {
-    //     //     throw new ConflictException({code: 'room.conflict', message: `Room with '${roomId}' already exists`})}
-    //     const roomData: RoomData = {
-    //         id: room.channel,
-    //         createdBy: await this.userService.getUsername(socket.id),
-    //         setPassword: await this.chatService.savePassword(room.channel, room.password),
-    //         password: await this.chatService.thereArePassword(room.password),
-    //         messages: 0,
-    //         participants: 0,
-    //         admin: 0,
-    //         ban: 0,
-    //       };
-    //     // this.rooms.set(roomId, new RoomData(roomDto.creatorUsername));
-    // }
+        const Users: Array<string> = await this.chatService.getUsers(room.channel);
 
-    // static close(roomId: string) {
-    //     if (!this.rooms.has(roomId)) {
-    //         throw new NotFoundException({code: 'room.not-fond', message: `Room with '${roomId}' not found`})
-    //     }
-    //     this.rooms.delete(roomId);
-    // }
-
+        return Users;
+    }
     
 }

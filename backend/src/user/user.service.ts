@@ -19,6 +19,10 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { username: username, }, });
+  }
+
   async findMatchesid(id: number): Promise<string[]> {
     const User = await this.userRepository.findOneBy({ id });
     return User.matchHistory;

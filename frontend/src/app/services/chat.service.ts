@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Socket} from 'ngx-socket-io';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
@@ -12,6 +12,12 @@ export interface MessageEventDto {
   username: string;
   content: string;
   createdAt: Date;
+}
+
+export interface Participant {
+  username: string;
+  avatar: string;
+  connected: boolean;
 }
 
 @Injectable({
@@ -115,12 +121,16 @@ export class ChatService {
   });
   }
   
-  getAllMessage(): MessageEventDto[] {
-    this.socket.fromEvent('fill data').subscribe((data: any) => {
-      this.dataArray = data;
-      console.log('Tableau reçu du serveur :', this.dataArray);
-    })
-    return this.dataArray;
+  getAllParticipants(channel: string): Observable<Array<string>> {
+    const room = { channel: channel };
+    return new Observable<string[]>(observer => {
+      const room = { channel: channel };
+      
+      this.socket.emit('getAllParticipants', room, (response: string[]) => {
+        observer.next(response); // Émettez la réponse lorsque les données sont disponibles
+        observer.complete(); // Indiquez que l'observable est terminé
+      });
+    });
   }
 
   

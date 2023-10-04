@@ -41,14 +41,25 @@ export class ChatComponent {
   addRoom(roomId: string) {
     this.roomCount++;
     const newDiv = document.createElement('div');
-    if (roomId) {
-      newDiv.textContent = roomId;
-    } else {
-      newDiv.textContent = `Room ${this.roomCount}`;
-    }
+    newDiv.textContent = roomId;
     
     // Ajoutez la classe "room-item" à la nouvelle div
     newDiv.classList.add('room-item');
+
+    // Ajoutez un gestionnaire d'événement de clic à la div
+    newDiv.addEventListener('click', () => {
+
+      this.chatService.getAllParticipants(roomId).subscribe((Response: Array<string>) => {
+        if (Response) {
+          var i = 0;
+          while ( Response[i] ) {
+            this.addUser(Response[i]);
+            i++;
+          }
+        }
+      });
+
+    });
     
     // Ajoutez la nouvelle div à la classe .all_room_name
     const allRoomName = document.querySelector('.all_room_name');
@@ -57,8 +68,10 @@ export class ChatComponent {
     }
   }
   
-  addUser() {
-    this.users.push();
+  addUser(pseudo: string) {
+    const index = this.users.indexOf(pseudo);
+    if (!(index > -1))
+      this.users.push(pseudo);
   }
   
   openDataKick() {
@@ -105,7 +118,7 @@ export class ChatComponent {
         this.addRoom(name);
       }
       else
-      alert("Channel can't be NULL");
+        alert("Channel can't be NULL");
     });
   }
 

@@ -39,10 +39,6 @@ export class ChatService {
         await this.roomRepository.delete(id);
     }
 
-    // async setRoomId(roomId: string) {
-
-    // }
-
     async saveRoom(room: RoomData) {
         try {
           await this.roomRepository.save(room);
@@ -51,16 +47,16 @@ export class ChatService {
         }
     }
     
-    // async getUsers(id: string) {
-    //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+    async getUsers(id: string) {
+        const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
-    //     if (!room) {
-    //         console.error('Room with ID ${id} not found');
-    //         return null;
-    //     }
-
-    //     return room.participants;
-    // }
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
+        const username: string = room.participants[0];
+        return room.participants;
+    }
 
     // async getAdmins(id: string) {
     //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
@@ -96,30 +92,6 @@ export class ChatService {
         return room.password;
     }
 
-    // async savePassword(password: string) {
-    //     // const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
-    //     const saltRounds = 10;
-    //     const hashedPassword = await bcrypt.hash(password, saltRounds);
-        
-    //     return hashedPassword;
-    //     // if (!room) {
-    //     //     console.error('Room with ID ${id} not found');
-    //     //     return null;
-    //     // }
-
-    //     // await this.roomRepository.delete(id);
-
-    //     // if (password == null) {
-    //     //     room.password = false;
-    //     // } else {
-    //     //     room.password = true;
-    //     //     room.setPassword = hashedPassword;
-    //     // }
-
-    //     // await this.roomRepository.save(room);
-    //     return true;
-    // }
-
     async verifyPassword(id: string, password: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
@@ -146,6 +118,19 @@ export class ChatService {
     //     await this.roomRepository.save(room);
     //     return true;
     // }
+
+    async addParticipant(id: string, User: string) {
+        const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
+        
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
+        await this.roomRepository.delete(id);
+        room.participants.push(User);
+        await this.roomRepository.save(room);
+        return true;
+    }
 
     // async kick(id: string, User: Participant) {
     //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
