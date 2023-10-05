@@ -142,21 +142,25 @@ export class ChatService {
         return false;
     }
 
-    // async kick(id: string, User: Participant) {
-    //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+    async kickParticipant(id: string, User: number) {
+        const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
         
-    //     if (!room) {
-    //         console.error('Room with ID ${id} not found');
-    //         return null;
-    //     }
-        
-    //     await this.roomRepository.delete(id);
-    //     const index = room.participants.indexOf(User);
-    //     if (index > -1)
-    //         room.participants.splice(index, 1);
-    //     await this.roomRepository.save(room);
-    //     return true;
-    // }
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
+
+        await this.roomRepository.delete(id);
+        var i = 0;
+        while (room.participants[i]) {
+            if (room.participants[i] == User) {
+                room.participants.splice(i, 1);
+            }
+            i++;
+        }
+        await this.roomRepository.save(room);
+        return true;
+    }
 
     // async ban(id: string, userId: number) {
     //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });

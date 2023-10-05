@@ -282,6 +282,7 @@ body
   flex: 0.07;
   position: relative;
   bottom: 8px;
+  width: max-content;
 }
 
 .room-avatar {
