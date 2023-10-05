@@ -120,6 +120,7 @@ export class ChatComponent {
   }
 
   private initConnection(roomID: string) {
+   
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       this.messages.push(message);
     });
@@ -141,23 +142,21 @@ export class ChatComponent {
     });
     this.chatService.receiveEvent(`kick/${roomID}`).subscribe((userId: number) => {
       if (this.currentRoomId == roomID) {
-        var i = 0;
-        while (this.users[i]) {
-          if (this.users[i].userId == userId) {
+        var j = 0;
+        while (this.users[j]) {
+          if (this.users[j].userId == userId) {
             this.users.pop();
           }
-          i++;
+          j++;
         }
       }
       if (this.myUserId == userId) {
         this.removeAllUser();
         const roomItems = document.querySelectorAll('.room-item');
-        var j = 0;
         roomItems.forEach((div) => {
           if (div.textContent == roomID) {
               div.remove();
           }
-          j++;
         });
         const divChannelName = document.querySelector(".channel_name");
         if (divChannelName) {
@@ -172,7 +171,7 @@ export class ChatComponent {
         }
         this.currentRoomId = "";
         this.settingsVisible = false;
-        if (j == 1) {
+        if (roomItems.length == 1) {
           this.router.navigate(['chat-lobby']);
         }
       }
@@ -284,7 +283,7 @@ export class ChatComponent {
     this.currentRoomId = "";
     this.settingsVisible = false;
 
-    if (i == 1) {
+    if (roomItems.length == 1) {
       this.router.navigate(['chat-lobby']);
     }
   }
