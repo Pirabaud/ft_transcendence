@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpService } from '../../http.service';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
-
+import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 export interface Participant {
   userId: number;
   username: string;
@@ -405,6 +405,41 @@ export class ChatComponent {
   }
   
   openDataRemoveAdmin() {
+    const dialogRef = this.dialog.open(RemoveAdminComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const name = result.name;
+
+      this.chatService.getUserId(name).subscribe((response1: any) => {
+        if (response1) {
+          var UserId = response1.id;
+        }
+        if (UserId == this.myUserId) {
+          alert("impossible to remove the admin yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        } else if (UserId) {
+          const name = UserId;
+          this.chatService.removeAdmin(name, this.currentRoomId);
+          // console.log("request : " + rep);
+          // if (!rep) {
+          //   alert('Room');
+          // } else if (rep == 1) {
+          //   alert(name + " : is already admin !");
+          // } else if (rep == 2) {
+          //   alert(name + " : is not in the room !");
+          // } else if (rep == 3) {
+          //   alert(name + " : is the channel owner !");
+          // }else {
+          //   alert(name + " : is admin !");
+          // }
+        } else {
+          alert("Write anything my Brother !");
+        }
+  
+        });
+    });
 
   }
 
@@ -423,7 +458,9 @@ export class ChatComponent {
         if (response1) {
           var UserId = response1.id;
         }
-        if (UserId) {
+        if (UserId == this.myUserId) {
+          alert("You are already admin !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        } if (UserId) {
           const name = UserId;
           this.chatService.addAdmin(name, this.currentRoomId);
           // console.log("request : " + rep);

@@ -160,7 +160,6 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         };
         await this.chatService.saveRoom(newData);
 
-
         return true;
     }
 
@@ -173,6 +172,11 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     @SubscribeMessage('addAdmin')
     async addAdmin(socket: Socket, room: any) {
         return await this.chatService.addAdmin(room.user, room.id);
+    }
+
+    @SubscribeMessage('removeAdmin')
+    async removeAdmin(socket: Socket, room: any) {
+        return await this.chatService.removeAdmin(room.user, room.id);
     }
 
     @SubscribeMessage('getAdmin')

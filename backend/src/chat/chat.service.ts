@@ -219,6 +219,49 @@ export class ChatService {
         return 4;
     }
 
+    async removeAdmin(admin: number, roomId: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return 0;
+        }
+
+        if (admin == room.createdBy) {
+            console.error('{admin} : is the channel owner');
+            return 1;
+        }
+        
+        var i = 0;
+        var inRoom: boolean = false;
+        while (room.participants[i]) {
+            
+            console.log("admin : " + admin + " participant : " + room.participants[i])
+            if (room.participants[i] == admin) {
+                inRoom = true;
+                break;
+            }
+            i++;
+        }
+
+        if (inRoom == false) {
+            console.error('{admin} : is not in the room');
+            return 2;
+        }
+
+        var i = 0;
+        while (room.admin[i]) {
+
+            if (room.admin[i] == admin) {
+                room.admin.splice(i, 1);
+                await this.roomRepository.save(room);
+                return 4;
+            }
+            i++;
+        }
+        return 3;
+
+    }
     async getAdmin(admin: number, roomId: string): Promise<boolean> {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
