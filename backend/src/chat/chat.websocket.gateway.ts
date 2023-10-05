@@ -7,12 +7,10 @@ import {
 } from '@nestjs/websockets';
 
 import {Socket} from 'socket.io';
-import {ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
-import {Participant, ChatDto, toMessageDto, MessageDto, MessageEventDto} from "./chat.dto";
+import {Participant, MessageEvent} from "./chat.dto";
 import { UserService } from 'src/user/user.service';
 import {ChatService} from "./chat.service";
 import { RoomData } from 'src/chat/chat.entity';
-import { User } from 'src/user/user.entity';
 import * as bcrypt from 'bcrypt';
 
 // INCROYABLE A NE PAS PERDRE 
@@ -34,72 +32,33 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
     @WebSocketServer() server;
 
-    // private static rooms: Map<string, RoomData> = new Map();
-    // private static participants: Map<string, string> = new Map(); // sockedId => roomId
 
     handleConnection(socket: Socket): void {
         const socketId = socket.id;
-        console.log(`New connecting... socket id:`, socketId);
-        // ChatWebsocketGateway.participants.set(socketId, '');
     }
 
     handleDisconnect(socket: Socket): void {
         const socketId = socket.id;
-        console.log(`Disconnection... socket id:`, socketId);
-        // const roomId = ChatWebsocketGateway.participants.get(socketId);
-        // const room = ChatWebsocketGateway.rooms.get(roomId);
-        // if (room) {
-        //     room.participants.get(socketId).connected = false;
-        //     this.server.emit(
-        //         `participants/${roomId}`,
-        //         Array.from(room.participants.values()),
-        //     );
-        // }
     }
 
-    @SubscribeMessage('participants')
-    async onParticipate(socket: Socket, participant: Participant) {
+    @SubscribeMessage('participant')
+    async onParticipate(socket: Socket, room: any) {
         const socketId = socket.id;
-        console.log(
-            `Registering new participant... socket id: %s and participant: `,
-            socketId,
-            participant,
-        );
+        this.server.emit(`participant/${room.roomID}`, room.user);
+    }
 
-        // const roomId = participant.roomId;
-        // if (!ChatWebsocketGateway.rooms.has(roomId)) {
-        //     console.error('Room with id: %s was not found, disconnecting the participant', roomId);
-        //     socket.disconnect();
-        //     throw new ForbiddenException('The access is forbidden');
-        // }
-
-        // const room = ChatWebsocketGateway.rooms.get(roomId);
-        // ChatWebsocketGateway.participants.set(socketId, roomId);
-        // participant.connected = true;
-        // room.participants.set(socketId, participant);
-        // // when received new participant we notify the chatter by room
-        // this.server.emit(
-        //     `participants/${roomId}`,
-        //     Array.from(room.participants.values()),
-        // );
+    @SubscribeMessage('leave')
+    async onLeave(socket: Socket, room: any) {
+        const socketId = socket.id;
+        this.server.emit(`leave/${room.roomID}`, room.userID);
     }
 
     @SubscribeMessage('exchanges')
-    async onMessage(socket: Socket, message: ChatDto) {
+    async onMessage(socket: Socket, message: MessageEvent) {
         const socketId = socket.id;
         message.socketId = socketId;
-        console.log(
-            'Received new message... socketId: %s, message: ',
-            socketId,
-            message,
-        );
-        // const roomId = message.roomId;
-        // const roomData = ChatWebsocketGateway.rooms.get(roomId);
-        // message.order = roomData.messages.length + 1;
-        // roomData.messages.push(message);
-        // ChatWebsocketGateway.rooms.set(roomId, roomData);
-        // // when received message we notify the chatter by room
-        // this.server.emit(roomId, toMessageDto(message));
+
+        this.server.emit(message.roomId, message);
     }
 
     @SubscribeMessage('joinRoom')

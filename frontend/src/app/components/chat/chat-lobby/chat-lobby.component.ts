@@ -32,7 +32,7 @@ export class ChatLobbyComponent {
           if (result2) {
             this.router.navigate(['/chat']);
           } else {
-            // Opération échouée
+            console.error("Error while joining the room");
           }
         });
       }
@@ -49,8 +49,13 @@ export class ChatLobbyComponent {
       if (result.name) {
         const name = result.name;
         const password = result.password;
-        this.chatService.createRoom(name, password);
-        this.router.navigate(['/chat']);
+        this.chatService.createRoom(name, password).subscribe(result2 => {
+          if (result2) {
+            this.router.navigate(['/chat']);
+          } else {
+            console.error("Error while creating the room");
+          }
+        });
        
       }
       else

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoomData } from './chat.entity';
-import {MessageEventDto, Participant} from "./chat.dto";
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -20,7 +19,6 @@ export class ChatService {
             console.log("Error while retrieving rooms");
             return null;
         }
-        console.log(result);
         return result;
     }
     

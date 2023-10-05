@@ -5,20 +5,19 @@ import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
-
-export interface MessageEventDto {
-  socketId: string;
-  roomId: string;
-  username: string;
-  content: string;
-  createdAt: Date;
-}
-
 export interface Participant {
-  roomId: string;
+  userId: number;
   username: string;
   avatar: string;
-  connected: boolean;
+  status: string,
+}
+
+export interface MessageEvent {
+  socketId: string;
+  roomId: string;
+  user: Participant;
+  content: string;
+  createdAt: Date;
 }
 
 @Injectable({
@@ -37,51 +36,51 @@ export class ChatService {
   }
 
 
-  sendMessage(message: MessageEventDto): void {
+  sendMessage(message: MessageEvent): void {
     this.socket.emit('exchanges', message);
   }
 
-  participate(roomId: string, username: string, avatar: string): boolean {
-    this.socket.emit('participants', {roomId, username, avatar});
-    return this.socket.ioSocket.connected;
+  participate(roomId: string, user: Participant) {
+    const room = {
+      roomID: roomId,
+      user: user,
+    }
+    this.socket.emit('participant', room);
+  }
+
+  leave(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('leave', room);
   }
 
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
   }
 
-  // getMessage(roomId: string, fromIndex: number, toIndex: number): Observable<MessageEventDto[]> {
-  //   // console.log("socket is : %s", <MessageEventDto>);
-  //   return this.httpClient.get<MessageEventDto[]>(
-  //     `/api/rooms/${roomId}/messages?fromIndex=${fromIndex}&toIndex=${toIndex}`,
-  //     { headers: { 'Access-Control-Allow-Origin': '*'}, withCredentials: true}, );
-      
-  // }
-  // getMessage(): Observable<MessageEventDto[]> {
-  //   // console.log("socket is : %s", <MessageEventDto>);
-  //   return this.httpClient.get<MessageEventDto[]>(
-  //     `/api/rooms/roomId`,
-  //     { headers: { 'Access-Control-Allow-Origin': '*'}, withCredentials: true}, );
-      
-  // }
-
-
   getAllRoom(): Observable<any> {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
   }
   
-  async createRoom(channel: string, password: string) {
-    await this.httpService.getUserId().subscribe((response: any) => {
-      if (response) {
-        const room = {
-          channel: channel,
-          password: password,
-          userId: response.UserId,
-        };
-        this.socket.emit('newRoom', room);
-      } else {
-        console.error("Error receiving username");
-      }
+  createRoom(channel: string, password: string): Observable<boolean> {
+    return new Observable<boolean>(observer => {
+      this.httpService.getUserId().subscribe((response: any) => {
+        if (response) {
+          const room = {
+            channel: channel,
+            password: password,
+            userId: response.UserId,
+          };
+          this.socket.emit('newRoom', room);
+          observer.next(true);
+        } else {
+          console.error("Error receiving username");
+          observer.next(false);
+        }
+        observer.complete();
+      });
     });
   }
 
@@ -106,7 +105,6 @@ export class ChatService {
               window.alert("You're already in the room!");
               observer.next(false);
             } else {
-              window.alert("Bravo!");
               observer.next(true);
             }
             observer.complete();

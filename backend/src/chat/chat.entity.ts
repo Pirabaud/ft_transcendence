@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
-import {MessageDto, Participant} from "./chat.dto";
 
 @Entity()
 export class RoomData {
