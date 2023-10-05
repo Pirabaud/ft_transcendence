@@ -51,6 +51,7 @@ import { ClassicGameComponent } from './components/chat/user_service/classic-gam
 import { PortalGameComponent } from './components/chat/user_service/portal-game/portal-game.component';
 import { AddAdminComponent } from './components/chat/room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './components/chat/room_service/remove-admin/remove-admin.component';
+import { UnbanComponent } from './components/chat/room_service/unban/unban.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
 
@@ -87,6 +88,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     PortalGameComponent,
     AddAdminComponent,
     RemoveAdminComponent,
+    UnbanComponent,
   ],
   imports: [
     BrowserModule,

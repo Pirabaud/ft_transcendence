@@ -277,8 +277,8 @@ export class ChatService {
             i++;
         }
         return 3;
-
     }
+
     async getAdmin(admin: number, roomId: string): Promise<any> {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
@@ -301,33 +301,88 @@ export class ChatService {
         return { ok: false };
     }
 
-    // async ban(id: string, userId: number) {
-    //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+    async banUser(banner: number, roomId: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
-    //     if (!room) {
-    //         console.error('Room with ID ${id} not found');
-    //         return null;
-    //     }
-
-    //     await this.roomRepository.delete(id);
-    //     room.ban = room.ban.concat(userId);
-    //     await this.roomRepository.save(room);
-    //     return true;
-    // }
-
-    // async unban(id: string, userId: number) {
-    //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return 0;
+        }
         
-    //     if (!room) {
-    //         console.error('Room with ID ${id} not found');
-    //         return null;
-    //     }
+        if (banner == room.createdBy) {
+            console.error('{banner} : is the channel owner');
+            return 3;
+        }
+
+        var i = 0;
+        while (room.ban[i]) {
+
+            if (room.ban[i] == banner) {
+                console.error('{banner} : is already ban !');
+                return 1;
+            }
+            i++;
+        }
+
+        var i = 0;
+        var inRoom: boolean = false;
+        while (room.participants[i]) {
+
+            if (room.participants[i] == banner) {
+                inRoom = true;
+                break;
+            }
+            i++;
+        }
+        if (inRoom == false) {
+            console.error('{banner} : is not in the room');
+            return 2;
+        }
+
+        await room.ban.push(banner);
+        await this.roomRepository.save(room);
+        return 4;
+    }
+
+    async unBanUser(banner: number, roomId: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return 0;
+        }
+
+        if (banner == room.createdBy) {
+            console.error('{banner} : is the channel owner');
+            return 1;
+        }
         
-    //     await this.roomRepository.delete(id);
-    //     const index = room.ban.indexOf(userId);
-    //     if (index > -1)
-    //         room.ban.splice(index, 1);
-    //     await this.roomRepository.save(room);
-    //     return true;
-    // }
+        var i = 0;
+        var inRoom: boolean = false;
+        while (room.participants[i]) {
+            
+            if (room.participants[i] == banner) {
+                inRoom = true;
+                break;
+            }
+            i++;
+        }
+
+        if (inRoom == false) {
+            console.error('{banner} : is not in the room');
+            return 2;
+        }
+
+        var i = 0;
+        while (room.admin[i]) {
+
+            if (room.admin[i] == banner) {
+                room.admin.splice(i, 1);
+                await this.roomRepository.save(room);
+                return 4;
+            }
+            i++;
+        }
+        return 3;
+    }
 }

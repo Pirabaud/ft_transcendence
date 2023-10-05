@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-ban',
-  templateUrl: './ban.component.html',
-  styleUrls: ['./ban.component.css']
+  selector: 'app-unban',
+  templateUrl: './unban.component.html',
+  styleUrls: ['./unban.component.css']
 })
-export class BanComponent {
+export class UnbanComponent {
   data: {name: string} = {name: ''};
 
-  constructor(private dialogRef: MatDialogRef<BanComponent>) {}
+  constructor(private dialogRef: MatDialogRef<UnbanComponent>) {}
 
   closeDialog() {
     this.dialogRef.close(); //return rien au dialog opener

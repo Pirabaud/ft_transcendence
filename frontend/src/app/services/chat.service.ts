@@ -199,6 +199,32 @@ export class ChatService {
       });
     });
   }
+
+  banUser(banned: number, roomId: string) {
+    const room = {
+      user: banned,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('addAdmin', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  unBanUser(unbanned: number, roomId: string) {
+    const room = {
+      user: unbanned,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('unBanUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
   
 
   getAllParticipants(channel: string): Observable<Array<number>> {

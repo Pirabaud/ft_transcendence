@@ -126,12 +126,20 @@
                             </button>
                             <mat-menu #menu="matMenu">
                                 <button mat-menu-item *ngIf="boutonsAdminVisible">
-                                <mat-icon>do_not_disturb_on_total_silence</mat-icon>
+                                  <mat-icon>do_not_disturb_on_total_silence</mat-icon>
                                     <span>Mute</span>
                                   </button>
                                   <button mat-menu-item *ngIf="boutonsAdminVisible">
+                                    <mat-icon>radio_button_unchecked</mat-icon>
+                                      <span>UnMute</span>
+                                    </button>
+                                  <button mat-menu-item (click)="openDataBan()" *ngIf="boutonsAdminVisible">
                                     <mat-icon>close</mat-icon>
                                     <span>Ban</span>
+                                  </button>
+                                  <button mat-menu-item (click)="openDataUnBan()" *ngIf="boutonsAdminVisible">
+                                    <mat-icon>check</mat-icon>
+                                    <span>UnBan</span>
                                   </button>
                                   <button mat-menu-item (click)="openDataKick()" *ngIf="boutonsAdminVisible">
                                     <mat-icon>remove</mat-icon>
