@@ -140,10 +140,7 @@ export class ChatService {
       user: admin,
       id: roomId,
     };
-    console.log("service : " + room.user);
-    console.log("service 2 : " +  room.id);
     this.socket.emit('addAdmin', room, (response: any) => {
-      console.log("reponse" + response);
       if (!response) {
         alert('Room');
       } else if (response == 1) {
@@ -163,10 +160,7 @@ export class ChatService {
       user: admin,
       id: roomId,
     };
-    console.log("service : " + room.user);
-    console.log("service 2 : " +  room.id);
     this.socket.emit('removeAdmin', room, (response: any) => {
-      console.log("reponse" + response);
       if (response == 0) {
         alert('Room not found');
       } else if (response == 1) {
@@ -189,9 +183,8 @@ export class ChatService {
   
     return new Observable<boolean>((observer) => {
       this.socket.emit('getAdmin', room, (response: boolean) => {
-        console.log("sorti : " + response);
-        observer.next(response); // Émet la réponse
-        observer.complete(); // Termine l'observable
+        observer.next(response);
+        observer.complete();
       });
     });
   }

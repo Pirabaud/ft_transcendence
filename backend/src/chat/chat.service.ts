@@ -73,7 +73,7 @@ export class ChatService {
             if (!room)
                 return false;
         } catch {
-            console.log("Error while retrieving the room");
+            ("Error while retrieving the room");
             return false;
         }
         return true;
@@ -173,8 +173,6 @@ export class ChatService {
 
     async addAdmin(admin: number, roomId: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
-        console.log("backend : " + admin);
-        console.log("backend 2 : " + roomId);
         if (!room) {
             console.error('Room with ID ${id} not found');
             return null;
@@ -194,7 +192,6 @@ export class ChatService {
         var inRoom: boolean = false;
         while (room.participants[i]) {
 
-            console.log("admin : " + admin + " participant : " + room.participants[i])
             if (room.participants[i] == admin) {
                 inRoom = true;
                 break;
@@ -234,7 +231,6 @@ export class ChatService {
         var inRoom: boolean = false;
         while (room.participants[i]) {
             
-            console.log("admin : " + admin + " participant : " + room.participants[i])
             if (room.participants[i] == admin) {
                 inRoom = true;
                 break;
@@ -263,13 +259,10 @@ export class ChatService {
     async getAdmin(admin: number, roomId: string): Promise<boolean> {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
-        console.log("caca : " + admin);
-        console.log("caca 2: " + roomId);
         var i = 0;
         if (admin == room.createdBy)
             return true;
         while (room.admin[i]) {
-            console.log("caca 3: " + room.admin[i]);
             if (room.admin[i] == admin) {
                 return true;
             }
