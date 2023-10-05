@@ -219,6 +219,24 @@ export class ChatService {
         return 4;
     }
 
+    async getAdmin(admin: number, roomId: string): Promise<boolean> {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        console.log("caca : " + admin);
+        console.log("caca 2: " + roomId);
+        var i = 0;
+        if (admin == room.createdBy)
+            return true;
+        while (room.admin[i]) {
+            console.log("caca 3: " + room.admin[i]);
+            if (room.admin[i] == admin) {
+                return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
     // async ban(id: string, userId: number) {
     //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 

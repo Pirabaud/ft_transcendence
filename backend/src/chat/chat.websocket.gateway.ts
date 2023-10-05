@@ -174,6 +174,11 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     async addAdmin(socket: Socket, room: any) {
         return await this.chatService.addAdmin(room.user, room.id);
     }
+
+    @SubscribeMessage('getAdmin')
+    async getAdmin(socket: Socket, room: any): Promise<boolean> {
+        return await this.chatService.getAdmin(room.user, room.id);
+    }
     
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {

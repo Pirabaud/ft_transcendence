@@ -49,7 +49,7 @@ export class ChatComponent {
   myUserId: number = 0;
   currentRoomId: string = "";
   settingsVisible = false;
-  boutonsAdminVisible = true;
+  boutonsAdminVisible: any = false;
   
   // chat
   public connected = false;
@@ -133,7 +133,7 @@ export class ChatComponent {
   // }
 
   // Fonction pour ajouter une nouvelle div
-  addRoom(roomId: string) {
+  async addRoom(roomId: string) {
     this.roomCount++;
     const newDiv = document.createElement('div');
     newDiv.textContent = roomId;
@@ -147,7 +147,7 @@ export class ChatComponent {
       this.currentRoomId = roomId;
 
       this.settingsVisible = true;
-
+      
       const divChannelName = document.querySelector(".channel_name");
 
       if (divChannelName) {
@@ -158,13 +158,13 @@ export class ChatComponent {
         } else {
           console.error("Paragraphe introuvable dans le div.");
         }
-
+        
       } else {
         console.error("Div avec la classe 'channel_name' introuvable.");
       }
-
+      
       this.removeAllUser();
-
+      
       this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
         if (Response) {
           var i = 0;
@@ -174,6 +174,16 @@ export class ChatComponent {
           }
         }
       });
+      
+      console.log("user : " + this.username + " id : " + this.myUserId);
+      console.log("Avant : " + this.boutonsAdminVisible);
+
+      this.chatService.getAdmin(this.myUserId, this.currentRoomId).subscribe((response) => {
+        this.boutonsAdminVisible = response;
+      });
+
+      // this.boutonsAdminVisible = this.chatService.getAdmin(this.myUserId, this.currentRoomId);
+      console.log("Apres : " + this.boutonsAdminVisible);
 
     });
 

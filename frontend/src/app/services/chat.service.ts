@@ -160,6 +160,36 @@ export class ChatService {
     });
   }
 
+  // getAdmin(admin: number, roomId: string) {
+
+  //   const room = {
+  //     user: admin,
+  //     id: roomId,
+  //   };
+
+  //   this.socket.emit('getAdmin', room, (response: boolean) => {
+  //     console.log("sorti : " + response);
+  //     return response;
+  //   });
+  // }
+  
+  getAdmin(admin: number, roomId: string): Observable<boolean> {
+    const room = {
+      user: admin,
+      id: roomId,
+    };
+  
+    return new Observable<boolean>((observer) => {
+      this.socket.emit('getAdmin', room, (response: boolean) => {
+        console.log("sorti : " + response);
+        observer.next(response); // Émet la réponse
+        observer.complete(); // Termine l'observable
+      });
+    });
+  }
+
+  
+
   getAllParticipants(channel: string): Observable<Array<number>> {
     const room = { channel: channel };
     return new Observable<number[]>(observer => {
