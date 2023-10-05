@@ -35,12 +35,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
     handleConnection(socket: Socket): void {
         const socketId = socket.id;
-        console.log(`New connecting... socket id:`, socketId);
     }
 
     handleDisconnect(socket: Socket): void {
         const socketId = socket.id;
-        console.log(`Disconnection... socket id:`, socketId);
     }
 
     // @SubscribeMessage('participants')
@@ -57,11 +55,6 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     async onMessage(socket: Socket, message: MessageEvent) {
         const socketId = socket.id;
         message.socketId = socketId;
-        console.log(
-            'Received new message... socketId: %s, message: ',
-            socketId,
-            message,
-        );
 
         this.server.emit(message.roomId, message);
     }

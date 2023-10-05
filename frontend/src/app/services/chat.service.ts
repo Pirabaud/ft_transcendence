@@ -40,10 +40,10 @@ export class ChatService {
     this.socket.emit('exchanges', message);
   }
 
-  participate(roomId: string, username: string, avatar: string): boolean {
-    this.socket.emit('participants', {roomId, username, avatar});
-    return this.socket.ioSocket.connected;
-  }
+  // participate(roomId: string, username: string, avatar: string): boolean {
+  //   this.socket.emit('participants', {roomId, username, avatar});
+  //   return this.socket.ioSocket.connected;
+  // }
 
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
@@ -53,18 +53,23 @@ export class ChatService {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
   }
   
-  async createRoom(channel: string, password: string) {
-    await this.httpService.getUserId().subscribe((response: any) => {
-      if (response) {
-        const room = {
-          channel: channel,
-          password: password,
-          userId: response.UserId,
-        };
-        this.socket.emit('newRoom', room);
-      } else {
-        console.error("Error receiving username");
-      }
+  createRoom(channel: string, password: string): Observable<boolean> {
+    return new Observable<boolean>(observer => {
+      this.httpService.getUserId().subscribe((response: any) => {
+        if (response) {
+          const room = {
+            channel: channel,
+            password: password,
+            userId: response.UserId,
+          };
+          this.socket.emit('newRoom', room);
+          observer.next(true);
+        } else {
+          console.error("Error receiving username");
+          observer.next(false);
+        }
+        observer.complete();
+      });
     });
   }
 
@@ -89,7 +94,6 @@ export class ChatService {
               window.alert("You're already in the room!");
               observer.next(false);
             } else {
-              window.alert("Bravo!");
               observer.next(true);
             }
             observer.complete();

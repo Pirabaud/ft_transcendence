@@ -19,7 +19,6 @@ export class ChatService {
             console.log("Error while retrieving rooms");
             return null;
         }
-        console.log(result);
         return result;
     }
     
