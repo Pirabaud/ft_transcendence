@@ -56,6 +56,14 @@ export class ChatService {
     this.socket.emit('leave', room);
   }
 
+  kick(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('kick', room);
+  }
+
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
   }

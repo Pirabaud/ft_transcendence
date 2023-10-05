@@ -53,6 +53,12 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         this.server.emit(`leave/${room.roomID}`, room.userID);
     }
 
+    @SubscribeMessage('kick')
+    async onKick(socket: Socket, room: any) {
+        const socketId = socket.id;
+        this.server.emit(`kick/${room.roomID}`, room.userID);
+    }
+
     @SubscribeMessage('exchanges')
     async onMessage(socket: Socket, message: MessageEvent) {
         const socketId = socket.id;

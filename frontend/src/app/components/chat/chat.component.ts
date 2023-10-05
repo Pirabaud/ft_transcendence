@@ -139,6 +139,44 @@ export class ChatComponent {
         }
       }
     });
+    this.chatService.receiveEvent(`kick/${roomID}`).subscribe((userId: number) => {
+      if (this.currentRoomId == roomID) {
+        var i = 0;
+        while (this.users[i]) {
+          if (this.users[i].userId == userId) {
+            this.users.pop();
+          }
+          i++;
+        }
+      }
+      if (this.myUserId == userId) {
+        this.removeAllUser();
+        const roomItems = document.querySelectorAll('.room-item');
+        var i = 0;
+        roomItems.forEach((div) => {
+          if (div.textContent == roomID) {
+              div.remove();
+          }
+          i++;
+        });
+        const divChannelName = document.querySelector(".channel_name");
+        if (divChannelName) {
+          const paragraphe = divChannelName.querySelector("p");
+          if (paragraphe) {
+            paragraphe.textContent = "";
+          } else {
+            console.error("Paragraphe introuvable dans le div.");
+          }
+        } else {
+          console.error("Div avec la classe 'channel_name' introuvable.");
+        }
+        this.currentRoomId = "";
+        this.settingsVisible = false;
+        if (i == 1) {
+          this.router.navigate(['chat-lobby']);
+        }
+      }
+    });
   }
   
   removeAllUser() {
@@ -207,7 +245,6 @@ export class ChatComponent {
 
   leaveRoom() {
     this.chatService.kickRoom(this.currentRoomId, this.myUserId).subscribe((response: any) => {
-      console.log("OOOOKKKKK:", response)
       if (response) {
         if (response.ok == true) {
           alert("This user leave the room " + this.currentRoomId);
@@ -222,11 +259,12 @@ export class ChatComponent {
     this.removeAllUser();
     
     const roomItems = document.querySelectorAll('.room-item');
-    
+    var i = 0;
     roomItems.forEach((div) => {
       if (div.textContent === this.currentRoomId) {
         div.remove();
       }
+      i++;
     });
 
     const divChannelName = document.querySelector(".channel_name");
@@ -246,6 +284,9 @@ export class ChatComponent {
     this.currentRoomId = "";
     this.settingsVisible = false;
 
+    if (i == 1) {
+      this.router.navigate(['chat-lobby']);
+    }
   }
   
   async openDataKick() {
@@ -263,45 +304,54 @@ export class ChatComponent {
           if (response1) {
             UserId = response1.id;
 
-            this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
-              if (Response) {
-                var i = 0;
-                while ( Response[i] ) {
-                  if (Response[i] == UserId) {
-                    ok = true;
-                  }
-                  i++;
-                }
-
-                if (ok) {
-
-                  this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
-                    if (response2) {
-                      if (response2.ok == true) {
-                        alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
-                      } else if (response2.ok == false) {
-                        alert("The user " + name + " has been kicked from the room " + this.currentRoomId + " and this room has been deleted");
-                      }
+            if (UserId != this.myUserId) {
+              
+              this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
+                if (Response) {
+                  var i = 0;
+                  while ( Response[i] ) {
+                    if (Response[i] == UserId) {
+                      ok = true;
                     }
-                  });
-                
-                  this.removeAllUser();
+                    i++;
+                  }
+                  
+                  if (ok) {
+                    
+                    this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
+                      if (response2) {
+                        if (response2.ok == true) {
+                          alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
+                        } else if (response2.ok == false) {
+                          alert("The user " + name + " has been kicked from the room " + this.currentRoomId + " and this room has been deleted");
+                        }
+                        
+                        this.chatService.kick(this.currentRoomId, UserId);
+                      
+                        // this.removeAllUser();
+                        
+                        // this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
+                        //   if (Response) {
+                        //     var i = 0;
+                        //     while ( Response[i] ) {
+                        //       this.addUser(Response[i]);
+                        //       i++;
+                        //     }
+                        //   } else {console.log("error3")}
+                        // });
 
-                  this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
-                    if (Response) {
-                      var i = 0;
-                      while ( Response[i] ) {
-                        this.addUser(Response[i]);
-                        i++;
                       }
-                    } else {console.log("error3")}
-                  });
-                
-                } else {
-                  alert("This user isn't in the room!")
-                }
-              } else {console.log("error2")}
-            });
+                    });
+                    
+                  } else {
+                    alert("This user isn't in the room!")
+                  }
+                } else {console.log("error2")}
+              });
+            
+            } else {
+              alert("You can't kick yourself!");
+            }
 
           } else {
             alert("This user doesn't exist!");
