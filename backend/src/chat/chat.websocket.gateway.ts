@@ -139,7 +139,7 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     }
 
     @SubscribeMessage('getAdmin')
-    async getAdmin(socket: Socket, room: any): Promise<boolean> {
+    async getAdmin(socket: Socket, room: any): Promise<any> {
         return await this.chatService.getAdmin(room.user, room.id);
     }
     

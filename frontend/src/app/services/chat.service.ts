@@ -175,14 +175,14 @@ export class ChatService {
     });
   }
   
-  getAdmin(admin: number, roomId: string): Observable<boolean> {
+  getAdmin(admin: number, roomId: string): Observable<any> {
     const room = {
       user: admin,
       id: roomId,
     };
   
-    return new Observable<boolean>((observer) => {
-      this.socket.emit('getAdmin', room, (response: boolean) => {
+    return new Observable<any>((observer) => {
+      this.socket.emit('getAdmin', room, (response: any) => {
         observer.next(response);
         observer.complete();
       });
