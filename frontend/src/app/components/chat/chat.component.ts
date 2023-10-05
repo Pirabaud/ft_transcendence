@@ -103,7 +103,8 @@ export class ChatComponent {
       });
 
       this.chatService.getAdmin(this.myUserId, this.currentRoomId).subscribe((response) => {
-        this.boutonsAdminVisible = response;
+        if (response)
+          this.boutonsAdminVisible = response;
       });
 
     });
