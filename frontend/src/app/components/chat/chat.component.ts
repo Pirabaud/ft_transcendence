@@ -61,8 +61,6 @@ export class ChatComponent {
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router, private jwtHelper: JwtHelperService) {}
 
   ngOnInit() {
-    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-      this.router.navigate(['/login']);
     var ok: boolean;
 
     this.httpService.getUserId().subscribe((response: any) => {

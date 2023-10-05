@@ -30,7 +30,7 @@ export class ChatLobbyComponent {
         const password = result.password;
         this.chatService.joinRoom(name, password).subscribe(result2 => {
           if (result2) {
-            window.location.href = 'chat';
+            this.router.navigate(['/chat']);
           } else {
             // Opération échouée
           }
@@ -50,7 +50,7 @@ export class ChatLobbyComponent {
         const name = result.name;
         const password = result.password;
         this.chatService.createRoom(name, password);
-        window.location.href = 'chat';
+        this.router.navigate(['/chat']);
        
       }
       else
