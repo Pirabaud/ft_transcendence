@@ -152,12 +152,12 @@ export class ChatComponent {
       if (this.myUserId == userId) {
         this.removeAllUser();
         const roomItems = document.querySelectorAll('.room-item');
-        var i = 0;
+        var j = 0;
         roomItems.forEach((div) => {
           if (div.textContent == roomID) {
               div.remove();
           }
-          i++;
+          j++;
         });
         const divChannelName = document.querySelector(".channel_name");
         if (divChannelName) {
@@ -172,7 +172,7 @@ export class ChatComponent {
         }
         this.currentRoomId = "";
         this.settingsVisible = false;
-        if (i == 1) {
+        if (j == 1) {
           this.router.navigate(['chat-lobby']);
         }
       }
