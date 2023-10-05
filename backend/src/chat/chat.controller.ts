@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Get } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { MessageEventDto, Participant } from './chat.dto';
+import { Participant } from './chat.dto';
 import { ChatModule } from './chat.module';
 import { RoomData } from './chat.entity';
 

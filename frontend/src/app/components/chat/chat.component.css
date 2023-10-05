@@ -373,6 +373,11 @@ left: 27px;
   width: 25px;
 }
 
+.img_incoming_msg_img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
 
 .sent_msg p {
   background: #05728f none repeat scroll 0 0;

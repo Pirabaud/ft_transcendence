@@ -165,7 +165,7 @@
                           <li class="message" *ngFor="let message of messages">
                             <div
                               *ngIf="
-                                message.username !== username;
+                                (message.user).userId !== myUserId;
                                 then incoming_msg;
                                 else outgoing_msg
                               "
@@ -174,7 +174,7 @@
                             <ng-template #incoming_msg>
                               <div class="incoming_msg">
                                 <div class="incoming_msg_img">
-                                  <img src="{{userAvatarsMap.get(message.username)?.avatar}}" alt="User avatar"/>
+                                  <img class="img_incoming_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
                                 </div>
                                 <div class="received_msg">
                                   <div class="received_withd_msg">

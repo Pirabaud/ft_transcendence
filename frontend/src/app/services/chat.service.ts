@@ -5,20 +5,19 @@ import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
-
-export interface MessageEventDto {
-  socketId: string;
-  roomId: string;
-  username: string;
-  content: string;
-  createdAt: Date;
-}
-
 export interface Participant {
-  roomId: string;
+  userId: number;
   username: string;
   avatar: string;
-  connected: boolean;
+  status: string,
+}
+
+export interface MessageEvent {
+  socketId: string;
+  roomId: string;
+  user: Participant;
+  content: string;
+  createdAt: Date;
 }
 
 @Injectable({
@@ -37,7 +36,7 @@ export class ChatService {
   }
 
 
-  sendMessage(message: MessageEventDto): void {
+  sendMessage(message: MessageEvent): void {
     this.socket.emit('exchanges', message);
   }
 
@@ -49,22 +48,6 @@ export class ChatService {
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
   }
-
-  // getMessage(roomId: string, fromIndex: number, toIndex: number): Observable<MessageEventDto[]> {
-  //   // console.log("socket is : %s", <MessageEventDto>);
-  //   return this.httpClient.get<MessageEventDto[]>(
-  //     `/api/rooms/${roomId}/messages?fromIndex=${fromIndex}&toIndex=${toIndex}`,
-  //     { headers: { 'Access-Control-Allow-Origin': '*'}, withCredentials: true}, );
-      
-  // }
-  // getMessage(): Observable<MessageEventDto[]> {
-  //   // console.log("socket is : %s", <MessageEventDto>);
-  //   return this.httpClient.get<MessageEventDto[]>(
-  //     `/api/rooms/roomId`,
-  //     { headers: { 'Access-Control-Allow-Origin': '*'}, withCredentials: true}, );
-      
-  // }
-
 
   getAllRoom(): Observable<any> {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
