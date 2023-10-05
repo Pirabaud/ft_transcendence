@@ -16,13 +16,12 @@ export class RoomData {
   
   @Column('simple-array', { nullable: true })
   participants: Array<number>;
-}
   
   // @Column({ nullable: true })
   // messages: MessageDto[];
   
-  // @Column({ nullable: true })
-  // admin: number[];
+  @Column('simple-array', { nullable: true })
+  admin: Array<number>;
 
 	// @Column({ nullable: true })
   // ban: number[]; // id of Users
@@ -32,4 +31,4 @@ export class RoomData {
 
   // @Column()
   // mute: Array<string>;
-
+}

@@ -114,11 +114,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             password: pass,
             participants: [room.userId,],
             // messages: [],
-            // admin: [],
+            admin: [],
             // ban: [],
         };
         await this.chatService.saveRoom(newData);
-
 
         return true;
     }
@@ -129,6 +128,20 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         await this.chatService.kickParticipant(room.channel, room.user);
     }
 
+    @SubscribeMessage('addAdmin')
+    async addAdmin(socket: Socket, room: any) {
+        return await this.chatService.addAdmin(room.user, room.id);
+    }
+
+    @SubscribeMessage('removeAdmin')
+    async removeAdmin(socket: Socket, room: any) {
+        return await this.chatService.removeAdmin(room.user, room.id);
+    }
+
+    @SubscribeMessage('getAdmin')
+    async getAdmin(socket: Socket, room: any): Promise<boolean> {
+        return await this.chatService.getAdmin(room.user, room.id);
+    }
     
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {

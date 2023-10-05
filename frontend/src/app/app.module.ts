@@ -49,6 +49,8 @@ import { ProfilComponent } from './components/chat/user_service/profil/profil.co
 import { PrivateMessageComponent } from './components/chat/user_service/private-message/private-message.component';
 import { ClassicGameComponent } from './components/chat/user_service/classic-game/classic-game.component';
 import { PortalGameComponent } from './components/chat/user_service/portal-game/portal-game.component';
+import { AddAdminComponent } from './components/chat/room_service/add-admin/add-admin.component';
+import { RemoveAdminComponent } from './components/chat/room_service/remove-admin/remove-admin.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
 
@@ -83,6 +85,8 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     PrivateMessageComponent,
     ClassicGameComponent,
     PortalGameComponent,
+    AddAdminComponent,
+    RemoveAdminComponent,
   ],
   imports: [
     BrowserModule,

@@ -10,6 +10,9 @@ import { JoinRoomComponent } from "./room_service/join-room/join-room.component"
 import { Router } from '@angular/router';
 import { HttpService } from '../../http.service';
 import {Observable, of} from 'rxjs';
+import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
+import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
+
 
 @Component({
   selector: 'app-chat',
@@ -23,7 +26,7 @@ export class ChatComponent {
   public messages: MessageEvent[] = [];
   public currentRoomId: string = "";
   public settingsVisible = false;
-  public boutonsAdminVisible = true;
+  public boutonsAdminVisible: any = false;
   public messageContent = '';
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
@@ -71,7 +74,7 @@ export class ChatComponent {
       this.currentRoomId = roomId;
       
       this.settingsVisible = true;
-
+      
       const divChannelName = document.querySelector(".channel_name");
       
       if (divChannelName) {
@@ -98,7 +101,11 @@ export class ChatComponent {
           }
         }
       });
-      
+
+      this.chatService.getAdmin(this.myUserId, this.currentRoomId).subscribe((response) => {
+        this.boutonsAdminVisible = response;
+      });
+
     });
     
     const allRoomName = document.querySelector('.all_room_name');
@@ -398,5 +405,85 @@ export class ChatComponent {
 
   viewProfilUser(id: number) {
     this.router.navigate(['/friendProfile', id.toString()]);
+  }
+  
+  openDataRemoveAdmin() {
+    const dialogRef = this.dialog.open(RemoveAdminComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const name = result.name;
+
+      this.chatService.getUserId(name).subscribe((response1: any) => {
+        if (response1) {
+          var UserId = response1.id;
+        }
+        if (UserId == this.myUserId) {
+          alert("impossible to remove the admin yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        } else if (UserId) {
+          const name = UserId;
+          this.chatService.removeAdmin(name, this.currentRoomId);
+          // console.log("request : " + rep);
+          // if (!rep) {
+          //   alert('Room');
+          // } else if (rep == 1) {
+          //   alert(name + " : is already admin !");
+          // } else if (rep == 2) {
+          //   alert(name + " : is not in the room !");
+          // } else if (rep == 3) {
+          //   alert(name + " : is the channel owner !");
+          // }else {
+          //   alert(name + " : is admin !");
+          // }
+        } else {
+          alert("Write anything my Brother !");
+        }
+  
+        });
+    });
+
+  }
+
+  openDataAddAdmin() {
+    const dialogRef = this.dialog.open(AddAdminComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+
+      console.log("1 : " + result.name);
+      const name = result.name;
+
+      this.chatService.getUserId(name).subscribe((response1: any) => {
+        if (response1) {
+          var UserId = response1.id;
+        }
+        if (UserId == this.myUserId) {
+          alert("You are already admin !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        } if (UserId) {
+          const name = UserId;
+          this.chatService.addAdmin(name, this.currentRoomId);
+          // console.log("request : " + rep);
+          // if (!rep) {
+          //   alert('Room');
+          // } else if (rep == 1) {
+          //   alert(name + " : is already admin !");
+          // } else if (rep == 2) {
+          //   alert(name + " : is not in the room !");
+          // } else if (rep == 3) {
+          //   alert(name + " : is the channel owner !");
+          // }else {
+          //   alert(name + " : is admin !");
+          // }
+        } else {
+          alert("Write anything my Brother !");
+        }
+  
+        });
+      });
+
   }
 }
