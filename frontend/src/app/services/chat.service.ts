@@ -45,7 +45,15 @@ export class ChatService {
       roomID: roomId,
       user: user,
     }
-    this.socket.emit('participants', room);
+    this.socket.emit('participant', room);
+  }
+
+  leave(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('leave', room);
   }
 
   receiveEvent(eventId: string): Observable<any> {

@@ -114,8 +114,20 @@ export class ChatComponent {
       this.messages.push(message);
     });
     this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => {
-      console.log('received participant event: ', participant);
-      this.users.push(participant);
+      if (participant.userId != this.myUserId && this.currentRoomId == roomID) {
+        this.users.push(participant);
+      }
+    });
+    this.chatService.receiveEvent(`leave/${roomID}`).subscribe((userId: number) => {
+      if (userId != this.myUserId && this.currentRoomId == roomID) {
+        var i = 0;
+        while (this.users[i]) {
+          if (this.users[i].userId == userId) {
+            this.users.pop();
+          }
+          i++;
+        }
+      }
     });
   }
   
@@ -185,16 +197,36 @@ export class ChatComponent {
 
   leaveRoom() {
     this.chatService.leaveRoom(this.currentRoomId, this.myUserId);
+    
+    this.chatService.leave(this.currentRoomId, this.myUserId);
 
     this.removeAllUser();
-
+    
     const roomItems = document.querySelectorAll('.room-item');
-
+    
     roomItems.forEach((div) => {
       if (div.textContent === this.currentRoomId) {
         div.remove();
       }
     });
+
+    const divChannelName = document.querySelector(".channel_name");
+      
+    if (divChannelName) {
+      const paragraphe = divChannelName.querySelector("p");
+
+      if (paragraphe) {
+        paragraphe.textContent = "";
+      } else {
+        console.error("Paragraphe introuvable dans le div.");
+      }
+      
+    } else {
+      console.error("Div avec la classe 'channel_name' introuvable.");
+    }
+    this.currentRoomId = "";
+    this.settingsVisible = false;
+
   }
   
   async openDataKick() {
