@@ -6,7 +6,7 @@ import { KickComponent } from '../chat/room_service/kick/kick.component';
 import { BanComponent } from '../chat/room_service/ban/ban.component';
 import { MuteComponent } from '../chat/room_service/mute/mute.component';
 import { SetPasswordComponent } from '../chat/room_service/set-password/set-password.component';
-import { ChatService } from '../../services/chat.service';
+import { ChatService, MessageEventDto } from '../../services/chat.service';
 import { CreateRoomComponent } from "./room_service/create-room/create-room.component";
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
@@ -17,7 +17,16 @@ export interface Participant {
   userId: number;
   username: string;
   avatar: string;
-  status: string;
+  status: string,
+}
+
+interface SimpleParticipant {
+  avatar: string;
+  connected: string;
+}
+
+interface ParticipantEvent extends SimpleParticipant{
+  username: string;
 }
 
 export interface MessageEvent {
@@ -36,17 +45,24 @@ export class ChatComponent {
   // Définissez une variable pour garder un compte des divs ajoutées
   roomCount: number = 0;
   users: Participant[] = [];
-  messages: MessageEvent[] = [];
   myUserId: number = 0;
   currentRoomId: string = "";
   settingsVisible = false;
   boutonsAdminVisible = true;
+  
+  // chat
+  public connected = false;
+  public username = '';
+  public avatar = '';
+  public messages: MessageEventDto[] = [];
+  public userAvatarsMap = new Map<string, SimpleParticipant>();
+  public messageContent = '';
 
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router, private jwtHelper: JwtHelperService) {}
 
   ngOnInit() {
-    // if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-      // this.router.navigate(['/login']);
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+      this.router.navigate(['/login']);
     var ok: boolean;
 
     this.httpService.getUserId().subscribe((response: any) => {
@@ -78,6 +94,44 @@ export class ChatComponent {
       }
     });
   }
+
+  // private initConnection(messages: MessageEventDto[], roomID: string) {
+  //   console.log("caca");
+
+  //   var username: string = "";
+  //   var pic: string = "";
+
+  //   this.chatService.getUsername(this.myUserId).subscribe((response1: any) => {
+  //     if (response1) {
+  //       username = response1.Username;
+
+  //       this.chatService.getPic(this.myUserId).subscribe((response2: any) => {
+  //         if (response2) {
+  //           pic = response2.Img;
+
+  //           this.messages = messages
+  //           this.chatService.participate(roomID, username, pic);
+  //           this.chatService.receiveEvent(roomID).subscribe((message: MessageEventDto) => {
+  //             console.debug('received message event: ', message);
+  //             this.messages.push(message)
+  //           });
+  //           this.chatService.receiveEvent(`participants/${roomID}`).subscribe((participants: ParticipantEvent[]) => {
+  //             console.debug('received participants event: ', participants);
+  //             this.userAvatarsMap = this.toUserAvatarsMap(participants);
+  //           });
+  //           this.connected = true;
+
+  //         }
+  //       });
+  //     }
+  //   });  
+  // }
+
+  // private toUserAvatarsMap(participants: ParticipantEvent[]): Map<string, SimpleParticipant> {
+  //   const mp = new Map<string, SimpleParticipant>();
+  //   participants.forEach(p => mp.set(p.username, {avatar: p.avatar, connected: p.connected}));
+  //   return mp;
+  // }
 
   // Fonction pour ajouter une nouvelle div
   addRoom(roomId: string) {
@@ -129,6 +183,8 @@ export class ChatComponent {
     if (allRoomName) {
       allRoomName.appendChild(newDiv);
     }
+
+    // this.initConnection(this.messages, roomId);
   }
 
   removeAllUser() {
@@ -308,6 +364,32 @@ export class ChatComponent {
         alert("Channel can't be NULL");
     });
   }
+
+ sendMessage(): void {
+  if (this.messageContent.trim().length === 0) {
+    return;
+  }
+  var username: string = "";
+
+  this.chatService.getUsername(this.myUserId).subscribe((response1: any) => {
+    if (response1) {
+      username = response1.Username;
+      
+      const message = {
+        roomId: this.currentRoomId,
+        username: username,
+        content: this.messageContent,
+        createdAt: new Date()
+      } as MessageEventDto;
+    
+      console.log("MESSAGE:", message);
+      this.messages.push(message);
+      this.chatService.sendMessage(message);
+      this.messageContent = '';
+    }
+  });
+
+ }
 
   viewProfilUser(id: number) {
     this.router.navigate(['/friendProfile', id.toString()]);

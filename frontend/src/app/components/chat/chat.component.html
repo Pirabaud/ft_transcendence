@@ -163,16 +163,18 @@
                         <div class="msg_history">
                   
                           <li class="message" *ngFor="let message of messages">
-      
-                            <!-- En fonction de la personne qui envoie le msg -->
-                            <!-- <div *ngIf="message.username !== username; then incoming_msg; else outgoing_msg">
-                            </div> -->
+                            <div
+                              *ngIf="
+                                message.username !== username;
+                                then incoming_msg;
+                                else outgoing_msg
+                              "
+                            ></div>
       
                             <ng-template #incoming_msg>
                               <div class="incoming_msg">
                                 <div class="incoming_msg_img">
-                                  <!-- il faut mettre l'avatar de la persone qui parle -->
-                                  <!-- <img src="" alt="User avatar"/> -->
+                                  <img src="{{userAvatarsMap.get(message.username)?.avatar}}" alt="User avatar"/>
                                 </div>
                                 <div class="received_msg">
                                   <div class="received_withd_msg">
@@ -198,14 +200,15 @@
                 <div class="write_bar" >
 
                     <div class="type_msg">
-                        <form class="input_msg_write">
+                        <form class="input_msg_write" (keydown.enter)="sendMessage()">
                           <input
                             type="text"
                             class="write_msg"
                             placeholder="Ecrit chef"
                             name="newMessage"
+                            [(ngModel)]="messageContent"
                           />
-                          <button matInput class="msg_send_btn" type="button">
+                          <button matInput class="msg_send_btn" type="button" (click)="sendMessage()" (keyup.enter)="sendMessage()">
                             <img class="send_msg" src="../../../assets/images/send.png" alt="send">
                           </button>
                         </form>
