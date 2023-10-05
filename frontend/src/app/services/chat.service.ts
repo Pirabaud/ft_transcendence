@@ -136,7 +136,30 @@ export class ChatService {
     };
     this.socket.emit('leaveRoom', room);
   }
-  
+
+  async addAdmin(admin: number, roomId: string) {
+    const room = {
+      user: admin,
+      id: roomId,
+    };
+    console.log("service : " + room.user);
+    console.log("service 2 : " +  room.id);
+    this.socket.emit('addAdmin', room, (response: any) => {
+      console.log("reponse" + response);
+      if (!response) {
+        alert('Room');
+      } else if (response == 1) {
+        alert(admin + " : is already admin !");
+      } else if (response == 2) {
+        alert(admin + " : is not in the room !");
+      } else if (response == 3) {
+        alert(admin + " : is the channel owner !");
+      }else {
+        alert(admin + " : is admin !");
+      }
+    });
+  }
+
   getAllParticipants(channel: string): Observable<Array<number>> {
     const room = { channel: channel };
     return new Observable<number[]>(observer => {

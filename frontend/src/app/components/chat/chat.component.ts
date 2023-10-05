@@ -12,6 +12,7 @@ import { JoinRoomComponent } from "./room_service/join-room/join-room.component"
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpService } from '../../http.service';
+import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 
 export interface Participant {
   userId: number;
@@ -392,8 +393,47 @@ export class ChatComponent {
   viewProfilUser(id: number) {
     this.router.navigate(['/friendProfile', id.toString()]);
   }
+  
+  openDataRemoveAdmin() {
 
-  addAdmin() {
-    
+  }
+
+  openDataAddAdmin() {
+    const dialogRef = this.dialog.open(AddAdminComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+
+      console.log("1 : " + result.name);
+      const name = result.name;
+
+      this.chatService.getUserId(name).subscribe((response1: any) => {
+        if (response1) {
+          var UserId = response1.id;
+        }
+        if (UserId) {
+          const name = UserId;
+          this.chatService.addAdmin(name, this.currentRoomId);
+          // console.log("request : " + rep);
+          // if (!rep) {
+          //   alert('Room');
+          // } else if (rep == 1) {
+          //   alert(name + " : is already admin !");
+          // } else if (rep == 2) {
+          //   alert(name + " : is not in the room !");
+          // } else if (rep == 3) {
+          //   alert(name + " : is the channel owner !");
+          // }else {
+          //   alert(name + " : is admin !");
+          // }
+        } else {
+          alert("Write anything my Brother !");
+        }
+  
+        });
+      });
+
   }
 }

@@ -155,7 +155,7 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             password: pass,
             participants: [room.userId,],
             // messages: [],
-            // admin: [],
+            admin: [],
             // ban: [],
         };
         await this.chatService.saveRoom(newData);
@@ -170,6 +170,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         await this.chatService.kickParticipant(room.channel, room.user);
     }
 
+    @SubscribeMessage('addAdmin')
+    async addAdmin(socket: Socket, room: any) {
+        return await this.chatService.addAdmin(room.user, room.id);
+    }
     
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {
