@@ -4,6 +4,7 @@
   cursor: pointer;
   display: inline-block;
   right: 20px;
+  top: 15vh;
   border: solid 1px white;
   box-shadow: 0 4px 8px 0 #00000019, 0 6px 15px 0 #00000019;
   border-radius: 50%;
@@ -59,8 +60,9 @@ mat-icon
   position: absolute;
   top: 90px;
   right: 0;
+  top: 25vh;
   width: 250px;
-  height: 90%;
+  height: 40%;
   background-color: transparent;
   transition: 0.5s;
   z-index: 1000000;
@@ -70,7 +72,7 @@ mat-icon
 }
 #sidenav {
   display: flex;
-  height: 55%;
+  height: 40%;
 }
 
 #requests-container
