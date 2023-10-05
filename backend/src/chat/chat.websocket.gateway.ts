@@ -41,15 +41,13 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         const socketId = socket.id;
     }
 
-    // @SubscribeMessage('participants')
-    // async onParticipate(socket: Socket, participant: Participant) {
-    //     const socketId = socket.id;
-    //     console.log(
-    //         `Registering new participant... socket id: %s and participant: `,
-    //         socketId,
-    //         participant,
-    //     );
-    // }
+    @SubscribeMessage('participants')
+    async onParticipate(socket: Socket, room: any) {
+        const socketId = socket.id;
+        console.log(
+            `Registering new participant... socket id: %s, participant: %s and room id: %s`, socketId, room.user, room.roomID);
+        this.server.emit(`participant/${room.roomID}`, room.user);
+    }
 
     @SubscribeMessage('exchanges')
     async onMessage(socket: Socket, message: MessageEvent) {

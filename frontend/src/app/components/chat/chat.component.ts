@@ -9,7 +9,7 @@ import { CreateRoomComponent } from "./room_service/create-room/create-room.comp
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
 import { HttpService } from '../../http.service';
-
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -113,6 +113,10 @@ export class ChatComponent {
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       this.messages.push(message);
     });
+    this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => {
+      console.log('received participant event: ', participant);
+      this.users.push(participant);
+    });
   }
   
   removeAllUser() {
@@ -141,7 +145,6 @@ export class ChatComponent {
     if (!ok)
       return;
 
-    var status: boolean;
     var username: string;
     var pic: string;
 
@@ -252,6 +255,47 @@ export class ChatComponent {
     });
   }
 
+  getMyUser(userID: number): Observable<Participant> {
+    return new Observable<Participant>(observer => {
+      var username: string = "";
+      var pic: string = "";
+
+      this.chatService.getUsername(userID).subscribe((response1: any) => {
+        if (response1) {
+          username = response1.Username;
+          
+          this.chatService.getPic(userID).subscribe((response2: any) => {
+            if (response2) {
+              pic = response2.Img;
+      
+              this.chatService.getStatus(userID).subscribe((response3: any) => {
+                if (response3) {
+                  if (response3.Status == "online") {
+                    observer.next({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Green-icon.png",
+                    } as Participant);
+                  } else {
+                    observer.next({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Red-icon.png",
+                    } as Participant);
+                  }
+                }
+                observer.complete();
+              });
+            }
+          });
+        }
+      });
+    });
+
+  }
+
   openDataJoinRoom() {
     const dialogRef = this.dialog.open(JoinRoomComponent, {
       width: '250px',
@@ -261,9 +305,17 @@ export class ChatComponent {
       if (result.name) {
         const name = result.name;
         const password = result.password;
-        this.chatService.joinRoom(name, password).subscribe(result2 => {
+        this.chatService.joinRoom(name, password).subscribe((result2) => {
           if (result2) {
             this.addRoom(name);
+
+            this.getMyUser(this.myUserId).subscribe((result3) => {
+              if (result3) {
+                this.chatService.participate(name, result3);
+              } else {
+                console.error("Error while getting my user");
+              }
+            });
           } else {
             console.error("Error while joining the room");
           }

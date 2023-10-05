@@ -40,10 +40,13 @@ export class ChatService {
     this.socket.emit('exchanges', message);
   }
 
-  // participate(roomId: string, username: string, avatar: string): boolean {
-  //   this.socket.emit('participants', {roomId, username, avatar});
-  //   return this.socket.ioSocket.connected;
-  // }
+  participate(roomId: string, user: Participant) {
+    const room = {
+      roomID: roomId,
+      user: user,
+    }
+    this.socket.emit('participants', room);
+  }
 
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
