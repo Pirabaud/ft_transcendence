@@ -392,4 +392,8 @@ export class ChatComponent {
   viewProfilUser(id: number) {
     this.router.navigate(['/friendProfile', id.toString()]);
   }
+
+  addAdmin() {
+    
+  }
 }
