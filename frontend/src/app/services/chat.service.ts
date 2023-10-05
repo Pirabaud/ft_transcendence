@@ -135,23 +135,16 @@ export class ChatService {
     this.socket.emit('leaveRoom', room);
   }
 
-  async addAdmin(admin: number, roomId: string) {
+  addAdmin(admin: number, roomId: string) {
     const room = {
       user: admin,
       id: roomId,
     };
-    this.socket.emit('addAdmin', room, (response: any) => {
-      if (!response) {
-        alert('Room');
-      } else if (response == 1) {
-        alert(admin + " : is already admin !");
-      } else if (response == 2) {
-        alert(admin + " : is not in the room !");
-      } else if (response == 3) {
-        alert(admin + " : is the channel owner !");
-      }else {
-        alert(admin + " : is admin !");
-      }
+    return new Observable<any>((observer) => {
+      this.socket.emit('addAdmin', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
     });
   }
 
@@ -160,18 +153,11 @@ export class ChatService {
       user: admin,
       id: roomId,
     };
-    this.socket.emit('removeAdmin', room, (response: any) => {
-      if (response == 0) {
-        alert('Room not found');
-      } else if (response == 1) {
-        alert(admin + " : is the channel owner !");
-      } else if (response == 2) {
-        alert(admin + " : is not in the room !");
-      } else if (response == 3) {
-        alert(admin + " : is not an admin !");
-      }else if (response == 4) {
-        alert(admin + " : he is no longer an admin");
-      }
+    return new Observable<any>((observer) => {
+      this.socket.emit('removeAdmin', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
     });
   }
   
@@ -180,7 +166,6 @@ export class ChatService {
       user: admin,
       id: roomId,
     };
-  
     return new Observable<any>((observer) => {
       this.socket.emit('getAdmin', room, (response: any) => {
         observer.next(response);
@@ -189,6 +174,31 @@ export class ChatService {
     });
   }
 
+  verifyPassword(roomId: string, password: string): Observable<any> {
+    const pass = {
+      id: roomId,
+      psd: password,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('verifyPassword', pass, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setPassword(roomId: string, password: string): Observable<any> {
+    const pass = {
+      id: roomId,
+      psd: password,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setPassword', pass, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
   
 
   getAllParticipants(channel: string): Observable<Array<number>> {

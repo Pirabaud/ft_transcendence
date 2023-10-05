@@ -90,8 +90,8 @@ export class ChatService {
         return room.password;
     }
 
-    async verifyPassword(id: string, password: string) {
-        const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+    async verifyPassword(roomId: string, password: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
             console.error('Room with ID ${id} not found');
@@ -103,6 +103,29 @@ export class ChatService {
         
         const result = await bcrypt.compare(password, room.setPassword);
         return { verify: result };
+    }
+
+    async setPassword(roomId: string, password: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
+        console.log("New Password : " + password);
+        if (password == "\0") {
+            room.password = false;
+            room.setPassword = "";
+            await this.roomRepository.save(room);
+            return true;
+        } else {
+            const saltRounds = 10;
+            room.password = true;
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            room.setPassword = hashedPassword;
+            await this.roomRepository.save(room);
+            return true;
+        }
     }
 
     // async saveMessage(id: string, message: MessageEventDto) {
@@ -173,9 +196,15 @@ export class ChatService {
 
     async addAdmin(admin: number, roomId: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
         if (!room) {
             console.error('Room with ID ${id} not found');
-            return null;
+            return 0;
+        }
+        
+        if (admin == room.createdBy) {
+            console.error('{admin} : is the channel owner');
+            return 3;
         }
 
         var i = 0;
@@ -202,14 +231,8 @@ export class ChatService {
             console.error('{admin} : is not in the room');
             return 2;
         }
-        if (admin == room.createdBy) {
-            console.error('{admin} : is the channel owner');
-            return 3;
-        }
-
 
         await room.admin.push(admin);
-
         await this.roomRepository.save(room);
         return 4;
     }

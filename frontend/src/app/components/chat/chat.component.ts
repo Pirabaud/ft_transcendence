@@ -13,7 +13,6 @@ import {Observable, of} from 'rxjs';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 
-
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -425,26 +424,23 @@ export class ChatComponent {
         }
         if (UserId == this.myUserId) {
           alert("impossible to remove the admin yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-        } else if (UserId) {
-          const name = UserId;
-          this.chatService.removeAdmin(name, this.currentRoomId);
-          // console.log("request : " + rep);
-          // if (!rep) {
-          //   alert('Room');
-          // } else if (rep == 1) {
-          //   alert(name + " : is already admin !");
-          // } else if (rep == 2) {
-          //   alert(name + " : is not in the room !");
-          // } else if (rep == 3) {
-          //   alert(name + " : is the channel owner !");
-          // }else {
-          //   alert(name + " : is admin !");
-          // }
-        } else {
-          alert("Write anything my Brother !");
+          return ;
         }
-  
+        const nameId = UserId;
+        this.chatService.removeAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
+          if (response == 0) {
+            alert('Room not found');
+          } else if (response == 1) {
+            alert(name + " : is the channel owner !");
+          } else if (response == 2) {
+            alert(name + " : is not in the room !");
+          } else if (response == 3) {
+            alert(name + " : is not an admin !");
+          }else if (response == 4) {
+            alert(name + " : he is no longer an admin");
+          }
         });
+      });
     });
 
   }
@@ -466,27 +462,90 @@ export class ChatComponent {
         }
         if (UserId == this.myUserId) {
           alert("You are already admin !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-        } if (UserId) {
-          const name = UserId;
-          this.chatService.addAdmin(name, this.currentRoomId);
-          // console.log("request : " + rep);
-          // if (!rep) {
-          //   alert('Room');
-          // } else if (rep == 1) {
-          //   alert(name + " : is already admin !");
-          // } else if (rep == 2) {
-          //   alert(name + " : is not in the room !");
-          // } else if (rep == 3) {
-          //   alert(name + " : is the channel owner !");
-          // }else {
-          //   alert(name + " : is admin !");
-          // }
-        } else {
-          alert("Write anything my Brother !");
-        }
-  
+          return ;
+        } 
+        const nameId = UserId;
+        this.chatService.addAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
+          if (response == 0) {
+            alert('Room not found');
+          } else if (response == 1) {
+            alert(name + " : is already admin !");
+          } else if (response == 2) {
+            alert(name + " : is not in the room !");
+          } else if (response == 3) {
+            alert(name + " : is the channel owner !");
+          }else if (response == 4) {
+            alert(name + " : is admin !");
+          }
         });
       });
+    });
+  }
 
+  addRemovePassword() {
+    const dialogRef = this.dialog.open(SetPasswordComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+    // var alreadyPass: boolean = false;
+    // this.chatService.verifyPassword(this.currentRoomId, "").subscribe((already: any) => {
+    //   if (already) {
+    //     if (already.verify) {
+    //       alreadyPass = true;
+    //     } else {
+    //       alreadyPass = false;
+    //     }
+    //   } else {
+    //     alert("Room not found");
+    //   }
+    // });
+    dialogRef.afterClosed().subscribe((result) => {
+      var oldPassword: string = result.oldPassword;
+      var newPassword: string = result.newPassword;
+      console.log("oldPassword: " + oldPassword);
+      console.log("newPassword: " + newPassword);
+
+      this.chatService.verifyPassword(this.currentRoomId, oldPassword).subscribe((reponse: any) => {
+        if (reponse) {
+          if (reponse.verify) {
+            console.log(reponse.verify);
+              if (newPassword == '\0') {
+                this.chatService.setPassword(this.currentRoomId, newPassword).subscribe((reponse1: any) => {
+                  if (reponse1) {
+                    alert("the channel is no longer protected by a password");
+                  } else {
+                    alert("Room not found");
+                  }
+                });
+              } else {
+                var message: string;
+                this.chatService.verifyPassword(this.currentRoomId, "").subscribe((reponse3: any) => {
+                  if (reponse3) {
+                    if (reponse3.verify) {
+                      message = "the channel changed its password";
+                    }
+                    else {
+                      message = "the channel is protected by a password";
+                    }
+                  } else {
+                    alert("Room not found");
+                  }
+                });
+                this.chatService.setPassword(this.currentRoomId, newPassword).subscribe((reponse2: any) => {
+                  if (reponse2) {
+                    alert(message);
+                  } else {
+                    alert("Room not found");
+                  }
+                });
+              }
+          } else {
+            alert(oldPassword + " : does not match the current password !");
+          }
+        } else {
+          alert("Room not found");
+        }
+      });
+    });
   }
 }

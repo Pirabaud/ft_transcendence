@@ -137,9 +137,9 @@
                                     <mat-icon>remove</mat-icon>
                                     <span>Kick</span>
                                   </button>
-                                  <button mat-menu-item *ngIf="boutonsAdminVisible">
+                                  <button mat-menu-item (click)="addRemovePassword()" *ngIf="boutonsAdminVisible">
                                     <mat-icon>lock</mat-icon>
-                                    <span>Set Password</span>
+                                    <span>Password</span>
                                   </button>
                                   <button mat-menu-item (click)="openDataAddAdmin()" *ngIf="boutonsAdminVisible">
                                     <mat-icon>admin_panel_settings</mat-icon>

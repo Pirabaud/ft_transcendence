@@ -142,6 +142,16 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     async getAdmin(socket: Socket, room: any): Promise<any> {
         return await this.chatService.getAdmin(room.user, room.id);
     }
+
+    @SubscribeMessage('setPassword')
+    async setPassword(socket: Socket, pass: any): Promise<any> {
+        return await this.chatService.setPassword(pass.id, pass.psd);
+    }
+
+    @SubscribeMessage('verifyPassword')
+    async verifyPassword(socket: Socket, pass: any): Promise<any> {
+        return await this.chatService.verifyPassword(pass.id, pass.psd);
+    }
     
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {
