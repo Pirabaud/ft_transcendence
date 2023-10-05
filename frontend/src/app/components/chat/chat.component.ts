@@ -206,7 +206,16 @@ export class ChatComponent {
   }
 
   leaveRoom() {
-    this.chatService.leaveRoom(this.currentRoomId, this.myUserId);
+    this.chatService.kickRoom(this.currentRoomId, this.myUserId).subscribe((response: any) => {
+      console.log("OOOOKKKKK:", response)
+      if (response) {
+        if (response.ok == true) {
+          alert("This user leave the room " + this.currentRoomId);
+        } else if (response.ok == false) {
+          alert("This user leave the room " + this.currentRoomId + " and this room has been deleted");
+        }
+      }
+    });
     
     this.chatService.leave(this.currentRoomId, this.myUserId);
 
@@ -266,8 +275,15 @@ export class ChatComponent {
 
                 if (ok) {
 
-                  this.chatService.kickRoom(this.currentRoomId, UserId);
-                  alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
+                  this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
+                    if (response2) {
+                      if (response2.ok == true) {
+                        alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
+                      } else if (response2.ok == false) {
+                        alert("The user " + name + " has been kicked from the room " + this.currentRoomId + " and this room has been deleted");
+                      }
+                    }
+                  });
                 
                   this.removeAllUser();
 
@@ -354,14 +370,12 @@ export class ChatComponent {
             this.getMyUser(this.myUserId).subscribe((result3) => {
               if (result3) {
                 this.chatService.participate(name, result3);
-              } else {
-                console.error("Error while getting my user");
               }
             });
-          } else {
-            console.error("Error while joining the room");
           }
         });
+      } else {
+        alert("Channel can't be NULL");
       }
     });
   }
@@ -375,8 +389,11 @@ export class ChatComponent {
       if (result.name) {
         const name = result.name;
         const password = result.password;
-        this.chatService.createRoom(name, password);
-        this.addRoom(name);
+        this.chatService.createRoom(name, password).subscribe((response) => {
+          if (response) {
+            this.addRoom(name);
+          }
+        });
       }
       else
         alert("Channel can't be NULL");
