@@ -1,5 +1,20 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
+export interface Participant {
+  userId: number;
+  username: string;
+  avatar: string;
+  status: string,
+}
+
+export interface MessageEvent {
+  socketId: string;
+  roomId: string;
+  user: Participant;
+  content: string;
+  createdAt: Date;
+}
+
 @Entity()
 export class RoomData {
   @PrimaryColumn()
@@ -16,9 +31,14 @@ export class RoomData {
   
   @Column('simple-array', { nullable: true })
   participants: Array<number>;
-  
-  // @Column({ nullable: true })
-  // messages: MessageDto[];
+
+  @Column({
+    type: 'jsonb',
+    array: false,
+    default: () => "'[]'",
+    nullable: false,
+  })
+  public messages!: Array<MessageEvent>;
   
   @Column('simple-array', { nullable: true })
   admin: Array<number>;

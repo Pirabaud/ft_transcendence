@@ -269,11 +269,21 @@ export class ChatService {
   
 
   getAllParticipants(channel: string): Observable<Array<number>> {
-    const room = { channel: channel };
     return new Observable<number[]>(observer => {
       const room = { channel: channel };
       
       this.socket.emit('getAllParticipants', room, (response: number[]) => {
+        observer.next(response); // Émettez la réponse lorsque les données sont disponibles
+        observer.complete(); // Indiquez que l'observable est terminé
+      });
+    });
+  }
+
+  getAllMessages(channel: string): Observable<MessageEvent[]> {
+    return new Observable<MessageEvent[]>(observer => {
+      const room = { channel: channel };
+      
+      this.socket.emit('getAllMessages', room, (response: MessageEvent[]) => {
         observer.next(response); // Émettez la réponse lorsque les données sont disponibles
         observer.complete(); // Indiquez que l'observable est terminé
       });
@@ -294,6 +304,10 @@ export class ChatService {
 
   getStatus(userId: number): Observable<any> {
     return this.http.post<any>("http://localhost:3000/user/getStatus", {userId});
+  }
+
+  getMessages(userId: string): Observable<MessageEvent[]> {
+    return this.http.post<MessageEvent[]>("http://localhost:3000/chat/getMessages", {userId});
   }
 
 }

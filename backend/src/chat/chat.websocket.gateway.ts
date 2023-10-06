@@ -64,9 +64,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         const socketId = socket.id;
         message.socketId = socketId;
 
+        this.chatService.saveMessage(message.roomId, message)
         this.server.emit(message.roomId, message);
     }
-
+    
     @SubscribeMessage('joinRoom')
     async joinRoom(channel: any, room: any) {
 
@@ -83,12 +84,13 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             // WRONG PASSWORD
             return 2
         }
-
+        
         const ok: boolean = await this.chatService.IsParticipantInTheRoom(room.channel, room.user);
         if (ok) {
             // YOU'RE ALREADY IN THE ROOM
             return 3;
         }
+
         const sol: boolean = await this.chatService.checkBan(room.channel, room.user);
         if (sol == false) {
             // YOU ARE BAN
@@ -100,7 +102,7 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
         return 5;
     }
-
+    
     @SubscribeMessage('newRoom')
     async newRoom(channel: any, room: any) {
         
@@ -125,31 +127,31 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             setPassword: hashedPassword,
             password: pass,
             participants: [room.userId,],
-            // messages: [],
+            messages: [],
             admin: [],
             ban: [],
             mute: [],
         };
         await this.chatService.saveRoom(newData);
-
+        
         return 42;
     }
-
+    
     @SubscribeMessage('leaveRoom')
     async leaveRoom(channel: any, room: any): Promise<any> {
         return await this.chatService.kickParticipant(room.channel, room.user);
     }
-
+    
     @SubscribeMessage('addAdmin')
     async addAdmin(socket: Socket, room: any) {
         return await this.chatService.addAdmin(room.user, room.id);
     }
-
+    
     @SubscribeMessage('removeAdmin')
     async removeAdmin(socket: Socket, room: any) {
         return await this.chatService.removeAdmin(room.user, room.id);
     }
-
+    
     @SubscribeMessage('getAdmin')
     async getAdmin(socket: Socket, room: any): Promise<any> {
         return await this.chatService.getAdmin(room.user, room.id);
@@ -159,17 +161,17 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     async setPassword(socket: Socket, pass: any): Promise<any> {
         return await this.chatService.setPassword(pass.id, pass.psd);
     }
-
+    
     @SubscribeMessage('verifyPassword')
     async verifyPassword(socket: Socket, pass: any): Promise<any> {
         return await this.chatService.verifyPassword(pass.id, pass.psd);
     }
-
+    
     @SubscribeMessage('banUser')
     async banUser(socket: Socket, room: any) {
         return await this.chatService.banUser(room.user, room.id);
     }
-
+    
     @SubscribeMessage('unBanUser')
     async unBanUser(socket: Socket, room: any) {
         return await this.chatService.unBanUser(room.user, room.id);
@@ -187,10 +189,15 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {
-
+        
         const Users: Array<number> = await this.chatService.getUsers(room.channel);
-
+        
         return Users;
     }
+
+    // @SubscribeMessage('getAllMessages')
+    // async getAllMessages(socket: Socket, room: any): Promise<MessageEvent[]> {
+    //     return await this.chatService.getMessages(room.channel);
+    // }
     
 }
