@@ -23,8 +23,11 @@ export class RoomData {
   @Column('simple-array', { nullable: true })
   admin: Array<number>;
 
-	// @Column({ nullable: true })
-  // ban: number[]; // id of Users
+	@Column('simple-array', {nullable: true })
+  ban: Array<number>; // id of Users
+
+  @Column('simple-array', {nullable: true })
+  mute: Array<number>; // id of Users
   
   // @Column()
   // createdDate: Date;
