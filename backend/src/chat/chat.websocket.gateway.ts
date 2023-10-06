@@ -182,6 +182,11 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         return await this.chatService.muteUser(room.user, room.id);
     }
 
+    // @SubscribeMessage('getUser')
+    // async getUser(socket: Socket, user: any) {
+    //     return await this.chatService.getUser(user);
+    // }
+
     @SubscribeMessage('unMuteUser')
     async unMuteUser(socket: Socket, room: any) {
         return await this.chatService.unMuteUser(room.user, room.id);

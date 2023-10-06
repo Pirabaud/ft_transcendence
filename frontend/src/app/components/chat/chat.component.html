@@ -180,16 +180,33 @@
                             ></div>
       
                             <ng-template #incoming_msg>
+
                               <div class="incoming_msg">
-                                <div class="incoming_msg_img">
-                                  <img class="img_incoming_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
-                                </div>
-                                <div class="received_msg">
-                                  <div class="received_withd_msg">
-                                    <p>{{ message.content }}</p>
+                                
+                                <div class="left_incoming_msg">
+
+                                  <div class="incoming_msg_img">
+                                    <img class="img_incoming_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
                                   </div>
+
+                                </div>
+
+                                <div class="column_received_msg">
+
+                                  <div class="user_received_msg">
+                                    <p><b>{{message.user.username}}</b></p>
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="received_msg">
+                                <div class="received_withd_msg">
+                                  <p class="inside_content">{{ message.content }}</p>
                                 </div>
                               </div>
+
                             </ng-template>
                             <ng-template #outgoing_msg>
                               <div class="outgoing_msg">

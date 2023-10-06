@@ -266,6 +266,15 @@ export class ChatService {
       });
     });
   }
+
+  // getUser(user: string) {
+  //   return new Observable<any>((observer) => {
+  //     this.socket.emit('unMuteUser', user, (response: any) => {
+  //       observer.next(response);
+  //       observer.complete();
+  //     });
+  //   });
+  // }
   
 
   getAllParticipants(channel: string): Observable<Array<number>> {

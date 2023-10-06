@@ -46,6 +46,23 @@ export class ChatService {
         return room.participants;
     }
 
+    // async getUser(id: string) {
+    //     const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
+
+    //     if (!room) {
+    //         console.error('Room with ID ${id} not found');
+    //         return null;
+    //     }
+
+    //     var i = 0;
+    //     while (room.participants[i])
+    //     {
+    //         if ()
+    //     }
+            
+    //     return room.participants;
+    // }
+
     // async getUsersId(id: number) {
     //     const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
