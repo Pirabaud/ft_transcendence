@@ -174,7 +174,7 @@ export class ChatService {
         return false;
     }
 
-    async kickParticipant(id: string, User: number) {
+    async kickParticipant(id: string, User: number): Promise<any> {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
         
         if (!room) {
@@ -190,8 +190,15 @@ export class ChatService {
             }
             i++;
         }
+        i = 0;
+        while (room.participants[i]) {
+            i++;
+        }
+        if (i == 0) {
+            return { ok: false };
+        }
         await this.roomRepository.save(room);
-        return true;
+        return { ok: true};
     }
 
     async addAdmin(admin: number, roomId: string) {

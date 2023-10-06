@@ -53,6 +53,12 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         this.server.emit(`leave/${room.roomID}`, room.userID);
     }
 
+    @SubscribeMessage('kick')
+    async onKick(socket: Socket, room: any) {
+        const socketId = socket.id;
+        this.server.emit(`kick/${room.roomID}`, room.userID);
+    }
+
     @SubscribeMessage('exchanges')
     async onMessage(socket: Socket, message: MessageEvent) {
         const socketId = socket.id;
@@ -95,12 +101,11 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         var hashedPassword: string = '';
         const saltRounds = 10;
         
-        if (await this.chatService.IsThereARoom(room.channel) == true) {
-            console.log("THIS ROOM ALREADY EXIST");
-            return null;
+        if (await this.chatService.IsThereARoom(room.channel)) {
+            // THIS ROOM ALREADY EXIST
+            return -1;
         }
 
-        console.log("Creating chat room...");
         if (room.password != "")
         {
             pass = true;
@@ -120,13 +125,12 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         };
         await this.chatService.saveRoom(newData);
 
-        return true;
+        return 42;
     }
 
     @SubscribeMessage('leaveRoom')
-    async leaveRoom(channel: any, room: any) {
-        
-        await this.chatService.kickParticipant(room.channel, room.user);
+    async leaveRoom(channel: any, room: any): Promise<any> {
+        return await this.chatService.kickParticipant(room.channel, room.user);
     }
 
     @SubscribeMessage('addAdmin')

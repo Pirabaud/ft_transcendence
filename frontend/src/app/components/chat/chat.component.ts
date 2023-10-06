@@ -120,6 +120,7 @@ export class ChatComponent {
   }
 
   private initConnection(roomID: string) {
+   
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       this.messages.push(message);
     });
@@ -136,6 +137,42 @@ export class ChatComponent {
             this.users.pop();
           }
           i++;
+        }
+      }
+    });
+    this.chatService.receiveEvent(`kick/${roomID}`).subscribe((userId: number) => {
+      if (this.currentRoomId == roomID) {
+        var j = 0;
+        while (this.users[j]) {
+          if (this.users[j].userId == userId) {
+            this.users.pop();
+          }
+          j++;
+        }
+      }
+      if (this.myUserId == userId) {
+        this.removeAllUser();
+        const roomItems = document.querySelectorAll('.room-item');
+        roomItems.forEach((div) => {
+          if (div.textContent == roomID) {
+              div.remove();
+          }
+        });
+        const divChannelName = document.querySelector(".channel_name");
+        if (divChannelName) {
+          const paragraphe = divChannelName.querySelector("p");
+          if (paragraphe) {
+            paragraphe.textContent = "";
+          } else {
+            console.error("Paragraphe introuvable dans le div.");
+          }
+        } else {
+          console.error("Div avec la classe 'channel_name' introuvable.");
+        }
+        this.currentRoomId = "";
+        this.settingsVisible = false;
+        if (roomItems.length == 1) {
+          this.router.navigate(['chat-lobby']);
         }
       }
     });
@@ -206,18 +243,27 @@ export class ChatComponent {
   }
 
   leaveRoom() {
-    this.chatService.leaveRoom(this.currentRoomId, this.myUserId);
+    this.chatService.kickRoom(this.currentRoomId, this.myUserId).subscribe((response: any) => {
+      if (response) {
+        if (response.ok == true) {
+          alert("This user leave the room " + this.currentRoomId);
+        } else if (response.ok == false) {
+          alert("This user leave the room " + this.currentRoomId + " and this room has been deleted");
+        }
+      }
+    });
     
     this.chatService.leave(this.currentRoomId, this.myUserId);
 
     this.removeAllUser();
     
     const roomItems = document.querySelectorAll('.room-item');
-    
+    var i = 0;
     roomItems.forEach((div) => {
       if (div.textContent === this.currentRoomId) {
         div.remove();
       }
+      i++;
     });
 
     const divChannelName = document.querySelector(".channel_name");
@@ -237,6 +283,9 @@ export class ChatComponent {
     this.currentRoomId = "";
     this.settingsVisible = false;
 
+    if (roomItems.length == 1) {
+      this.router.navigate(['chat-lobby']);
+    }
   }
   
   async openDataKick() {
@@ -254,43 +303,48 @@ export class ChatComponent {
           if (response1) {
             UserId = response1.id;
 
-            this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
-              if (Response) {
-                var i = 0;
-                while ( Response[i] ) {
-                  if (Response[i] == UserId) {
-                    ok = true;
+            if (UserId != this.myUserId) {
+              
+              this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
+                if (Response) {
+                  var i = 0;
+                  while ( Response[i] ) {
+                    if (Response[i] == UserId) {
+                      ok = true;
+                    }
+                    i++;
                   }
-                  i++;
-                }
+                  
+                  if (ok) {
+                    
+                    this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
+                      if (response2) {
+                        if (response2.ok == true) {
+                          alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
+                        } else if (response2.ok == false) {
+                          alert("The user " + name + " has been kicked from the room " + this.currentRoomId + " and this room has been deleted");
+                        }
+                        
+                        this.chatService.kick(this.currentRoomId, UserId);
 
-                if (ok) {
-
-                  this.chatService.kickRoom(this.currentRoomId, UserId);
-                  alert("The user " + name + " has been kicked from the room " + this.currentRoomId);
-                
-                  this.removeAllUser();
-
-                  this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
-                    if (Response) {
-                      var i = 0;
-                      while ( Response[i] ) {
-                        this.addUser(Response[i]);
-                        i++;
                       }
-                    } else {console.log("error3")}
-                  });
-                } else {
-                  alert("This user isn't in the room!")
-                }
-              } else {console.log("error2")}
-            });
+
+                    });
+                    
+                  } else {
+                    alert("This user isn't in the room!")
+                  }
+                } else {console.log("error2")}
+              });
+            
+            } else {
+              alert("You can't kick yourself!");
+            }
 
           } else {
             alert("This user doesn't exist!");
           }
         });
-
 
       } else {console.log("error1")}
     });
@@ -353,14 +407,12 @@ export class ChatComponent {
             this.getMyUser(this.myUserId).subscribe((result3) => {
               if (result3) {
                 this.chatService.participate(name, result3);
-              } else {
-                console.error("Error while getting my user");
               }
             });
-          } else {
-            console.error("Error while joining the room");
           }
         });
+      } else {
+        alert("Channel can't be NULL");
       }
     });
   }
@@ -374,8 +426,11 @@ export class ChatComponent {
       if (result.name) {
         const name = result.name;
         const password = result.password;
-        this.chatService.createRoom(name, password);
-        this.addRoom(name);
+        this.chatService.createRoom(name, password).subscribe((response) => {
+          if (response) {
+            this.addRoom(name);
+          }
+        });
       }
       else
         alert("Channel can't be NULL");

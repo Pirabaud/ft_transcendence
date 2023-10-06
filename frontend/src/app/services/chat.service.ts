@@ -56,6 +56,14 @@ export class ChatService {
     this.socket.emit('leave', room);
   }
 
+  kick(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('kick', room);
+  }
+
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
   }
@@ -73,13 +81,21 @@ export class ChatService {
             password: password,
             userId: response.UserId,
           };
-          this.socket.emit('newRoom', room);
-          observer.next(true);
+          this.socket.emit('newRoom', room, (response: any) => {
+            if (response == -1) {
+            alert("This room already exist!");
+            observer.next(false);
+            observer.complete();
+          } else if (response == 42) {
+            observer.next(true);
+            observer.complete();
+            }
+          });
         } else {
           console.error("Error receiving username");
           observer.next(false);
+          observer.complete();
         }
-        observer.complete();
       });
     });
   }
@@ -118,21 +134,17 @@ export class ChatService {
     });
   }
 
-  leaveRoom(channel: string, userId: number) {
+  kickRoom(channel: string, userId: number): Observable<any> {
     const room = {
       channel: channel,
       user: userId,
     };
-    this.socket.emit('leaveRoom', room);
-    alert("This user leave the room " + channel);
-  }
-
-  kickRoom(channel: string, userId: number) {
-    const room = {
-      channel: channel,
-      user: userId,
-    };
-    this.socket.emit('leaveRoom', room);
+    return new Observable<any>((observer) => {
+      this.socket.emit('leaveRoom', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
   }
 
   addAdmin(admin: number, roomId: string) {
