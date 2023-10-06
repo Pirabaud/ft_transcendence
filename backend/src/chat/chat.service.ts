@@ -363,6 +363,29 @@ export class ChatService {
         return 4;
     }
 
+    async checkBan(roomId: string, user: number) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        console.log("WTffffff");
+        if (!room) {
+            console.log("ERROR");
+            console.error('Room with ID ${id} not found');
+            return false;
+        }
+
+        var i = 0;
+        console.log(user);
+        while (room.ban[i]) {
+            console.log(room.ban[i]);
+            if (room.ban[i] == user) {
+                console.error('{user} : is ban !');
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
     async unBanUser(banner: number, roomId: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
@@ -393,10 +416,114 @@ export class ChatService {
         }
 
         var i = 0;
-        while (room.admin[i]) {
+        while (room.ban[i]) {
 
-            if (room.admin[i] == banner) {
-                room.admin.splice(i, 1);
+            if (room.ban[i] == banner) {
+                room.ban.splice(i, 1);
+                await this.roomRepository.save(room);
+                return 4;
+            }
+            i++;
+        }
+        return 3;
+    }
+
+    async muteUser(mute: number, roomId: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return 0;
+        }
+        
+        if (mute == room.createdBy) {
+            console.error('{mutter} : is the channel owner');
+            return 3;
+        }
+
+        var i = 0;
+        while (room.mute[i]) {
+
+            if (room.mute[i] == mute) {
+                console.error('{mutter} : is already mute !');
+                return 1;
+            }
+            i++;
+        }
+
+        var i = 0;
+        var inRoom: boolean = false;
+        while (room.participants[i]) {
+
+            if (room.participants[i] == mute) {
+                inRoom = true;
+                break;
+            }
+            i++;
+        }
+        if (inRoom == false) {
+            console.error('{mutter} : is not in the room');
+            return 2;
+        }
+
+        await room.mute.push(mute);
+        await this.roomRepository.save(room);
+        return 4;
+    }
+
+    async checkMute(roomId: string, user: number) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return false;
+        }
+        
+        var i = 0;
+        while (room.mute[i]) {
+            if (room.mute[i] == user) {
+                console.error('{user} : is mute !');
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
+    async unMuteUser(mute: number, roomId: string) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return 0;
+        }
+
+        if (mute == room.createdBy) {
+            console.error('{mutter} : is the channel owner');
+            return 1;
+        }
+        
+        var i = 0;
+        var inRoom: boolean = false;
+        while (room.participants[i]) {
+            
+            if (room.participants[i] == mute) {
+                inRoom = true;
+                break;
+            }
+            i++;
+        }
+
+        if (inRoom == false) {
+            console.error('{mutter} : is not in the room');
+            return 2;
+        }
+
+        var i = 0;
+        while (room.mute[i]) {
+
+            if (room.mute[i] == mute) {
+                room.mute.splice(i, 1);
                 await this.roomRepository.save(room);
                 return 4;
             }

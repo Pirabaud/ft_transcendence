@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-mute',
-  templateUrl: './mute.component.html',
-  styleUrls: ['./mute.component.css']
+  selector: 'app-unmute',
+  templateUrl: './unmute.component.html',
+  styleUrls: ['./unmute.component.css']
 })
-export class MuteComponent {
+export class UnmuteComponent {
   data: {name: string} = {name: ''};
 
-  constructor(private dialogRef: MatDialogRef<MuteComponent>) {}
+  constructor(private dialogRef: MatDialogRef<UnmuteComponent>) {}
 
   closeDialog() {
     this.dialogRef.close(); //return rien au dialog opener

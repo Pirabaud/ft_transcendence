@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { KickComponent } from '../chat/room_service/kick/kick.component';
 import { BanComponent } from '../chat/room_service/ban/ban.component';
 import { MuteComponent } from '../chat/room_service/mute/mute.component';
+import { UnmuteComponent } from './room_service/unmute/unmute.component';
 import { SetPasswordComponent } from '../chat/room_service/set-password/set-password.component';
 import { ChatService, Participant, MessageEvent } from '../../services/chat.service';
 import { CreateRoomComponent } from "./room_service/create-room/create-room.component";
@@ -62,7 +63,7 @@ export class ChatComponent {
       }
     });
   }
-  
+
   addRoom(roomId: string) {
     const newDiv = document.createElement('div');
     newDiv.textContent = roomId;
@@ -631,18 +632,12 @@ export class ChatComponent {
           } else if (response == 3) {
             alert(name + " : is the channel owner !");
           }else if (response == 4) {
-            this.chatService.kickRoom(this.currentRoomId, UserId);
-            this.removeAllUser();
-            this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
-              if (Response) {
-                var i = 0;
-                while ( Response[i] ) {
-                  this.addUser(Response[i]);
-                  i++;
-                }
-              } else {console.log("error3")}
+            this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
+              if (response2) {
+                this.chatService.kick(this.currentRoomId, UserId);
+                alert(name + " : is ban !");
+              }
             });
-            alert(name + " : is ban !");
           }
         });
       });
@@ -678,6 +673,76 @@ export class ChatComponent {
             alert(name + " : is not ban !");
           }else if (response == 4) {
             alert(name + " : he is no longer banned !");
+          }
+        });
+      });
+    });
+  }
+
+  openDataMute() {
+    const dialogRef = this.dialog.open(MuteComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const name = result.name;
+
+      this.chatService.getUserId(name).subscribe((response1: any) => {
+        if (response1) {
+          var UserId = response1.id;
+        }
+        if (UserId == this.myUserId) {
+          alert("impossible to ban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+          return ;
+        }
+        const nameId = UserId;
+        this.chatService.muteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
+          if (response == 0) {
+            alert('Room not found');
+          } else if (response == 1) {
+            alert(name + " : is already mute !");
+          } else if (response == 2) {
+            alert(name + " : is not in the room !");
+          } else if (response == 3) {
+            alert(name + " : is the channel owner !");
+          }else if (response == 4) {
+            alert(name + " : is mute !");
+          }
+        });
+      });
+    });
+  }
+
+  openDataUnMute() {
+    const dialogRef = this.dialog.open(UnmuteComponent, {
+      /*Ouvre le dialog et definit la taille*/
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const name = result.name;
+
+      this.chatService.getUserId(name).subscribe((response1: any) => {
+        if (response1) {
+          var UserId = response1.id;
+        }
+        if (UserId == this.myUserId) {
+          alert("impossible to unban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+          return ;
+        }
+        const nameId = UserId;
+        this.chatService.unMuteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
+          if (response == 0) {
+            alert('Room not found');
+          } else if (response == 1) {
+            alert(name + " : is the channel owner !");
+          } else if (response == 2) {
+            alert(name + " : is not in the room !");
+          } else if (response == 3) {
+            alert(name + " : is not mute !");
+          }else if (response == 4) {
+            alert(name + " : he is no longer muted !");
           }
         });
       });

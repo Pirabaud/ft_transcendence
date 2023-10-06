@@ -82,7 +82,7 @@
                                               <mat-icon>account_circle</mat-icon>
                                               <span>View Profil</span>
                                             </button>
-                                            <button mat-menu-item>
+                                            <button mat-menu-item >
                                                 <mat-icon>person_add</mat-icon>
                                                 <span>Send Private Message</span>
                                               </button>
@@ -125,11 +125,11 @@
                                 <mat-icon>settings</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item *ngIf="boutonsAdminVisible">
+                                <button mat-menu-item (click)="openDataMute()" *ngIf="boutonsAdminVisible">
                                   <mat-icon>do_not_disturb_on_total_silence</mat-icon>
                                     <span>Mute</span>
                                   </button>
-                                  <button mat-menu-item *ngIf="boutonsAdminVisible">
+                                  <button mat-menu-item (click)="openDataUnMute()" *ngIf="boutonsAdminVisible">
                                     <mat-icon>radio_button_unchecked</mat-icon>
                                       <span>UnMute</span>
                                     </button>
