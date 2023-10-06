@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoomData } from './chat.entity';
+import { MessageEvent, Participant } from './chat.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -128,19 +129,30 @@ export class ChatService {
         }
     }
 
-    // async saveMessage(id: string, message: MessageEventDto) {
-    //     const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+    async saveMessage(id: string, message: MessageEvent) {
+        const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
-    //     if (!room) {
-    //         console.error('Room with ID ${id} not found');
-    //         return null;
-    //     }
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
 
-    //     await this.roomRepository.delete(id);
-    //     room.messages = room.messages.concat(message);
-    //     await this.roomRepository.save(room);
-    //     return true;
-    // }
+        await this.roomRepository.delete(id);
+        room.messages.push(message);
+        await this.roomRepository.save(room);
+        return true;
+    }
+
+    async getMessages(id: string): Promise<MessageEvent[]> {
+        const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+
+        if (!room) {
+            console.error('Room with ID ${id} not found');
+            return null;
+        }
+
+        return room.messages;
+    }
 
     async addParticipant(id: string, User: number) {
         const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });

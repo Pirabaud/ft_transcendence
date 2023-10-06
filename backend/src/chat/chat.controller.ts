@@ -38,10 +38,10 @@ export class ChatController {
     return this.chatService.verifyPassword(obj.id, obj.password);
   }
 
-  // @Post('saveMessage')
-  // async saveMessage(@Body() obj: { id: string, message: MessageEventDto}) {
-  //   return this.chatService.saveMessage(obj.id, obj.message);
-  // }
+  @Post('getMessages')
+  async getMessages(@Body() userId: { userId: string }) {
+    return await this.chatService.getMessages(userId.userId);
+  }
 
   // @Post('kick')
   // async kick(@Body() obj: { id: string, user: Participant }) {

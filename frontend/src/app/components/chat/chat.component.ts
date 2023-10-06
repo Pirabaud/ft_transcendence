@@ -72,6 +72,8 @@ export class ChatComponent {
     newDiv.addEventListener('click', () => {
       
       this.currentRoomId = roomId;
+
+      this.messages = [];
       
       this.settingsVisible = true;
       
@@ -103,9 +105,18 @@ export class ChatComponent {
       });
 
       this.chatService.getAdmin(this.myUserId, this.currentRoomId).subscribe((response) => {
-        console.log(response);
         if (response) {
           this.boutonsAdminVisible = response.ok;
+        }
+      });
+
+      this.chatService.getMessages(roomId).subscribe((response2: MessageEvent[]) => {
+        if (response2) {
+          var j = 0;
+          while ( response2[j] ) {
+            this.messages.push(response2[j]);
+            j++;
+          }
         }
       });
 
@@ -122,7 +133,9 @@ export class ChatComponent {
   private initConnection(roomID: string) {
    
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
-      this.messages.push(message);
+      if (message.roomId == this.currentRoomId) {
+        this.messages.push(message);
+      }
     });
     this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => {
       if (participant.userId != this.myUserId && this.currentRoomId == roomID) {
@@ -152,6 +165,7 @@ export class ChatComponent {
       }
       if (this.myUserId == userId) {
         this.removeAllUser();
+        this.messages = [];
         const roomItems = document.querySelectorAll('.room-item');
         roomItems.forEach((div) => {
           if (div.textContent == roomID) {
@@ -254,6 +268,8 @@ export class ChatComponent {
     });
     
     this.chatService.leave(this.currentRoomId, this.myUserId);
+
+    this.messages = [];
 
     this.removeAllUser();
     
