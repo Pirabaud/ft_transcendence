@@ -615,18 +615,12 @@ export class ChatComponent {
           } else if (response == 3) {
             alert(name + " : is the channel owner !");
           }else if (response == 4) {
-            this.chatService.kickRoom(this.currentRoomId, UserId);
-            this.removeAllUser();
-            this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
-              if (Response) {
-                var i = 0;
-                while ( Response[i] ) {
-                  this.addUser(Response[i]);
-                  i++;
-                }
-              } else {console.log("error3")}
+            this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
+              if (response2) {
+                this.chatService.kick(this.currentRoomId, UserId);
+                alert(name + " : is ban !");
+              }
             });
-            alert(name + " : is ban !");
           }
         });
       });

@@ -70,6 +70,8 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     @SubscribeMessage('joinRoom')
     async joinRoom(channel: any, room: any) {
 
+        console.log(room.user);
+
         if (await this.chatService.IsThereARoom(room.channel) == false) {
             // THIS ROOM DOESN'T EXIST
             return 1;
@@ -87,11 +89,16 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             // YOU'RE ALREADY IN THE ROOM
             return 3;
         }
+        const sol: boolean = await this.chatService.checkBan(room.channel, room.user);
+        if (sol == false) {
+            // YOU ARE BAN
+            return 4;
+        }
 
         // Add the participant
         await this.chatService.addParticipant(room.channel, room.user);
 
-        return 4;
+        return 5;
     }
 
     @SubscribeMessage('newRoom')

@@ -120,6 +120,9 @@ export class ChatService {
             } else if (response == 3) {
               window.alert("You're already in the room!");
               observer.next(false);
+            } else if (response == 4) {
+              window.alert("You're ban !");
+              observer.next(false);
             } else {
               observer.next(true);
             }
@@ -218,7 +221,7 @@ export class ChatService {
       id: roomId,
     };
     return new Observable<any>((observer) => {
-      this.socket.emit('addAdmin', room, (response: any) => {
+      this.socket.emit('banUser', room, (response: any) => {
         observer.next(response);
         observer.complete();
       });

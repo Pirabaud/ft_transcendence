@@ -351,6 +351,29 @@ export class ChatService {
         return 4;
     }
 
+    async checkBan(roomId: string, user: number) {
+        const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
+
+        console.log("WTffffff");
+        if (!room) {
+            console.log("ERROR");
+            console.error('Room with ID ${id} not found');
+            return false;
+        }
+        
+        var i = 0;
+        console.log(user);
+        while (room.ban[i]) {
+            console.log(room.ban[i]);
+            if (room.ban[i] == user) {
+                console.error('{user} : is ban !');
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
     async unBanUser(banner: number, roomId: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
@@ -381,10 +404,10 @@ export class ChatService {
         }
 
         var i = 0;
-        while (room.admin[i]) {
+        while (room.ban[i]) {
 
-            if (room.admin[i] == banner) {
-                room.admin.splice(i, 1);
+            if (room.ban[i] == banner) {
+                room.ban.splice(i, 1);
                 await this.roomRepository.save(room);
                 return 4;
             }
