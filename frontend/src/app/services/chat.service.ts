@@ -240,6 +240,32 @@ export class ChatService {
       });
     });
   }
+
+  muteUser(mute: number, roomId: string) {
+    const room = {
+      user: mute,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('muteUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  unMuteUser(unMute: number, roomId: string) {
+    const room = {
+      user: unMute,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('unMuteUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
   
 
   getAllParticipants(channel: string): Observable<Array<number>> {
