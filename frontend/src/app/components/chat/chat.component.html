@@ -169,31 +169,77 @@
                     <div class="content_msg">
   
                         <div class="msg_history">
-                  
+                          
                           <li class="message" *ngFor="let message of messages">
                             <div
-                              *ngIf="
-                                (message.user).userId !== myUserId;
-                                then incoming_msg;
-                                else outgoing_msg
-                              "
+                            *ngIf="
+                            (message.user).userId != myUserId;
+                            then incoming_msg;
+                            else outgoing_msg
+                            "
                             ></div>
-      
+                            
                             <ng-template #incoming_msg>
-
-                              <div class="incoming_msg">
+                              
+                              <div class="right_incoming_msg">
                                 
-                                <div class="left_incoming_msg">
+                                
+                                
+                                
+                                <div class="incoming_msg">
+                                  
+                                  <div class="column_received_msg">
+                                    
+                                    <div class="user_received_msg">
+                                      <p><b>{{message.user.username}}</b></p>
+                                    </div>
+                                    
+                                  </div>
+                                  
+                                  <div class="right_incoming_msg">
+                                    
+                                    <div class="incoming_msg_img">
+                                      <img class="img_incoming_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
+                                    </div>
+                                    
+                                  </div>
+                                  
+                                </div>
+                              </div>
+                              <div class="right_incoming_msg">
+                                <div class="received_msg">
+                                  <div class="received_withd_msg">
+                                    <p class="inside_content">{{ message.content }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                                
 
-                                  <div class="incoming_msg_img">
-                                    <img class="img_incoming_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
+                            </ng-template>
+
+
+
+
+
+
+
+
+
+                            <ng-template #outgoing_msg>
+
+                              <div class="outgoing_msg">
+                                
+                                <div class="left_outgoing_msg">
+
+                                  <div class="outgoing_msg_img">
+                                    <img class="img_outgoing_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
                                   </div>
 
                                 </div>
 
-                                <div class="column_received_msg">
+                                <div class="column_received_msg_outgoing">
 
-                                  <div class="user_received_msg">
+                                  <div class="user_received_msg_outgoing">
                                     <p><b>{{message.user.username}}</b></p>
                                   </div>
 
@@ -201,20 +247,23 @@
 
                               </div>
 
-                              <div class="received_msg">
-                                <div class="received_withd_msg">
-                                  <p class="inside_content">{{ message.content }}</p>
+                              <div class="received_msg_outgoing">
+                                <div class="received_withd_msg_outgoing">
+                                  <p class="inside_content_outgoing">{{ message.content }}</p>
                                 </div>
                               </div>
 
                             </ng-template>
-                            <ng-template #outgoing_msg>
+
+
+                            <!-- <ng-template #outgoing_msg>
                               <div class="outgoing_msg">
                                 <div class="sent_msg">
                                   <p>{{ message.content }}</p>
                                 </div>
                               </div>
-                            </ng-template>
+                            </ng-template> -->
+                            
                           </li>
                         </div>
                     
