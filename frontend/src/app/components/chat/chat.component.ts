@@ -63,7 +63,7 @@ export class ChatComponent {
       }
     });
   }
-  
+
   addRoom(roomId: string) {
     const newDiv = document.createElement('div');
     newDiv.textContent = roomId;
