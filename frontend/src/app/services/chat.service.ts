@@ -267,41 +267,57 @@ export class ChatService {
     });
   }
 
-  blockUser(mute: number, roomId: string) {
+  checkMute(mute: number, roomId: string) {
     const room = {
       user: mute,
       id: roomId,
     };
     return new Observable<any>((observer) => {
-      this.socket.emit('muteUser', room, (response: any) => {
+      this.socket.emit('checkMute', room, (response: any) => {
         observer.next(response);
         observer.complete();
       });
     });
   }
 
-  unBlockUser(block: number, user: string) {
+  blockUser(block: number, user: number) {
     const room = {
       userId: block,
       userData: user,
     };
     return new Observable<any>((observer) => {
-      this.socket.emit('unMuteUser', room, (response: any) => {
+      this.socket.emit('blockUser', room, (response: any) => {
         observer.next(response);
         observer.complete();
       });
     });
   }
 
-  // getUser(user: string) {
-  //   return new Observable<any>((observer) => {
-  //     this.socket.emit('unMuteUser', user, (response: any) => {
-  //       observer.next(response);
-  //       observer.complete();
-  //     });
-  //   });
-  // }
-  
+  unBlockUser(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('unBlockUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  checkBlock(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('checkBlock', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
 
   getAllParticipants(channel: string): Observable<Array<number>> {
     return new Observable<number[]>(observer => {

@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-block',
-  templateUrl: './block.component.html',
-  styleUrls: ['./block.component.css']
+  selector: 'app-unblock',
+  templateUrl: './unblock.component.html',
+  styleUrls: ['./unblock.component.css']
 })
-export class BlockComponent {
-
+export class UnblockComponent {
+  
   data: {name: string} = {name: ''};
 
-  constructor(private dialogRef: MatDialogRef<BlockComponent>) {}
+  constructor(private dialogRef: MatDialogRef<UnblockComponent>) {}
 
   closeDialog() {
     this.dialogRef.close(); //return rien au dialog opener

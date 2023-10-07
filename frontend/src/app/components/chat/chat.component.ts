@@ -14,7 +14,8 @@ import {Observable, of} from 'rxjs';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 import { UnbanComponent } from './room_service/unban/unban.component';
-
+import { BlockComponent } from './user_service/block/block.component';
+import { UnblockComponent } from './user_service/unblock/unblock.component';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -462,23 +463,30 @@ export class ChatComponent {
   if (this.messageContent.trim().length === 0) {
     return;
   }
-  
-  var i = 0;
-  while (this.users[i]) {
-    if (this.users[i].userId == this.myUserId) {
-      const user: Participant = this.users[i];
-      const message = {
-        roomId: this.currentRoomId,
-        user: user,
-        content: this.messageContent,
-        createdAt: new Date()
-      } as MessageEvent;
-      
-      this.chatService.sendMessage(message);
-      this.messageContent = '';
+
+  this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
+    if (!response) {
+      alert("you have been muted");
+    } else {
+      var i = 0;
+      while (this.users[i]) {
+        if (this.users[i].userId == this.myUserId) {
+          const user: Participant = this.users[i];
+          const message = {
+            roomId: this.currentRoomId,
+            user: user,
+            content: this.messageContent,
+            createdAt: new Date()
+          } as MessageEvent;
+          
+          this.chatService.sendMessage(message);
+          this.messageContent = '';
+        }
+        i++;
+      }
     }
-    i++;
-  }
+  });
+
 
  }
 
@@ -752,6 +760,42 @@ export class ChatComponent {
         });
       });
     });
+  }
+
+
+  openDataBlock(nameId: number, name: string) {
+
+      if (nameId == this.myUserId) {
+        alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        return ;
+      }
+      this.chatService.blockUser(nameId, this.myUserId).subscribe((response: any) =>{
+        if (response == 0) {
+          alert('Room not found');
+        } else if (response == 1) {
+          alert(name + " : is already block !");
+        } else if (response == 2) {
+          alert(name + " : is block !");
+        }
+      });
+  }
+
+  openDataUnBlock(nameId: number, name: string) {
+
+    if (nameId == this.myUserId) {
+      alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+      return ;
+    }
+    this.chatService.unBlockUser(nameId, this.myUserId).subscribe((response: any) =>{
+      if (response == 0) {
+        alert('Room not found');
+      } else if (response == 1) {
+        alert(name + " : he is no longer blocked !");
+      } else if (response == 2) {
+        alert(name + " : is not blocked !");
+      } 
+    });
+
   }
 
   scrollToBottom() {

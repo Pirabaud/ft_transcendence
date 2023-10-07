@@ -94,9 +94,13 @@
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
-                                              <button mat-menu-item>
+                                              <button mat-menu-item (click)="openDataBlock(user.userId, user.username)">
                                                 <mat-icon>block</mat-icon>
                                                 <span>Block</span>
+                                              </button>
+                                              <button mat-menu-item (click)="openDataUnBlock(user.userId, user.username)">
+                                                <mat-icon>lock_open_right</mat-icon>
+                                                <span>unBlock</span>
                                               </button>
                                           </mat-menu>
                                     </div>

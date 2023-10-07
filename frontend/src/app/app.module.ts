@@ -53,6 +53,7 @@ import { AddAdminComponent } from './components/chat/room_service/add-admin/add-
 import { RemoveAdminComponent } from './components/chat/room_service/remove-admin/remove-admin.component';
 import { UnbanComponent } from './components/chat/room_service/unban/unban.component';
 import { UnmuteComponent } from './components/chat/room_service/unmute/unmute.component';
+import { UnblockComponent } from './components/chat/user_service/unblock/unblock.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
 
@@ -91,6 +92,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     RemoveAdminComponent,
     UnbanComponent,
     UnmuteComponent,
+    UnblockComponent,
   ],
   imports: [
     BrowserModule,
