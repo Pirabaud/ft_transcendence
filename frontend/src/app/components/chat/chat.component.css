@@ -226,8 +226,11 @@ body
 .content_msg {
   flex: 0.9;
   overflow-x: hidden;
-  overflow: auto;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+
 }
+
 
 .write_bar {
   flex: 0.1;

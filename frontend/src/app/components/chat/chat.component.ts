@@ -64,13 +64,13 @@ export class ChatComponent {
     });
   }
 
-  addRoom(roomId: string) {
+  async addRoom(roomId: string) {
     const newDiv = document.createElement('div');
     newDiv.textContent = roomId;
     
     newDiv.classList.add('room-item');
     
-    newDiv.addEventListener('click', () => {
+    await newDiv.addEventListener('click', () => {
       
       this.currentRoomId = roomId;
 
@@ -115,14 +115,16 @@ export class ChatComponent {
         if (response2) {
           var j = 0;
           while ( response2[j] ) {
+            this.scrollToBottom();
             this.messages.push(response2[j]);
             j++;
           }
         }
       });
-
     });
-    
+
+
+
     const allRoomName = document.querySelector('.all_room_name');
     if (allRoomName) {
       allRoomName.appendChild(newDiv);
@@ -136,6 +138,7 @@ export class ChatComponent {
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       if (message.roomId == this.currentRoomId) {
         this.messages.push(message);
+        this.scrollToBottom();
       }
     });
     this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => {
@@ -475,6 +478,7 @@ export class ChatComponent {
     }
     i++;
   }
+
  }
 
   viewProfilUser(id: number) {
@@ -748,4 +752,15 @@ export class ChatComponent {
       });
     });
   }
+
+  scrollToBottom() {
+    const chatMessages = document.getElementById("content_msg_id");
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
+
+  // async sleep(ms: number) {
+  //   return await new Promise(resolve => setTimeout(resolve, ms));
+  // }
 }
