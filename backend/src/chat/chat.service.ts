@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoomData } from './chat.entity';
-import { User } from 'src/user/user.entity';
+import { User, Visible } from 'src/user/user.entity';
 import { MessageEvent, Participant } from './chat.dto';
 import * as bcrypt from 'bcrypt';
 
@@ -565,7 +565,13 @@ export class ChatService {
             i++;
         }
 
+        var bntVisible: Visible[] = [
+            { userId: block, privateMessage: false, classicGame: false, portalGame: false, block: false, unblock: true }
+        ];
+        
+        await user.buttonVisible.push(bntVisible[0]);
         await user.blockUser.push(block);
+          
         await this.userRepository.save(user);
         return 2;
     }
@@ -603,6 +609,7 @@ export class ChatService {
 
             if (user.blockUser[i] == block) {
                 user.blockUser.splice(i, 1);
+                user.buttonVisible.splice(i, 1);
                 await this.userRepository.save(user);
                 return 1;
             }
@@ -611,4 +618,85 @@ export class ChatService {
 
         return 2;
     }
+
+    async setBlockUserVisibleButton(button: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+          console.error(`User with ID ${userId} not found`);
+          return false;
+        }
+
+        console.log(button);
+        console.log(userId);
+
+        // console.log(user.buttonVisible.userId);
+    
+        var i = 0;
+        while (user.buttonVisible[i]) {
+            console.log(user.buttonVisible[i]);
+          if (user.buttonVisible[i].userId == button) {
+            user.buttonVisible[i].privateMessage = false;
+            user.buttonVisible[i].classicGame = false;
+            user.buttonVisible[i].portalGame = false;
+            user.buttonVisible[i].block = false;
+            user.buttonVisible[i].unblock = true;
+    
+            await this.userRepository.save(user);
+    
+            return user.buttonVisible[i];
+          }
+          i++;
+        }
+        return false;
+      }
+    
+      async setUnBlockUserVisibleButton(button: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+          console.error(`User with ID ${userId} not found`);
+          return false;
+        }
+    
+        console.log(button);
+        console.log(userId);
+
+        var i = 0;
+        while (user.buttonVisible[i]) {
+            console.log(user.buttonVisible[i]);
+          if (user.buttonVisible[i].userId == button) {
+            user.buttonVisible[i].privateMessage = true;
+            user.buttonVisible[i].classicGame = true;
+            user.buttonVisible[i].portalGame = true;
+            user.buttonVisible[i].block = true;
+            user.buttonVisible[i].unblock = false;
+    
+            await this.userRepository.save(user);
+    
+            return user.buttonVisible[i];
+          }
+          i++;
+        }
+        return false;
+      }
+
+    async getVisibleButton(button: number, userId: number): Promise<Visible | false> {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        
+        if (!user) {
+            console.error(`User with ID ${userId} not found`);
+            return false;
+        }
+        
+        const buttonVisibleItem = user.buttonVisible.find(item => item.userId === button);
+        
+        if (buttonVisibleItem) {  
+
+            return buttonVisibleItem;
+        }
+        
+        return false;
+    }
+      
 }

@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
+
 export interface Participant {
   userId: number;
   username: string;
@@ -14,13 +15,15 @@ export interface Participant {
 }
 
 
-interface Visible {
+export interface Visible {
+  userId: number;
   privateMessage: boolean;
   classicGame: boolean;
   portalGame: boolean;
   block: boolean;
   unblock: boolean;
 }
+
 
 export interface MessageEvent {
   socketId: string;
@@ -323,6 +326,45 @@ export class ChatService {
     };
     return new Observable<any>((observer) => {
       this.socket.emit('checkBlock', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setBlockUserVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setBlockUserVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setUnBlockUserVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setUnBlockUserVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  getVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setUnBlockUserVisibleButton', room, (response: any) => {
         observer.next(response);
         observer.complete();
       });

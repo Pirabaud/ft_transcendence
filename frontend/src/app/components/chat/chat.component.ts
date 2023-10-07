@@ -5,7 +5,7 @@ import { BanComponent } from '../chat/room_service/ban/ban.component';
 import { MuteComponent } from '../chat/room_service/mute/mute.component';
 import { UnmuteComponent } from './room_service/unmute/unmute.component';
 import { SetPasswordComponent } from '../chat/room_service/set-password/set-password.component';
-import { ChatService, Participant, MessageEvent } from '../../services/chat.service';
+import { ChatService, Participant, MessageEvent, Visible } from '../../services/chat.service';
 import { CreateRoomComponent } from "./room_service/create-room/create-room.component";
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
@@ -31,9 +31,9 @@ export class ChatComponent {
   public boutonsAdminVisible: any = false;
   public messageContent = '';
 
-  // public boutonVisible: Visible[] = [
-  //   { privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: false }
-  // ];
+  public boutonVisible: Visible[] = [
+    {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: true }
+  ];
   
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
 
@@ -241,35 +241,29 @@ export class ChatComponent {
     
             this.chatService.getStatus(userID).subscribe((response3: any) => {
               if (response3) {
-                if (response3.Status == "online") {
-                  this.users.push({
-                    userId: userID,
-                    username: username,
-                    avatar: pic,
-                    status: "../../../assets/images/Button-Blank-Green-icon.png",
-                    boutonVisible: { 
-                      privateMessage: true,
-                      classicGame: true,
-                      portalGame: true,
-                      block: true,
-                      unblock: false
-                    }
-                  });
-                } else {
-                  this.users.push({
-                    userId: userID,
-                    username: username,
-                    avatar: pic,
-                    status: "../../../assets/images/Button-Blank-Red-icon.png",
-                    boutonVisible: { 
-                      privateMessage: true,
-                      classicGame: true,
-                      portalGame: true,
-                      block: true,
-                      unblock: false
-                    }
-                  });
-                }
+                this.chatService.setUnBlockUserVisibleButton(userID, this.myUserId).subscribe((response: any) =>{
+                  if (response) {
+                    this.boutonVisible[0] = response;
+                    console.log(response);
+                  }
+                  if (response3.Status == "online") {
+                    this.users.push({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Green-icon.png",
+                      boutonVisible: this.boutonVisible[0],
+                    });
+                  } else {
+                    this.users.push({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Red-icon.png",
+                      boutonVisible: this.boutonVisible[0],
+                    });
+                  }
+                });
               }
             });
           }
@@ -406,12 +400,14 @@ export class ChatComponent {
               this.chatService.getStatus(userID).subscribe((response3: any) => {
                 if (response3) {
                   if (response3.Status == "online") {
+
                     observer.next({
                       userId: userID,
                       username: username,
                       avatar: pic,
                       status: "../../../assets/images/Button-Blank-Green-icon.png",
                     } as Participant);
+
                   } else {
                     observer.next({
                       userId: userID,
@@ -794,11 +790,20 @@ export class ChatComponent {
           alert(name + " : is already block !");
         } else if (response == 2) {
 
-          users.boutonVisible.privateMessage = false;
-          users.boutonVisible.classicGame = false;
-          users.boutonVisible.portalGame = false;
-          users.boutonVisible.block = false;
-          users.boutonVisible.unblock = true;
+          this.chatService.setBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
+            if (response) {
+              console.log("ERROR", response);
+              users.boutonVisible = response;
+            } else {
+            console.log("DIFF", response);
+            }
+          });
+
+          // users.boutonVisible.privateMessage = false;
+          // users.boutonVisible.classicGame = false;
+          // users.boutonVisible.portalGame = false;
+          // users.boutonVisible.block = false;
+          // users.boutonVisible.unblock = true;
 
           alert(name + " : is block !");
         }
@@ -816,11 +821,20 @@ export class ChatComponent {
         alert('Room not found');
       } else if (response == 1) {
 
-        users.boutonVisible.privateMessage = true;
-        users.boutonVisible.classicGame = true;
-        users.boutonVisible.portalGame = true;
-        users.boutonVisible.block = true;
-        users.boutonVisible.unblock = false;
+        this.chatService.setUnBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
+          if (response) {
+            console.log("ERROR", response);
+            users.boutonVisible = response;
+          } else {
+            console.log("DIFF", response);
+          }
+        });
+
+        // users.boutonVisible.privateMessage = true;
+        // users.boutonVisible.classicGame = true;
+        // users.boutonVisible.portalGame = true;
+        // users.boutonVisible.block = true;
+        // users.boutonVisible.unblock = false;
 
         alert(name + " : he is no longer blocked !");
 

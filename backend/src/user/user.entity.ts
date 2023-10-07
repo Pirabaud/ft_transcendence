@@ -1,5 +1,14 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
+export interface Visible {
+  userId: number;
+  privateMessage: boolean;
+  classicGame: boolean;
+  portalGame: boolean;
+  block: boolean;
+  unblock: boolean;
+}
+
 @Entity()
 export class User {
   @PrimaryColumn()
@@ -44,6 +53,14 @@ export class User {
   // Chat
   @Column('simple-array', { nullable: true })
   blockUser: Array<number>;
+
+  @Column({
+    type: 'jsonb',
+    array: false,
+    default: () => "'[]'",
+    nullable: false,
+  })
+  buttonVisible: Array<Visible>;
 
   @Column({ nullable: true })
   gameStatus: boolean;
