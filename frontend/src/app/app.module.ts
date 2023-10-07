@@ -44,6 +44,7 @@ import { MuteComponent } from './components/chat/room_service/mute/mute.componen
 import { SetPasswordComponent } from './components/chat/room_service/set-password/set-password.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { BlockComponent } from './components/chat/user_service/block/block.component';
 import { ProfilComponent } from './components/chat/user_service/profil/profil.component';
 import { PrivateMessageComponent } from './components/chat/user_service/private-message/private-message.component';
@@ -95,6 +96,7 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    NoopAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     MatInputModule,

@@ -28,8 +28,10 @@ export class ProfileComponent {
   @ViewChild('statsLose') statsLoseElement: ElementRef;
   @ViewChild('statsElo') statsEloElement: ElementRef;
   ngOnInit() {
-    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-          this.router.navigate(['/login']);
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt'))) {
+      this.httpBackend.updateUserStatus('offline');
+      this.router.navigate(['/login']);
+    }
     this.httpBackend.getMatchesHistory().subscribe(
       (response: any) => {
         if (response.length === 0)

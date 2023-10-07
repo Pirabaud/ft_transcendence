@@ -14,6 +14,8 @@ import {Observable, of} from 'rxjs';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 import { UnbanComponent } from './room_service/unban/unban.component';
+import { v4 as uuidv4 } from "uuid";
+import { GameService } from "../../services/game.service";
 
 @Component({
   selector: 'app-chat',
@@ -30,7 +32,11 @@ export class ChatComponent {
   public boutonsAdminVisible: any = false;
   public messageContent = '';
 
-  constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
+  constructor(private dialog: MatDialog,
+              private chatService: ChatService,
+              private httpService: HttpService,
+              private router: Router,
+              private gameService: GameService) {}
 
   ngOnInit() {
     var ok: boolean;
@@ -40,7 +46,7 @@ export class ChatComponent {
         this.myUserId = response.UserId;
       }
     });
-    
+
     this.chatService.getAllRoom().subscribe((Response) => {
       if (Response) {
         var i = 0;
@@ -67,19 +73,19 @@ export class ChatComponent {
   addRoom(roomId: string) {
     const newDiv = document.createElement('div');
     newDiv.textContent = roomId;
-    
+
     newDiv.classList.add('room-item');
-    
+
     newDiv.addEventListener('click', () => {
-      
+
       this.currentRoomId = roomId;
 
       this.messages = [];
-      
+
       this.settingsVisible = true;
-      
+
       const divChannelName = document.querySelector(".channel_name");
-      
+
       if (divChannelName) {
         const paragraphe = divChannelName.querySelector("p");
 
@@ -88,13 +94,13 @@ export class ChatComponent {
         } else {
           console.error("Paragraphe introuvable dans le div.");
         }
-        
+
       } else {
         console.error("Div avec la classe 'channel_name' introuvable.");
       }
-      
+
       this.removeAllUser();
-      
+
       this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
         if (Response) {
           var i = 0;
@@ -122,17 +128,17 @@ export class ChatComponent {
       });
 
     });
-    
+
     const allRoomName = document.querySelector('.all_room_name');
     if (allRoomName) {
       allRoomName.appendChild(newDiv);
     }
-    
+
     this.initConnection(roomId);
   }
 
   private initConnection(roomID: string) {
-   
+
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       if (message.roomId == this.currentRoomId) {
         this.messages.push(message);
@@ -192,7 +198,7 @@ export class ChatComponent {
       }
     });
   }
-  
+
   removeAllUser() {
     var i = 0;
 
@@ -202,7 +208,7 @@ export class ChatComponent {
       i++;
     }
   }
-  
+
   addUser(userID: number) {
 
     var ok: boolean = true;
@@ -225,11 +231,11 @@ export class ChatComponent {
     this.chatService.getUsername(userID).subscribe((response1: any) => {
       if (response1) {
         username = response1.Username;
-        
+
         this.chatService.getPic(userID).subscribe((response2: any) => {
           if (response2) {
             pic = response2.Img;
-    
+
             this.chatService.getStatus(userID).subscribe((response3: any) => {
               if (response3) {
                 if (response3.Status == "online") {
@@ -253,8 +259,8 @@ export class ChatComponent {
         });
       }
     });
-    
-  
+
+
   }
 
   leaveRoom() {
@@ -267,13 +273,13 @@ export class ChatComponent {
         }
       }
     });
-    
+
     this.chatService.leave(this.currentRoomId, this.myUserId);
 
     this.messages = [];
 
     this.removeAllUser();
-    
+
     const roomItems = document.querySelectorAll('.room-item');
     var i = 0;
     roomItems.forEach((div) => {
@@ -284,7 +290,7 @@ export class ChatComponent {
     });
 
     const divChannelName = document.querySelector(".channel_name");
-      
+
     if (divChannelName) {
       const paragraphe = divChannelName.querySelector("p");
 
@@ -293,7 +299,7 @@ export class ChatComponent {
       } else {
         console.error("Paragraphe introuvable dans le div.");
       }
-      
+
     } else {
       console.error("Div avec la classe 'channel_name' introuvable.");
     }
@@ -304,7 +310,7 @@ export class ChatComponent {
       this.router.navigate(['chat-lobby']);
     }
   }
-  
+
   async openDataKick() {
     const dialogRef = this.dialog.open(KickComponent, {
       width: '300px',
@@ -321,7 +327,7 @@ export class ChatComponent {
             UserId = response1.id;
 
             if (UserId != this.myUserId) {
-              
+
               this.chatService.getAllParticipants(this.currentRoomId).subscribe((Response: Array<number>) => {
                 if (Response) {
                   var i = 0;
@@ -331,9 +337,9 @@ export class ChatComponent {
                     }
                     i++;
                   }
-                  
+
                   if (ok) {
-                    
+
                     this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
                       if (response2) {
                         if (response2.ok == true) {
@@ -341,19 +347,19 @@ export class ChatComponent {
                         } else if (response2.ok == false) {
                           alert("The user " + name + " has been kicked from the room " + this.currentRoomId + " and this room has been deleted");
                         }
-                        
+
                         this.chatService.kick(this.currentRoomId, UserId);
 
                       }
 
                     });
-                    
+
                   } else {
                     alert("This user isn't in the room!")
                   }
                 } else {console.log("error2")}
               });
-            
+
             } else {
               alert("You can't kick yourself!");
             }
@@ -375,11 +381,11 @@ export class ChatComponent {
       this.chatService.getUsername(userID).subscribe((response1: any) => {
         if (response1) {
           username = response1.Username;
-          
+
           this.chatService.getPic(userID).subscribe((response2: any) => {
             if (response2) {
               pic = response2.Img;
-      
+
               this.chatService.getStatus(userID).subscribe((response3: any) => {
                 if (response3) {
                   if (response3.Status == "online") {
@@ -458,7 +464,7 @@ export class ChatComponent {
   if (this.messageContent.trim().length === 0) {
     return;
   }
-  
+
   var i = 0;
   while (this.users[i]) {
     if (this.users[i].userId == this.myUserId) {
@@ -469,7 +475,7 @@ export class ChatComponent {
         content: this.messageContent,
         createdAt: new Date()
       } as MessageEvent;
-      
+
       this.chatService.sendMessage(message);
       this.messageContent = '';
     }
@@ -480,7 +486,7 @@ export class ChatComponent {
   viewProfilUser(id: number) {
     this.router.navigate(['/friendProfile', id.toString()]);
   }
-  
+
   openDataRemoveAdmin() {
     const dialogRef = this.dialog.open(RemoveAdminComponent, {
       width: '250px',
@@ -533,7 +539,7 @@ export class ChatComponent {
         if (UserId == this.myUserId) {
           alert("You are already admin !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
           return ;
-        } 
+        }
         const nameId = UserId;
         this.chatService.addAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
           if (response == 0) {
@@ -742,10 +748,27 @@ export class ChatComponent {
           } else if (response == 3) {
             alert(name + " : is not mute !");
           }else if (response == 4) {
-            alert(name + " : he is no longer muted !");
+            alert(name + " : is no longer muted !");
           }
         });
       });
+    });
+  }
+  createPrivateGame(gameMode: number, hostname: number) {
+    console.log('priv');
+    let gameId = uuidv4();
+    this.gameService.createGame(gameId, gameMode, hostname, 1);
+    /*If it is the first player joining this game, it keeps its gameId, otherwise, it changes the gameId to the other player's gameId*/
+    this.gameService.getCreateGame().subscribe((newGameId: string) => {
+      if (newGameId === "") {
+        alert('An error occured');
+        return ;
+      }
+      if (newGameId !== "0")
+        gameId = <string>newGameId;
+      this.gameService.setJoinedViaMatchmaking(true);
+      this.gameService.setGameMode(gameMode);
+      this.router.navigate(['/game', gameId]);
     });
   }
 }
