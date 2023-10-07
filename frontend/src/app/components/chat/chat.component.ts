@@ -31,6 +31,10 @@ export class ChatComponent {
   public boutonsAdminVisible: any = false;
   public messageContent = '';
 
+  // public boutonVisible: Visible[] = [
+  //   { privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: false }
+  // ];
+  
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
 
   ngOnInit() {
@@ -243,6 +247,13 @@ export class ChatComponent {
                     username: username,
                     avatar: pic,
                     status: "../../../assets/images/Button-Blank-Green-icon.png",
+                    boutonVisible: { 
+                      privateMessage: true,
+                      classicGame: true,
+                      portalGame: true,
+                      block: true,
+                      unblock: false
+                    }
                   });
                 } else {
                   this.users.push({
@@ -250,6 +261,13 @@ export class ChatComponent {
                     username: username,
                     avatar: pic,
                     status: "../../../assets/images/Button-Blank-Red-icon.png",
+                    boutonVisible: { 
+                      privateMessage: true,
+                      classicGame: true,
+                      portalGame: true,
+                      block: true,
+                      unblock: false
+                    }
                   });
                 }
               }
@@ -763,7 +781,7 @@ export class ChatComponent {
   }
 
 
-  openDataBlock(nameId: number, name: string) {
+  openDataBlock(nameId: number, name: string, users: Participant) {
 
       if (nameId == this.myUserId) {
         alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
@@ -775,12 +793,19 @@ export class ChatComponent {
         } else if (response == 1) {
           alert(name + " : is already block !");
         } else if (response == 2) {
+
+          users.boutonVisible.privateMessage = false;
+          users.boutonVisible.classicGame = false;
+          users.boutonVisible.portalGame = false;
+          users.boutonVisible.block = false;
+          users.boutonVisible.unblock = true;
+
           alert(name + " : is block !");
         }
       });
   }
 
-  openDataUnBlock(nameId: number, name: string) {
+  openDataUnBlock(nameId: number, name: string, users: Participant) {
 
     if (nameId == this.myUserId) {
       alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
@@ -790,7 +815,15 @@ export class ChatComponent {
       if (response == 0) {
         alert('Room not found');
       } else if (response == 1) {
+
+        users.boutonVisible.privateMessage = true;
+        users.boutonVisible.classicGame = true;
+        users.boutonVisible.portalGame = true;
+        users.boutonVisible.block = true;
+        users.boutonVisible.unblock = false;
+
         alert(name + " : he is no longer blocked !");
+
       } else if (response == 2) {
         alert(name + " : is not blocked !");
       } 

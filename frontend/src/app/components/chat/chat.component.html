@@ -82,23 +82,23 @@
                                               <mat-icon>account_circle</mat-icon>
                                               <span>View Profil</span>
                                             </button>
-                                            <button mat-menu-item >
+                                            <button mat-menu-item *ngIf="user.boutonVisible.privateMessage">
                                                 <mat-icon>person_add</mat-icon>
                                                 <span>Send Private Message</span>
                                               </button>
-                                            <button mat-menu-item>
+                                            <button mat-menu-item *ngIf="user.boutonVisible.classicGame">
                                                 <mat-icon>sports_esports</mat-icon>
                                                 <span>Classic Game</span>
                                               </button>
-                                            <button mat-menu-item>
+                                            <button mat-menu-item *ngIf="user.boutonVisible.portalGame">
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
-                                              <button mat-menu-item (click)="openDataBlock(user.userId, user.username)">
+                                              <button mat-menu-item (click)="openDataBlock(user.userId, user.username, user)" *ngIf="user.boutonVisible.block">
                                                 <mat-icon>block</mat-icon>
                                                 <span>Block</span>
                                               </button>
-                                              <button mat-menu-item (click)="openDataUnBlock(user.userId, user.username)">
+                                              <button mat-menu-item (click)="openDataUnBlock(user.userId, user.username, user)" *ngIf="user.boutonVisible.unblock">
                                                 <mat-icon>lock_open_right</mat-icon>
                                                 <span>unBlock</span>
                                               </button>

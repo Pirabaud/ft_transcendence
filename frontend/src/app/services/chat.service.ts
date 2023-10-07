@@ -10,6 +10,16 @@ export interface Participant {
   username: string;
   avatar: string;
   status: string,
+  boutonVisible: Visible;
+}
+
+
+interface Visible {
+  privateMessage: boolean;
+  classicGame: boolean;
+  portalGame: boolean;
+  block: boolean;
+  unblock: boolean;
 }
 
 export interface MessageEvent {
