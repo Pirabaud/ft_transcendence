@@ -5,6 +5,7 @@ import { AppComponent } from "../../app.component";
 import { GameService } from "../../services/game.service";
 import {Subscription} from "rxjs";
 import { GameComponent } from "../game/game.component";
+import { ChatService } from '../../services/chat.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
@@ -19,7 +20,8 @@ export class NavbarComponent {
     private httpBackend: HttpService, 
     private appService: AppComponent, 
     private gameService: GameService,
-    private jwtHelper: JwtHelperService) {
+    private jwtHelper: JwtHelperService,
+    private chatService: ChatService,) {
   };
   @ViewChild(GameComponent) gameComponent: GameComponent;
 
@@ -98,7 +100,39 @@ export class NavbarComponent {
   }
 
   navToChat() {
-    this.router.navigate(['/chat']);
+
+    var ok: boolean = false;
+    var myUserId: number = 0;
+
+    this.httpBackend.getUserId().subscribe((response: any) => {
+      if (response) {
+        myUserId = response.UserId;
+      }
+    });
+
+    this.chatService.getAllRoom().subscribe((Response) => {
+      if (Response) {
+        var i = 0;
+        while (Response[i]) {
+          var j = 0;
+          while (Response[i].participants[j]) {
+            if (Response[i].participants[j] == myUserId) {
+              ok = true;
+            }
+            j++;
+          }
+          i++;
+        }
+        if (ok) {
+          this.router.navigate(['/chat']);
+        } else {
+          this.router.navigate(['/chat-lobby']);
+        }
+      } else {
+        console.error("Error while retreiving all Rooms");
+      }
+    });
+
   }
 
   navToLobby() {

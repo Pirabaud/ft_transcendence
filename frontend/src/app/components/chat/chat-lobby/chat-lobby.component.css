@@ -1,0 +1,45 @@
+body
+{
+  height: 90vh;
+  place-items: center;
+  display: grid;
+}
+
+#buttons-container
+{
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 14px;
+  padding: 7px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 15px 0 rgba(0, 0, 0, 0.1);
+  place-items: center;
+}
+
+#buttonNormalGame
+{
+  background-color: #27A64BFF;
+  border: solid 1px #27A64BFF;
+  margin-right: 7px;
+}
+
+#buttonPortalGame
+{
+  background-color: #5583F1FF;
+  border: solid 1px #5583F1FF;
+}
+
+.button {
+  box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
+  padding: 10px 17px 10px 17px;
+  font: 15px 'Oswald', sans-serif;
+  color: white;
+  border-radius: 7px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button:hover {
+  font: 20px 'Oswald', sans-serif;
+}

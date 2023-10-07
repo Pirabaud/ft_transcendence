@@ -41,6 +41,10 @@ export class User {
   @Column({ nullable: true })
   status: string;
 
+  // // Chat
+  // @Column()
+  // blockUser: Array<number>;
+
   @Column({ nullable: true })
   gameStatus: boolean;
 

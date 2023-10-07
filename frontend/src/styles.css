@@ -1,3 +1,50 @@
-body{
+/* body{
   background-color: #EEEDF2FF;
+} */
+
+html, body { height: 100%; background-color: #EEEDF2FF; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.room-item {
+  width: 93%;
+  text-align: center;
+  height: 22px;
+  padding: 5px;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  background-color: #FEEAA1;
+  color: white;
+  font: 15px 'Oswald', sans-serif;
+  border-radius: 7px;
+}
+
+.room-item:hover {
+  box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
+  /* padding: 10px 17px 10px 17px; */
+  margin-top: 4px;
+  font: 15px 'Oswald', sans-serif;
+  color: white;
+  border-radius: 7px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.1s;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.close-icon {
+  font-size: 20px;
+  color: #ff0000; /* Couleur de la croix */
 }

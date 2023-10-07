@@ -1,0 +1,17 @@
+
+<div class="center">
+
+    <h1 mat-dialog-title>unMute</h1> <!--Titre a l'interieur du dialog-->
+    <div mat-dialog-content> <!--  Represente le dialog-->
+      <form (submit)="saveData()">
+        <mat-form-field>
+          <input matInput placeholder="Who !?" [(ngModel)]="data.name" name="name">
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="center" mat-dialog-actions> <!--Div pour les deux boutons a l'interieur du dialog-->
+      <button mat-button (click)="closeDialog()">Cancel</button>
+      <button mat-button (click)="saveData()">Save</button>
+    </div>
+
+</div>

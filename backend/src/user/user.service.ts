@@ -19,9 +19,57 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { username: username, }, });
+  }
+
   async findMatchesid(id: number): Promise<string[]> {
     const User = await this.userRepository.findOneBy({ id });
     return User.matchHistory;
+  }
+
+  async getUserIdfromUsername(username: string) {
+    const user = await this.userRepository.findOne({ where: { username: username, }, });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { id: user.id };
+  }
+
+  async getUsername(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+
+    return { Username: user.username };
+  }
+
+  async getPic(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    
+    return { Img: user.img };
+  }
+
+  async getStatus(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.error('User with ID ${id} not found');
+      return null;
+    }
+    
+    return { Status: user.status };
   }
 
   async findOneByUsername(username: string): Promise<User | null> {
@@ -129,10 +177,12 @@ async updateUserStatus(id: number, status: string) {
   }
 
   async saveUser(user: User) {
-    try {
+    try
+    {
       await this.userRepository.save(user);
-    } catch (error) {
     }
+    catch (error)
+    {}
   }
 
   async turnOnTfa(id: number) {
@@ -140,7 +190,6 @@ async updateUserStatus(id: number, status: string) {
 
     if (!user)
       return null;
-
     await this.userRepository.delete(id);
     user.tfa = true;
     await this.userRepository.save(user);

@@ -128,6 +128,33 @@ export class UserController {
   async getLeaderBoard() {
     return await this.userService.getLeaderBoard();
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getUserId')
+  async getUserId(@Request() req) {
+    return { UserId: req.user.sub } ;
+  }
+
+  @Post('getUserIdfromUsername')
+  async getUserIdfromUsername(@Body() username: { username: string }) {
+    return await this.userService.getUserIdfromUsername(username.username);
+  }
+
+  @Post('getUsername')
+  async getUsername(@Body() userId: { userId: number }) {
+    return await this.userService.getUsername(userId.userId);
+  }
+
+  @Post('getPic')
+  async getPic(@Body() userId: { userId: number }) {
+    return await this.userService.getPic(userId.userId);
+  }
+
+  @Post('getStatus')
+  async getStatus(@Body() userId: { userId: number }) {
+    return await this.userService.getStatus(userId.userId);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('gameStatus')
   getGameStatus(@Request() req) {

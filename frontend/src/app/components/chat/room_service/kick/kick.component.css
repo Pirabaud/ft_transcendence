@@ -1,0 +1,9 @@
+.center {
+    justify-content: center;
+    text-align: center;
+}
+
+.width {
+    width: 256px;
+    height: 256px;
+}

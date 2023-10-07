@@ -7,6 +7,7 @@ import { HomepageComponent } from './components/homepage/homepage.component';
 import { LoginHandlerComponent } from './components/login-handler/login-handler.component';
 import { HttpService } from './http.service';
 import { ChatComponent } from './components/chat/chat.component';
+import { ChatLobbyComponent } from './components/chat/chat-lobby/chat-lobby.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
 import {ProfileComponent} from "./components/profile/profile.component";
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'home', component: HomepageComponent, canActivate: [AuthGuard], title: 'Home' },
   { path: 'lobby', component: LobbyComponent, canActivate: [AuthGuard], title: 'Lobby'},
   { path: 'chat', component: ChatComponent, canActivate: [AuthGuard], title: 'Chat'},
+  { path: 'chat-lobby', component: ChatLobbyComponent, canActivate: [AuthGuard], title: 'Chat-lobby'},
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], title: 'Profile'},
   { path: 'game/:id', component: GameComponent, canActivate: [AuthGuard], title:'Game'},
   { path: 'game', component: LobbyComponent, canActivate: [AuthGuard], title:'Lobby'},
