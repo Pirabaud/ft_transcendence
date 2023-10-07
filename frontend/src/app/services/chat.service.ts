@@ -267,6 +267,32 @@ export class ChatService {
     });
   }
 
+  blockUser(mute: number, roomId: string) {
+    const room = {
+      user: mute,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('muteUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  unBlockUser(block: number, user: string) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('unMuteUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
   // getUser(user: string) {
   //   return new Observable<any>((observer) => {
   //     this.socket.emit('unMuteUser', user, (response: any) => {
