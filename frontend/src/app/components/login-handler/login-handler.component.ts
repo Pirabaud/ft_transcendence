@@ -26,7 +26,12 @@ export class LoginHandlerComponent implements OnInit {
           if (response.first_connection) {
 				  localStorage.setItem('tfa', "true");
 				  this.router.navigate(['/two-factor-first-co']);
-		  } else {
+		  } 
+      else {
+            this.httpBackend.getUserStatus().subscribe((response: {status: string}) => { 
+              if (response.status === 'online' || response.status === 'in game')
+                  this.router.navigate(["/login"]);
+            })
             this.httpBackend.getTfaStatus().subscribe((response: any) => {
             	if (response == true) {
             	  this.router.navigate(['/google']);

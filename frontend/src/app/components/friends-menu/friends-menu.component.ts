@@ -1,6 +1,6 @@
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { HttpService } from "../../http.service";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute, UrlSegment } from "@angular/router";
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {FriendObject} from "./friend-object.interface";
 
@@ -25,18 +25,29 @@ export class FriendsMenuComponent {
   constructor(private httpBackend: HttpService,
     private renderer: Renderer2,
     private router: Router,
-    private jwtHelper: JwtHelperService) {}
+    private jwtHelper: JwtHelperService,
+    private activatedRoute: ActivatedRoute) {}
 
   ngOnInit()
   {
     if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
           this.router.navigate(['/login']);
-    this.fetchAndUpdateFriendRequests();
-    this.fetchAndUpdateFriendlist();
-    setInterval(() => {
-      this.fetchAndUpdateFriendRequests();
-      this.fetchAndUpdateFriendlist();
-    }, 5000);
+    this.activatedRoute.url.subscribe(
+      (url: UrlSegment[]) =>
+      {
+        let interval;
+        if (url[0].path !== 'login') {
+          this.fetchAndUpdateFriendRequests();
+          this.fetchAndUpdateFriendlist();
+          interval = setInterval(() => {
+          this.fetchAndUpdateFriendRequests();
+          this.fetchAndUpdateFriendlist();
+          }, 5000);
+        }
+        else
+          clearInterval(interval);
+      }
+    )
   }
   sendFriendRequest(keycode: KeyboardEvent)
   {

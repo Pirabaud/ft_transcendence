@@ -36,7 +36,8 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post('updateStatus')
-  updateUserStatus(@Body() statusObject: { status: string }, @Request() req) {
+  async updateUserStatus(@Body() statusObject: { status: string }, @Request() req) {
+    await this.userService.updateUserStatus(req.user.sub, statusObject.status);
     return this.userService.updateUserStatus(req.user.sub, statusObject.status);
   }
 
@@ -161,7 +162,7 @@ export class UserController {
   }
   @UseGuards(JwtAuthGuard)
   @Post('gameStatus')
-  async setGameStatus(@Body() statusObj: { status: number }, @Request() req) {
+  async setGameStatus(@Body() statusObj: { status: boolean }, @Request() req) {
     return await this.userService.setGameStatus(statusObj.status, req.user.sub);
   }
   @UseGuards(JwtAuthGuard)

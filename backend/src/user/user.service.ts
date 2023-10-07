@@ -94,19 +94,19 @@ export class UserService {
     return imagePathObject;
   }
 
-  async updateUserStatus(id: number, statusObject: string) {
+async updateUserStatus(id: number, status: string) {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     
-    if (!userToUpdate)
-      return null;
-    userToUpdate.status = statusObject;
-    await this.saveUser(userToUpdate);
-    return true;
+    if (userToUpdate)
+    {
+      userToUpdate.status = status;
+      await this.saveUser(userToUpdate);
+    }
   }
 
   async getUserStatus(id: number) {
     const user = await this.findById(id);
-    return { status: user.status };
+    return ({ status: user.status });
   }
 
   async updateHistory(id: number, gameid: string) {
@@ -274,10 +274,10 @@ export class UserService {
     if (!user) {
       return null;
     }
-    return { gameStatus: user.gameStatus };
+    return user.gameStatus;
   }
 
-  async setGameStatus(gameStatus: number, id: number) {
+  async setGameStatus(gameStatus: boolean, id: number) {
     const user = await this.findById(id);
     if (!user) {
       return;
@@ -290,7 +290,7 @@ export class UserService {
     if (!user) {
       return null;
     }
-    return { currentGameId: user.currentGameId };
+    return user.currentGameId;
   }
   async setCurrentGameId(gameId: string, id: number) {
     const user = await this.findById(id);

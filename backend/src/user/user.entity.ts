@@ -46,7 +46,7 @@ export class User {
   // blockUser: Array<number>;
 
   @Column({ nullable: true })
-  gameStatus: number;
+  gameStatus: boolean;
 
   @Column({ nullable: true })
   currentGameId: string;
