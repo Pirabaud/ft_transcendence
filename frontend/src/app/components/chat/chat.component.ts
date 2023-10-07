@@ -115,8 +115,8 @@ export class ChatComponent {
         if (response2) {
           var j = 0;
           while ( response2[j] ) {
-            this.scrollToBottom();
             this.messages.push(response2[j]);
+            this.sleep(100);
             j++;
           }
         }
@@ -138,7 +138,8 @@ export class ChatComponent {
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       if (message.roomId == this.currentRoomId) {
         this.messages.push(message);
-        this.scrollToBottom();
+        // this.scrollToBottom();
+        this.sleep(100);
       }
     });
     this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => {
@@ -760,7 +761,9 @@ export class ChatComponent {
     }
   }
 
-  // async sleep(ms: number) {
-  //   return await new Promise(resolve => setTimeout(resolve, ms));
-  // }
+  async sleep(ms: number) {
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, ms);
+  }
 }
