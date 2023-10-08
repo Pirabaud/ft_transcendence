@@ -48,6 +48,14 @@ export class ChatService {
     this.socket.emit('participant', room);
   }
 
+  privateMessage(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('private-message', room);
+  }
+
   leave(roomId: string, userId: number) {
     const room = {
       roomID: roomId,
@@ -70,6 +78,35 @@ export class ChatService {
 
   getAllRoom(): Observable<any> {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
+  }
+
+  createPrivateRoom(channel: string, password: string, otherUserID: number) {
+    return new Observable<boolean>(observer => {
+      this.httpService.getUserId().subscribe((response: any) => {
+        if (response) {
+          const room = {
+            channel: channel + "/" + response.UserId.toString(),
+            password: password,
+            userId: response.UserId,
+            otherUserID: otherUserID,
+          };
+          this.socket.emit('newPrivateRoom', room, (response: any) => {
+            if (response == -1) {
+            alert("You already have a private room with this person!");
+            observer.next(false);
+            observer.complete();
+          } else if (response == 42) {
+            observer.next(true);
+            observer.complete();
+            }
+          });
+        } else {
+          console.error("Error receiving username");
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
   
   createRoom(channel: string, password: string): Observable<boolean> {
@@ -315,8 +352,12 @@ export class ChatService {
     return this.http.post<any>("http://localhost:3000/user/getStatus", {userId});
   }
 
-  getMessages(userId: string): Observable<MessageEvent[]> {
-    return this.http.post<MessageEvent[]>("http://localhost:3000/chat/getMessages", {userId});
+  getMessages(roomId: string): Observable<MessageEvent[]> {
+    return this.http.post<MessageEvent[]>("http://localhost:3000/chat/getMessages", {roomId});
+  }
+
+  IsPrivateRoom(roomId: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/chat/IsPrivateRoom", {roomId});
   }
 
 }

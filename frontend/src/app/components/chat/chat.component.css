@@ -74,7 +74,7 @@ body
   /* background-color: yellow; */
   width: 100%;
   height: 85%;
-  overflow: auto;
+  overflow-y: auto;
   overflow-x: hidden;
   justify-content: center;
 }
@@ -139,7 +139,8 @@ body
   height: 100%; */
   border-left: 1px solid #EEEDF2FF;
   /* border-right: 1px solid #EEEDF2FF; */
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   /* border-color: grey; */
   justify-content: center;
   
@@ -226,7 +227,7 @@ body
 .content_msg {
   flex: 0.9;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-behavior: smooth;
 
 }
@@ -566,10 +567,6 @@ left: 27px;
   min-width: 1000px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 15px 0 rgba(0, 0, 0, 0.1);
 } */
-
-.msg_history {
-  height: 516px;
-}
 
 .message {
   list-style-type: none;

@@ -39,8 +39,13 @@ export class ChatController {
   }
 
   @Post('getMessages')
-  async getMessages(@Body() userId: { userId: string }) {
-    return await this.chatService.getMessages(userId.userId);
+  async getMessages(@Body() roomId: { roomId: string }) {
+    return await this.chatService.getMessages(roomId.roomId);
+  }
+
+  @Post('IsPrivateRoom')
+  async IsPrivateRoom(@Body() roomId: { roomId: string }) {
+    return await this.chatService.IsPrivateRoom(roomId.roomId);
   }
 
   // @Post('kick')
