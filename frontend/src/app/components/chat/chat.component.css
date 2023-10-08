@@ -243,8 +243,8 @@ body
   margin-top: 3px;
   margin-bottom: 5px;
   margin-left: 2px;
-  background-color: #FEEAA1;
-  color: grey;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
   border-radius: 7px;
   display: flex;
 }
@@ -270,6 +270,7 @@ text-align: center;
 }
 
 .use_name_user {
+  color: black;
   position: relative;
   bottom: 10px;
 }
