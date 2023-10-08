@@ -5,12 +5,25 @@ import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
+
 export interface Participant {
   userId: number;
   username: string;
   avatar: string;
   status: string,
+  boutonVisible: Visible;
 }
+
+
+export interface Visible {
+  userId: number;
+  privateMessage: boolean;
+  classicGame: boolean;
+  portalGame: boolean;
+  block: boolean;
+  unblock: boolean;
+}
+
 
 export interface MessageEvent {
   socketId: string;
@@ -123,7 +136,10 @@ export class ChatService {
             alert("This room already exist!");
             observer.next(false);
             observer.complete();
-          } else if (response == 42) {
+          } else if (response == -2) {
+            alert("Room must be 12 characters or less !");
+          } 
+          else if (response == 42) {
             observer.next(true);
             observer.complete();
             }
@@ -304,15 +320,96 @@ export class ChatService {
     });
   }
 
-  // getUser(user: string) {
-  //   return new Observable<any>((observer) => {
-  //     this.socket.emit('unMuteUser', user, (response: any) => {
-  //       observer.next(response);
-  //       observer.complete();
-  //     });
-  //   });
-  // }
-  
+  checkMute(mute: number, roomId: string) {
+    const room = {
+      user: mute,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('checkMute', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  blockUser(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('blockUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  unBlockUser(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('unBlockUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  checkBlock(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('checkBlock', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setBlockUserVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setBlockUserVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setUnBlockUserVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setUnBlockUserVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  getVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('getVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
 
   getAllParticipants(channel: string): Observable<Array<number>> {
     return new Observable<number[]>(observer => {

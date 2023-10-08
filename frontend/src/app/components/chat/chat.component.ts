@@ -5,7 +5,7 @@ import { BanComponent } from '../chat/room_service/ban/ban.component';
 import { MuteComponent } from '../chat/room_service/mute/mute.component';
 import { UnmuteComponent } from './room_service/unmute/unmute.component';
 import { SetPasswordComponent } from '../chat/room_service/set-password/set-password.component';
-import { ChatService, Participant, MessageEvent } from '../../services/chat.service';
+import { ChatService, Participant, MessageEvent, Visible } from '../../services/chat.service';
 import { CreateRoomComponent } from "./room_service/create-room/create-room.component";
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
@@ -30,6 +30,10 @@ export class ChatComponent {
   public boutonsAdminVisible: any = false;
   public messageContent = '';
 
+  public boutonVisible: Visible[] = [
+    {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: true }
+  ];
+  
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
 
   ngOnInit() {
@@ -320,21 +324,29 @@ export class ChatComponent {
     
             this.chatService.getStatus(userID).subscribe((response3: any) => {
               if (response3) {
-                if (response3.Status == "online") {
-                  this.users.push({
-                    userId: userID,
-                    username: username,
-                    avatar: pic,
-                    status: "../../../assets/images/Button-Blank-Green-icon.png",
-                  });
-                } else {
-                  this.users.push({
-                    userId: userID,
-                    username: username,
-                    avatar: pic,
-                    status: "../../../assets/images/Button-Blank-Red-icon.png",
-                  });
-                }
+                this.chatService.getVisibleButton(userID, this.myUserId).subscribe((response: any) =>{
+                  if (response) {
+                    this.boutonVisible[0] = response;
+                    console.log("CHANGE ROOM", response);
+                  }
+                  if (response3.Status == "online") {
+                    this.users.push({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Green-icon.png",
+                      boutonVisible: this.boutonVisible[0],
+                    });
+                  } else {
+                    this.users.push({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Red-icon.png",
+                      boutonVisible: this.boutonVisible[0],
+                    });
+                  }
+                });
               }
             });
           }
@@ -494,12 +506,14 @@ export class ChatComponent {
               this.chatService.getStatus(userID).subscribe((response3: any) => {
                 if (response3) {
                   if (response3.Status == "online") {
+
                     observer.next({
                       userId: userID,
                       username: username,
                       avatar: pic,
                       status: "../../../assets/images/Button-Blank-Green-icon.png",
                     } as Participant);
+
                   } else {
                     observer.next({
                       userId: userID,
@@ -569,23 +583,30 @@ export class ChatComponent {
   if (this.messageContent.trim().length === 0) {
     return;
   }
-  
-  var i = 0;
-  while (this.users[i]) {
-    if (this.users[i].userId == this.myUserId) {
-      const user: Participant = this.users[i];
-      const message = {
-        roomId: this.currentRoomId,
-        user: user,
-        content: this.messageContent,
-        createdAt: new Date()
-      } as MessageEvent;
-      
-      this.chatService.sendMessage(message);
-      this.messageContent = '';
+
+  this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
+    if (response) {
+      alert("you have been muted");
+    } else {
+      var i = 0;
+      while (this.users[i]) {
+        if (this.users[i].userId == this.myUserId) {
+          const user: Participant = this.users[i];
+          const message = {
+            roomId: this.currentRoomId,
+            user: user,
+            content: this.messageContent,
+            createdAt: new Date()
+          } as MessageEvent;
+          
+          this.chatService.sendMessage(message);
+          this.messageContent = '';
+        }
+        i++;
+      }
     }
-    i++;
-  }
+  });
+
 
  }
 
@@ -730,7 +751,6 @@ export class ChatComponent {
 
   openDataBan() {
     const dialogRef = this.dialog.open(BanComponent, {
-      /*Ouvre le dialog et definit la taille*/
       width: '250px',
     });
 
@@ -770,7 +790,6 @@ export class ChatComponent {
 
   openDataUnBan () {
     const dialogRef = this.dialog.open(UnbanComponent, {
-      /*Ouvre le dialog et definit la taille*/
       width: '250px',
     });
 
@@ -805,7 +824,6 @@ export class ChatComponent {
 
   openDataMute() {
     const dialogRef = this.dialog.open(MuteComponent, {
-      /*Ouvre le dialog et definit la taille*/
       width: '250px',
     });
 
@@ -871,6 +889,60 @@ export class ChatComponent {
         });
       });
     });
+  }
+
+
+  openDataBlock(nameId: number, name: string, users: Participant) {
+
+      if (nameId == this.myUserId) {
+        alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        return ;
+      }
+      this.chatService.blockUser(nameId, this.myUserId).subscribe((response: any) =>{
+        if (response == 0) {
+          alert('Room not found');
+        } else if (response == 1) {
+          alert(name + " : is already block !");
+        } else if (response == 2) {
+
+          this.chatService.setBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
+            if (response) {
+              console.log("GOOD BLOCK : ", response);
+              users.boutonVisible = response;
+            } else {
+            console.log("DIFF BLOCK : ", response);
+            }
+          });
+          alert(name + " : is block !");
+        }
+      });
+  }
+
+  openDataUnBlock(nameId: number, name: string, users: Participant) {
+
+    if (nameId == this.myUserId) {
+      alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+      return ;
+    }
+    this.chatService.unBlockUser(nameId, this.myUserId).subscribe((response: any) =>{
+      if (response == 0) {
+        alert('Room not found');
+      } else if (response == 1) {
+
+        this.chatService.setUnBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
+          if (response) {
+            console.log("GOOD UNBLOCK : ", response);
+            users.boutonVisible = response;
+          } else {
+            console.log("DIFF UNBLOCK : ", response);
+          }
+        });
+        alert(name + " : he is no longer blocked !");
+      } else if (response == 2) {
+        alert(name + " : is not blocked !");
+      } 
+    });
+
   }
 
   scrollToBottom() {

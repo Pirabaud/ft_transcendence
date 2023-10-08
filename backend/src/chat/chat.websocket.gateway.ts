@@ -11,6 +11,7 @@ import {Participant, MessageEvent} from "./chat.dto";
 import { UserService } from 'src/user/user.service';
 import {ChatService} from "./chat.service";
 import { RoomData } from 'src/chat/chat.entity';
+import { Visible } from 'src/user/user.entity';
 import * as bcrypt from 'bcrypt';
 
 // INCROYABLE A NE PAS PERDRE 
@@ -124,6 +125,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             return -1;
         }
 
+        if (await this.chatService.lenghtRoom(room.channel) == false) {
+            return -2;
+        }
+
         if (room.password != "")
         {
             pass = true;
@@ -235,6 +240,41 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     @SubscribeMessage('unMuteUser')
     async unMuteUser(socket: Socket, room: any) {
         return await this.chatService.unMuteUser(room.user, room.id);
+    }
+
+    @SubscribeMessage('checkMute')
+    async checkMute(socket: Socket, room: any) {
+        return await this.chatService.checkMute(room.user, room.id);
+    }
+    
+    @SubscribeMessage('blockUser')
+    async blockUser(socket: Socket, room: any) {
+        return await this.chatService.blockUser(room.userId, room.userData);
+    }
+    
+    @SubscribeMessage('unBlockUser')
+    async unBlockUser(socket: Socket, room: any) {
+        return await this.chatService.unBlockUser(room.userId, room.userData);
+    }
+
+    @SubscribeMessage('checkBlock')
+    async checkBlock(socket: Socket, room: any) {
+        return await this.chatService.checkBlock(room.userId, room.userData);
+    }
+
+    @SubscribeMessage('setBlockUserVisibleButton')
+    async setBlockUserVisibleButton(socket: Socket, room: any): Promise<Visible | false> {
+        return await this.chatService.setBlockUserVisibleButton(room.userId, room.userData);
+    }
+
+    @SubscribeMessage('setUnBlockUserVisibleButton')
+    async setUnBlockUserVisibleButton(socket: Socket, room: any): Promise<Visible | false> {
+        return await this.chatService.setUnBlockUserVisibleButton(room.userId, room.userData);
+    }
+
+    @SubscribeMessage('getVisibleButton')
+    async getVisibleButton(socket: Socket, room: any): Promise<Visible | false>  {
+        return await this.chatService.getVisibleButton(room.userId, room.userData);
     }
 
     @SubscribeMessage('getAllParticipants')
