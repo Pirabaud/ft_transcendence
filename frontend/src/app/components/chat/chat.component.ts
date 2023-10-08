@@ -778,10 +778,10 @@ export class ChatComponent {
 
   openDataBlock(nameId: number, name: string, users: Participant) {
 
-      // if (nameId == this.myUserId) {
-      //   alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-      //   return ;
-      // }
+      if (nameId == this.myUserId) {
+        alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+        return ;
+      }
       this.chatService.blockUser(nameId, this.myUserId).subscribe((response: any) =>{
         if (response == 0) {
           alert('Room not found');
@@ -797,13 +797,6 @@ export class ChatComponent {
             console.log("DIFF BLOCK : ", response);
             }
           });
-
-          // users.boutonVisible.privateMessage = false;
-          // users.boutonVisible.classicGame = false;
-          // users.boutonVisible.portalGame = false;
-          // users.boutonVisible.block = false;
-          // users.boutonVisible.unblock = true;
-
           alert(name + " : is block !");
         }
       });
@@ -811,10 +804,10 @@ export class ChatComponent {
 
   openDataUnBlock(nameId: number, name: string, users: Participant) {
 
-    // if (nameId == this.myUserId) {
-    //   alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-    //   return ;
-    // }
+    if (nameId == this.myUserId) {
+      alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+      return ;
+    }
     this.chatService.unBlockUser(nameId, this.myUserId).subscribe((response: any) =>{
       if (response == 0) {
         alert('Room not found');
@@ -828,15 +821,7 @@ export class ChatComponent {
             console.log("DIFF UNBLOCK : ", response);
           }
         });
-
-        // users.boutonVisible.privateMessage = true;
-        // users.boutonVisible.classicGame = true;
-        // users.boutonVisible.portalGame = true;
-        // users.boutonVisible.block = true;
-        // users.boutonVisible.unblock = false;
-
         alert(name + " : he is no longer blocked !");
-
       } else if (response == 2) {
         alert(name + " : is not blocked !");
       } 
