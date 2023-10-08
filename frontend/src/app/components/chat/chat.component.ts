@@ -14,8 +14,7 @@ import {Observable, of} from 'rxjs';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 import { UnbanComponent } from './room_service/unban/unban.component';
-import { BlockComponent } from './user_service/block/block.component';
-import { UnblockComponent } from './user_service/unblock/unblock.component';
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
