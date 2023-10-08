@@ -100,6 +100,15 @@ export class ChatService {
         return true;
     }
 
+    async lenghtRoom(id: string) {
+        var len = id.length;
+
+        if (len > 12) {
+            return false;
+        }
+        return true;
+    }
+
     async IsThereAPassword(id: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 

@@ -99,7 +99,10 @@ export class ChatService {
             alert("This room already exist!");
             observer.next(false);
             observer.complete();
-          } else if (response == 42) {
+          } else if (response == -2) {
+            alert("Room must be 12 characters or less !");
+          } 
+          else if (response == 42) {
             observer.next(true);
             observer.complete();
             }

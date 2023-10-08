@@ -116,6 +116,10 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             return -1;
         }
 
+        if (await this.chatService.lenghtRoom(room.channel) == false) {
+            return -2;
+        }
+
         if (room.password != "")
         {
             pass = true;
