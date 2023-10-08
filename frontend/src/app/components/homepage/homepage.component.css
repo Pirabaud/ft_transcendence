@@ -1,8 +1,32 @@
 body
 {
   height: 90vh;
+  /* background-color: white; */
+}
+/* .giphy-embed {
+  position: relative;
+  height: 90vh;
+  width: 90vh;
+} */
+.first_plan {
+  z-index: 2;
 }
 
+/* .content {
+  position: absolute;
+  bottom: 1vh;
+  background-image: url('../../../assets/gifs/Pong.gif');
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  width: 90%;
+  height: 90vh; 
+  opacity: 0.8;
+  justify-content: center;
+  align-items: center;
+  margin-left: 4.3vw;
+  border-radius: 7px;
+  z-index: 1;
+} */
 h1
 {
   position: absolute;
@@ -25,6 +49,7 @@ h1
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  z-index: 2;
 }
 
 #profile-image
@@ -76,6 +101,7 @@ h1
   position: absolute;
   text-align: center;
   display: inline;
+  z-index: 2;
 }
 
 #right-gif-container
@@ -88,6 +114,7 @@ h1
   position: absolute;
   text-align: center;
   display: inline;
+  z-index: 2;
 }
 
 #gif
@@ -98,6 +125,8 @@ h1
   display: block;
   border: solid 3px black;
   border-radius: 10px;
+  background-color: #EEEDF2;
+
 }
 
 .button {
