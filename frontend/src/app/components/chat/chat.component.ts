@@ -62,87 +62,208 @@ export class ChatComponent {
           }
           i++;
         }
+        this.initConnection2();
       } else {
         console.error("Error while retreiving all Rooms");
       }
     });
   }
 
-  async addRoom(roomId: string) {
-    const newDiv = document.createElement('div');
-    newDiv.textContent = roomId;
-    
-    newDiv.classList.add('room-item');
-    
-    await newDiv.addEventListener('click', () => {
-      
-      this.currentRoomId = roomId;
-
-      this.messages = [];
-      
-      this.settingsVisible = true;
-      
-      const divChannelName = document.querySelector(".channel_name");
-      
-      if (divChannelName) {
-        const paragraphe = divChannelName.querySelector("p");
-
-        if (paragraphe) {
-          paragraphe.textContent = roomId;
-        } else {
-          console.error("Paragraphe introuvable dans le div.");
-        }
-        
-      } else {
-        console.error("Div avec la classe 'channel_name' introuvable.");
+  private initConnection2() {
+    this.chatService.receiveEvent(`receive-private-message`).subscribe((room: any) => {
+      if (room.userID == this.myUserId) {
+        this.addRoom(room.roomID);
       }
-      
-      this.removeAllUser();
-      
-      this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
-        if (Response) {
-          var i = 0;
-          while ( Response[i] ) {
-            this.addUser(Response[i]);
-            i++;
-          }
-        }
-      });
-
-      this.chatService.getAdmin(this.myUserId, this.currentRoomId).subscribe((response) => {
-        if (response) {
-          this.boutonsAdminVisible = response.ok;
-        }
-      });
-
-      this.chatService.getMessages(roomId).subscribe((response2: MessageEvent[]) => {
-        if (response2) {
-          var j = 0;
-          while ( response2[j] ) {
-            this.messages.push(response2[j]);
-            this.sleep(100);
-            j++;
-          }
-        }
-      });
     });
-
-
-
-    const allRoomName = document.querySelector('.all_room_name');
-    if (allRoomName) {
-      allRoomName.appendChild(newDiv);
-    }
-    
-    this.initConnection(roomId);
+    this.chatService.receiveEvent(`receive-kick`).subscribe((room: any) => {
+      this.receiveKick(room.roomID, room.userID);
+    });
   }
 
+  receiveKick(roomID: string, userId: number) {
+    if (userId != this.myUserId && this.currentRoomId == roomID) {
+      var j = 0;
+      while (this.users[j]) {
+        if (this.users[j].userId == userId) {
+          this.users.pop();
+        }
+        j++;
+      }
+    }
+    if (this.myUserId == userId) {
+      var RoomId = "";
+      this.chatService.IsPrivateRoom(roomID).subscribe((Response2: any) => {
+        if (Response2) {
+          var roomId = roomID;
+          var TabUsersID = roomId.split('/', 2);
+          var myUserId = this.myUserId.toString();
+          var i = 0;
+          if (TabUsersID[0] == myUserId) {
+            i = 1;
+          }
+          const otherUserId = parseInt(TabUsersID[i], 10);
+          this.chatService.getUsername(otherUserId).subscribe((Response3: any) => {
+            if (Response3) {
+              RoomId = Response3.Username;
+              this.removeAllUser();
+              this.messages = [];
+              const roomItems = document.querySelectorAll('.room-item');
+              roomItems.forEach((div) => {
+                if (div.textContent == RoomId) {
+                    div.remove();
+                }
+              });
+              const divChannelName = document.querySelector(".channel_name");
+              if (divChannelName) {
+                const paragraphe = divChannelName.querySelector("p");
+                if (paragraphe) {
+                  paragraphe.textContent = "";
+                } else {
+                  console.error("Paragraphe introuvable dans le div.");
+                }
+              } else {
+                console.error("Div avec la classe 'channel_name' introuvable.");
+              }
+              this.currentRoomId = "";
+              this.settingsVisible = false;
+              if (roomItems.length == 1) {
+                this.router.navigate(['chat-lobby']);
+              }
+              alert("You have been kicked from the private room with " + RoomId);
+            }
+          });
+
+        } else {
+            RoomId = roomID;
+            this.removeAllUser();
+            this.messages = [];
+            const roomItems = document.querySelectorAll('.room-item');
+            roomItems.forEach((div) => {
+              if (div.textContent == RoomId) {
+                div.remove();
+              }
+            });
+            const divChannelName = document.querySelector(".channel_name");
+            if (divChannelName) {
+            const paragraphe = divChannelName.querySelector("p");
+            if (paragraphe) {
+              paragraphe.textContent = "";
+            } else {
+              console.error("Paragraphe introuvable dans le div.");
+            }
+          } else {
+            console.error("Div avec la classe 'channel_name' introuvable.");
+          }
+          this.currentRoomId = "";
+          this.settingsVisible = false;
+          if (roomItems.length == 1) {
+            this.router.navigate(['chat-lobby']);
+          }
+          alert("You have been kicked from the room " + RoomId);
+        }
+      });
+    }
+  }
+
+  addRoom2(roomId: string, roomName: string, p: boolean) {
+    var ok: boolean = true;
+    const roomItems = document.querySelectorAll('.room-item');
+    roomItems.forEach((div) => {
+      if (div.textContent === roomName) {
+        ok = false;
+      }
+    });
+    if (ok) {
+      const newDiv = document.createElement('div');
+      newDiv.textContent = roomName;
+      if (p) {
+        newDiv.style.backgroundColor = 'red';
+      }
+      newDiv.classList.add('room-item');
+      
+      newDiv.addEventListener('click', () => {
+        this.currentRoomId = roomId;
+        this.messages = [];
+        this.settingsVisible = true;
+        const divChannelName = document.querySelector(".channel_name");
+        if (divChannelName) {
+          const paragraphe = divChannelName.querySelector("p");
+          if (paragraphe) {
+            paragraphe.textContent = roomName;
+          } else {
+            console.error("Paragraphe introuvable dans le div.");
+          }
+        } else {
+          console.error("Div avec la classe 'channel_name' introuvable.");
+        }
+        this.removeAllUser();
+        this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
+          if (Response) {
+            var i = 0;
+            while ( Response[i] ) {
+              this.addUser(Response[i]);
+              i++;
+            }
+            this.chatService.getAdmin(this.myUserId, this.currentRoomId).subscribe((response) => {
+              if (response) {
+                this.boutonsAdminVisible = response.ok;
+                this.chatService.getMessages(roomId).subscribe((response2: MessageEvent[]) => {
+                  if (response2) {
+                    var j = 0;
+                    while ( response2[j] ) {
+                      this.messages.push(response2[j]);
+                      this.sleep(100);
+                      j++;
+                    }
+                  }
+                });
+              }
+            });
+          }
+        });
+      });
+      
+      const allRoomName = document.querySelector('.all_room_name');
+      if (allRoomName) {
+        allRoomName.appendChild(newDiv);
+      }
+      this.initConnection(roomId);
+    }
+  }
+
+  addRoom(roomId: string) {
+      var roomName = "";
+      var p: boolean = false;
+      
+      this.chatService.IsPrivateRoom(roomId).subscribe((Response2: any) => {
+      if (Response2) {
+        p = true;
+        var TabUsersID = roomId.split('/', 2);
+        var myUserId = this.myUserId.toString();
+        var i = 0;
+        if (TabUsersID[0] == myUserId) {
+          i = 1;
+        }
+        const otherUserId = parseInt(TabUsersID[i], 10);
+        this.chatService.getUsername(otherUserId).subscribe((Response3: any) => {
+          if (Response3) {
+            roomName = Response3.Username;
+            this.addRoom2(roomId, roomName, p);
+          }
+        });
+      } else {
+        roomName = roomId;
+        this.addRoom2(roomId, roomName, p);
+      }
+    });
+    
+  }
+  
   private initConnection(roomID: string) {
    
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       if (message.roomId == this.currentRoomId) {
         this.messages.push(message);
-        // this.scrollToBottom();
         this.sleep(100);
       }
     });
@@ -156,51 +277,14 @@ export class ChatComponent {
         var i = 0;
         while (this.users[i]) {
           if (this.users[i].userId == userId) {
-            this.users.pop();
+            this.users.splice(i, 1);;
           }
           i++;
         }
       }
     });
-    this.chatService.receiveEvent(`kick/${roomID}`).subscribe((userId: number) => {
-      if (this.currentRoomId == roomID) {
-        var j = 0;
-        while (this.users[j]) {
-          if (this.users[j].userId == userId) {
-            this.users.pop();
-          }
-          j++;
-        }
-      }
-      if (this.myUserId == userId) {
-        this.removeAllUser();
-        this.messages = [];
-        const roomItems = document.querySelectorAll('.room-item');
-        roomItems.forEach((div) => {
-          if (div.textContent == roomID) {
-              div.remove();
-          }
-        });
-        const divChannelName = document.querySelector(".channel_name");
-        if (divChannelName) {
-          const paragraphe = divChannelName.querySelector("p");
-          if (paragraphe) {
-            paragraphe.textContent = "";
-          } else {
-            console.error("Paragraphe introuvable dans le div.");
-          }
-        } else {
-          console.error("Div avec la classe 'channel_name' introuvable.");
-        }
-        this.currentRoomId = "";
-        this.settingsVisible = false;
-        if (roomItems.length == 1) {
-          this.router.navigate(['chat-lobby']);
-        }
-      }
-    });
   }
-  
+
   removeAllUser() {
     var i = 0;
 
@@ -273,32 +357,18 @@ export class ChatComponent {
   
   }
 
-  leaveRoom() {
-    this.chatService.kickRoom(this.currentRoomId, this.myUserId).subscribe((response: any) => {
-      if (response) {
-        if (response.ok == true) {
-          alert("This user leave the room " + this.currentRoomId);
-        } else if (response.ok == false) {
-          alert("This user leave the room " + this.currentRoomId + " and this room has been deleted");
-        }
-      }
-    });
-    
-    this.chatService.leave(this.currentRoomId, this.myUserId);
-
-    this.messages = [];
-
-    this.removeAllUser();
-    
+  leaveRoom2(RoomId: string) {
     const roomItems = document.querySelectorAll('.room-item');
     var i = 0;
     roomItems.forEach((div) => {
-      if (div.textContent === this.currentRoomId) {
+      if (div.textContent === RoomId) {
         div.remove();
       }
       i++;
     });
 
+    this.removeAllUser();
+    
     const divChannelName = document.querySelector(".channel_name");
       
     if (divChannelName) {
@@ -319,6 +389,43 @@ export class ChatComponent {
     if (roomItems.length == 1) {
       this.router.navigate(['chat-lobby']);
     }
+  }
+
+  leaveRoom() {
+    this.chatService.kickRoom(this.currentRoomId, this.myUserId).subscribe((response: any) => {
+      if (response) {
+        if (response.ok == true) {
+          this.chatService.leave(this.currentRoomId, this.myUserId);
+          this.messages = [];
+          var RoomId = "";
+          var otherUserID: number = 0;
+            this.chatService.IsPrivateRoom(this.currentRoomId).subscribe((Response2: any) => {
+            if (Response2) {
+              var i = 0;
+              while (this.users[i]) {
+                if (this.users[i].userId != this.myUserId) {
+                  otherUserID = this.users[i].userId;
+                  RoomId = this.users[i].username;
+                  this.chatService.kickRoom(this.currentRoomId, otherUserID).subscribe((Response3: any) => {
+                    if (Response3) {
+                      this.chatService.kick(this.currentRoomId, otherUserID);
+                      this.leaveRoom2(RoomId);
+                    }
+                  });
+                }
+                i++;
+              }
+            } else {
+              RoomId = this.currentRoomId;
+              this.leaveRoom2(RoomId);
+            }
+          });
+        } else if (response.ok == false) {
+          RoomId = this.currentRoomId;
+          this.leaveRoom2(RoomId);
+        }
+      }
+    });
   }
   
   async openDataKick() {
@@ -503,6 +610,19 @@ export class ChatComponent {
 
  }
 
+ sendPrivateMessage (id: number) {
+  if (id != this.myUserId) {
+    this.chatService.createPrivateRoom(id.toString(), "", id).subscribe((result2) => {
+      if (result2) {
+        this.addRoom(id.toString() + "/" + this.myUserId.toString());
+        this.chatService.privateMessage(id.toString() + "/" + this.myUserId.toString(), id);
+      }
+    });
+  } else {
+    alert("You cannot send private messages to yourself!");
+  }
+ }
+
   viewProfilUser(id: number) {
     this.router.navigate(['/friendProfile', id.toString()]);
   }
@@ -549,7 +669,6 @@ export class ChatComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
 
-      console.log("1 : " + result.name);
       const name = result.name;
 
       this.chatService.getUserId(name).subscribe((response1: any) => {
@@ -838,4 +957,5 @@ export class ChatComponent {
       this.scrollToBottom();
     }, ms);
   }
+
 }

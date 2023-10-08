@@ -20,7 +20,7 @@ export class ChatService {
         try {
             result = await this.roomRepository.find();
         } catch (error) {
-            console.log("Error while retrieving rooms");
+            console.error("Error while retrieving rooms");
             return null;
         }
         return result;
@@ -93,11 +93,30 @@ export class ChatService {
             const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
             if (!room)
                 return false;
+            // if (room.private)
+            //     return false;
         } catch {
             ("Error while retrieving the room");
             return false;
         }
         return true;
+    }
+
+
+    async IsPrivateRoom(id: string) {
+        try {
+            const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+            if (!room) {
+                return true;
+            }
+            if (room.private) {
+                return true;
+            }
+        } catch {
+            ("Error while retrieving the room");
+                return false;
+        }
+        return false;
     }
 
     async lenghtRoom(id: string) {
@@ -142,7 +161,6 @@ export class ChatService {
             console.error('Room with ID ${id} not found');
             return null;
         }
-        console.log("New Password : " + password);
         if (password == "\0") {
             room.password = false;
             room.setPassword = "";
@@ -217,7 +235,6 @@ export class ChatService {
 
     async kickParticipant(id: string, User: number): Promise<any> {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
-        
         if (!room) {
             console.error('Room with ID ${id} not found');
             return null;
