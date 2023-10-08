@@ -632,7 +632,6 @@ export class ChatComponent {
 
   openDataBan() {
     const dialogRef = this.dialog.open(BanComponent, {
-      /*Ouvre le dialog et definit la taille*/
       width: '250px',
     });
 
@@ -672,7 +671,6 @@ export class ChatComponent {
 
   openDataUnBan () {
     const dialogRef = this.dialog.open(UnbanComponent, {
-      /*Ouvre le dialog et definit la taille*/
       width: '250px',
     });
 
@@ -707,7 +705,6 @@ export class ChatComponent {
 
   openDataMute() {
     const dialogRef = this.dialog.open(MuteComponent, {
-      /*Ouvre le dialog et definit la taille*/
       width: '250px',
     });
 
