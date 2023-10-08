@@ -364,7 +364,7 @@ export class ChatService {
       userData: myUser,
     };
     return new Observable<any>((observer) => {
-      this.socket.emit('setUnBlockUserVisibleButton', room, (response: any) => {
+      this.socket.emit('getVisibleButton', room, (response: any) => {
         observer.next(response);
         observer.complete();
       });

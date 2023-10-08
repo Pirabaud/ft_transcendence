@@ -241,10 +241,10 @@ export class ChatComponent {
     
             this.chatService.getStatus(userID).subscribe((response3: any) => {
               if (response3) {
-                this.chatService.setUnBlockUserVisibleButton(userID, this.myUserId).subscribe((response: any) =>{
+                this.chatService.getVisibleButton(userID, this.myUserId).subscribe((response: any) =>{
                   if (response) {
                     this.boutonVisible[0] = response;
-                    console.log(response);
+                    console.log("CHANGE ROOM", response);
                   }
                   if (response3.Status == "online") {
                     this.users.push({
@@ -479,7 +479,7 @@ export class ChatComponent {
   }
 
   this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
-    if (!response) {
+    if (response) {
       alert("you have been muted");
     } else {
       var i = 0;
@@ -779,10 +779,10 @@ export class ChatComponent {
 
   openDataBlock(nameId: number, name: string, users: Participant) {
 
-      if (nameId == this.myUserId) {
-        alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-        return ;
-      }
+      // if (nameId == this.myUserId) {
+      //   alert("impossible to block yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+      //   return ;
+      // }
       this.chatService.blockUser(nameId, this.myUserId).subscribe((response: any) =>{
         if (response == 0) {
           alert('Room not found');
@@ -792,10 +792,10 @@ export class ChatComponent {
 
           this.chatService.setBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
             if (response) {
-              console.log("ERROR", response);
+              console.log("GOOD BLOCK : ", response);
               users.boutonVisible = response;
             } else {
-            console.log("DIFF", response);
+            console.log("DIFF BLOCK : ", response);
             }
           });
 
@@ -812,10 +812,10 @@ export class ChatComponent {
 
   openDataUnBlock(nameId: number, name: string, users: Participant) {
 
-    if (nameId == this.myUserId) {
-      alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-      return ;
-    }
+    // if (nameId == this.myUserId) {
+    //   alert("impossible to unBlock yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+    //   return ;
+    // }
     this.chatService.unBlockUser(nameId, this.myUserId).subscribe((response: any) =>{
       if (response == 0) {
         alert('Room not found');
@@ -823,10 +823,10 @@ export class ChatComponent {
 
         this.chatService.setUnBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
           if (response) {
-            console.log("ERROR", response);
+            console.log("GOOD UNBLOCK : ", response);
             users.boutonVisible = response;
           } else {
-            console.log("DIFF", response);
+            console.log("DIFF UNBLOCK : ", response);
           }
         });
 

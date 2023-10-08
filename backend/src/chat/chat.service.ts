@@ -499,11 +499,11 @@ export class ChatService {
         while (room.mute[i]) {
             if (room.mute[i] == user) {
                 console.error('{user} : is mute !');
-                return false;
+                return true;
             }
             i++;
         }
-        return true;
+        return false;
     }
 
     async unMuteUser(mute: number, roomId: string) {
@@ -581,7 +581,7 @@ export class ChatService {
 
         if (!user) {
             console.error('User with ID ${id} not found');
-            return 0;
+            return false;
         }
 
         var i = 0;
@@ -589,11 +589,11 @@ export class ChatService {
 
             if (user.blockUser[i] == block) {
                 console.error('{blocker} : is already block !');
-                return false;
+                return true;
             }
             i++;
         }
-        return true;
+        return false;
     }
 
     async unBlockUser(block: number, userId: number) {
@@ -634,16 +634,16 @@ export class ChatService {
     
         var i = 0;
         while (user.buttonVisible[i]) {
-            console.log(user.buttonVisible[i]);
-          if (user.buttonVisible[i].userId == button) {
-            user.buttonVisible[i].privateMessage = false;
-            user.buttonVisible[i].classicGame = false;
-            user.buttonVisible[i].portalGame = false;
-            user.buttonVisible[i].block = false;
-            user.buttonVisible[i].unblock = true;
-    
-            await this.userRepository.save(user);
-    
+            if (user.buttonVisible[i].userId == button) {
+                user.buttonVisible[i].privateMessage = false;
+                user.buttonVisible[i].classicGame = false;
+                user.buttonVisible[i].portalGame = false;
+                user.buttonVisible[i].block = false;
+                user.buttonVisible[i].unblock = true;
+                
+                await this.userRepository.save(user);
+                
+            console.log("SET BLOCK", user.buttonVisible[i]);
             return user.buttonVisible[i];
           }
           i++;
@@ -664,16 +664,16 @@ export class ChatService {
 
         var i = 0;
         while (user.buttonVisible[i]) {
-            console.log(user.buttonVisible[i]);
-          if (user.buttonVisible[i].userId == button) {
-            user.buttonVisible[i].privateMessage = true;
-            user.buttonVisible[i].classicGame = true;
-            user.buttonVisible[i].portalGame = true;
-            user.buttonVisible[i].block = true;
-            user.buttonVisible[i].unblock = false;
-    
-            await this.userRepository.save(user);
-    
+            if (user.buttonVisible[i].userId == button) {
+                user.buttonVisible[i].privateMessage = true;
+                user.buttonVisible[i].classicGame = true;
+                user.buttonVisible[i].portalGame = true;
+                user.buttonVisible[i].block = true;
+                user.buttonVisible[i].unblock = false;
+                
+                await this.userRepository.save(user);
+                
+            console.log("SET UNBLOCK", user.buttonVisible[i]);
             return user.buttonVisible[i];
           }
           i++;
@@ -689,11 +689,13 @@ export class ChatService {
             return false;
         }
         
-        const buttonVisibleItem = user.buttonVisible.find(item => item.userId === button);
-        
-        if (buttonVisibleItem) {  
-
-            return buttonVisibleItem;
+        var i = 0;
+        while (user.buttonVisible[i]) {
+            if (user.buttonVisible[i].userId == button) {
+            console.log("GET : ",user.buttonVisible[i]);
+            return user.buttonVisible[i];
+          }
+          i++;
         }
         
         return false;
