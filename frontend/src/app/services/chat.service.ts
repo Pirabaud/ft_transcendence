@@ -50,7 +50,9 @@ export class ChatService {
 
 
   sendMessage(message: MessageEvent): void {
-    this.socket.emit('exchanges', message);
+    if (message.content.trim().length != 0) {
+      this.socket.emit('exchanges', message);
+    }
   }
 
   participate(roomId: string, user: Participant) {
