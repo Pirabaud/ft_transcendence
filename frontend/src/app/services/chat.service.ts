@@ -5,12 +5,25 @@ import {HttpClient} from "@angular/common/http";
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
+
 export interface Participant {
   userId: number;
   username: string;
   avatar: string;
   status: string,
+  boutonVisible: Visible;
 }
+
+
+export interface Visible {
+  userId: number;
+  privateMessage: boolean;
+  classicGame: boolean;
+  portalGame: boolean;
+  block: boolean;
+  unblock: boolean;
+}
+
 
 export interface MessageEvent {
   socketId: string;
@@ -48,6 +61,38 @@ export class ChatService {
     this.socket.emit('participant', room);
   }
 
+  privateMessage(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('private-message', room);
+  }
+
+  privateClassicGame(otherUserId: number, userId: number) {
+    const room = {
+      otherUserID: userId,
+      userID: otherUserId,
+    }
+    this.socket.emit('private-classic-game', room);
+  }
+
+  privatePortalGame(otherUserId: number, userId: number) {
+    const room = {
+      otherUserID: userId,
+      userID: otherUserId,
+    }
+    this.socket.emit('private-portal-game', room);
+  }
+
+  refusePrivateGame(type: string, userId: number) {
+    const room = {
+      userID: userId,
+      type: type,
+    }
+    this.socket.emit('refuse-private-game', room);
+  }
+
   leave(roomId: string, userId: number) {
     const room = {
       roomID: roomId,
@@ -71,6 +116,35 @@ export class ChatService {
   getAllRoom(): Observable<any> {
     return this.http.get<any>("http://localhost:3000/chat/getAllRoom");
   }
+
+  createPrivateRoom(channel: string, password: string, otherUserID: number) {
+    return new Observable<boolean>(observer => {
+      this.httpService.getUserId().subscribe((response: any) => {
+        if (response) {
+          const room = {
+            channel: channel + "/" + response.UserId.toString(),
+            password: password,
+            userId: response.UserId,
+            otherUserID: otherUserID,
+          };
+          this.socket.emit('newPrivateRoom', room, (response: any) => {
+            if (response == -1) {
+            alert("You already have a private room with this person!");
+            observer.next(false);
+            observer.complete();
+          } else if (response == 42) {
+            observer.next(true);
+            observer.complete();
+            }
+          });
+        } else {
+          console.error("Error receiving username");
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
+  }
   
   createRoom(channel: string, password: string): Observable<boolean> {
     return new Observable<boolean>(observer => {
@@ -86,7 +160,10 @@ export class ChatService {
             alert("This room already exist!");
             observer.next(false);
             observer.complete();
-          } else if (response == 42) {
+          } else if (response == -2) {
+            alert("Room must be 12 characters or less !");
+          } 
+          else if (response == 42) {
             observer.next(true);
             observer.complete();
             }
@@ -267,15 +344,96 @@ export class ChatService {
     });
   }
 
-  // getUser(user: string) {
-  //   return new Observable<any>((observer) => {
-  //     this.socket.emit('unMuteUser', user, (response: any) => {
-  //       observer.next(response);
-  //       observer.complete();
-  //     });
-  //   });
-  // }
-  
+  checkMute(mute: number, roomId: string) {
+    const room = {
+      user: mute,
+      id: roomId,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('checkMute', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  blockUser(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('blockUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  unBlockUser(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('unBlockUser', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  checkBlock(block: number, user: number) {
+    const room = {
+      userId: block,
+      userData: user,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('checkBlock', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setBlockUserVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setBlockUserVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  setUnBlockUserVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('setUnBlockUserVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
+  getVisibleButton(visibleUser: number, myUser: number): Observable<Visible | false> {
+    const room = {
+      userId: visibleUser,
+      userData: myUser,
+    };
+    return new Observable<any>((observer) => {
+      this.socket.emit('getVisibleButton', room, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
 
   getAllParticipants(channel: string): Observable<Array<number>> {
     return new Observable<number[]>(observer => {
@@ -315,8 +473,12 @@ export class ChatService {
     return this.http.post<any>("http://localhost:3000/user/getStatus", {userId});
   }
 
-  getMessages(userId: string): Observable<MessageEvent[]> {
-    return this.http.post<MessageEvent[]>("http://localhost:3000/chat/getMessages", {userId});
+  getMessages(roomId: string): Observable<MessageEvent[]> {
+    return this.http.post<MessageEvent[]>("http://localhost:3000/chat/getMessages", {roomId});
+  }
+
+  IsPrivateRoom(roomId: string): Observable<any> {
+    return this.http.post<any>("http://localhost:3000/chat/IsPrivateRoom", {roomId});
   }
 
 }

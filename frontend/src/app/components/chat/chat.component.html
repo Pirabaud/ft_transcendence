@@ -30,9 +30,7 @@
                               <div class="name_room_name">
 
                               </div>
-                              <!-- <div class="room-item" *ngFor="let room of rooms" (click)="enterInRoom()">
-                                <p>{{ room.name }}</p>
-                              </div> -->
+
                             </div>
     
     
@@ -66,7 +64,7 @@
                                 <div class="name_user">
 
                                     <div class="use_name_user">
-                                        <p>{{ user.username }}</p>
+                                        <p><b>{{ user.username }}</b></p>
                                     </div>
 
                                 </div>
@@ -82,21 +80,25 @@
                                               <mat-icon>account_circle</mat-icon>
                                               <span>View Profil</span>
                                             </button>
-                                            <button mat-menu-item >
+                                            <button mat-menu-item (click)="sendPrivateMessage(user.userId, user.username)" *ngIf="user.boutonVisible.privateMessage">
                                                 <mat-icon>person_add</mat-icon>
                                                 <span>Send Private Message</span>
                                               </button>
-                                            <button mat-menu-item>
+                                            <button mat-menu-item (click)="sendClassicGame(user)" *ngIf="user.boutonVisible.classicGame">
                                                 <mat-icon>sports_esports</mat-icon>
                                                 <span>Classic Game</span>
                                               </button>
-                                            <button mat-menu-item>
+                                            <button mat-menu-item (click)="sendPortalGame(user)" *ngIf="user.boutonVisible.portalGame">
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
-                                              <button mat-menu-item>
+                                              <button mat-menu-item (click)="openDataBlock(user.userId, user.username, user)" *ngIf="user.boutonVisible.block">
                                                 <mat-icon>block</mat-icon>
                                                 <span>Block</span>
+                                              </button>
+                                              <button mat-menu-item (click)="openDataUnBlock(user.userId, user.username, user)" *ngIf="user.boutonVisible.unblock">
+                                                <mat-icon>lock_open_right</mat-icon>
+                                                <span>unBlock</span>
                                               </button>
                                           </mat-menu>
                                     </div>
@@ -166,16 +168,14 @@
 
                       </div>
 
-                    <div class="content_msg">
+                    <div class="content_msg" id="content_msg_id">
   
-                        <div class="msg_history">
-                          
                           <li class="message" *ngFor="let message of messages">
                             <div
                             *ngIf="
                             (message.user).userId != myUserId;
-                            then incoming_msg;
-                            else outgoing_msg
+                            then outgoing_msg;
+                            else incoming_msg
                             "
                             ></div>
                             
@@ -254,19 +254,8 @@
                               </div>
 
                             </ng-template>
-
-
-                            <!-- <ng-template #outgoing_msg>
-                              <div class="outgoing_msg">
-                                <div class="sent_msg">
-                                  <p>{{ message.content }}</p>
-                                </div>
-                              </div>
-                            </ng-template> -->
                             
                           </li>
-                        </div>
-                    
 
                     </div>
 
