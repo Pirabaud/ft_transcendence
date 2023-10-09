@@ -371,7 +371,6 @@ export class ChatComponent {
 
                   if (response) {
                     boutonVisible[0] = response;
-                    console.log("CHANGE ROOM", response);
                   }
                   if (response3.Status == "online") {
                     this.users.push({
@@ -518,7 +517,7 @@ export class ChatComponent {
                   } else {
                     alert("This user isn't in the room!")
                   }
-                } else {console.log("error2")}
+                }
               });
             
             } else {
@@ -530,7 +529,7 @@ export class ChatComponent {
           }
         });
 
-      } else {console.log("error1")}
+      }
     });
   }
 
@@ -628,33 +627,79 @@ export class ChatComponent {
     return;
   }
 
-  // this.chatService.IsPrivateRoom(this.currentRoomId).subscribe((Response2: any) => {
-  //   if (Response2) {}
-  // });
-
-  this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
-    if (response) {
-      alert("you have been muted");
-    } else {
+  this.chatService.IsPrivateRoom(this.currentRoomId).subscribe((Response2: any) => {
+    if (Response2) {
+      var otherUserID: number = 0;
+      var otherUsername: string = "";
       var i = 0;
       while (this.users[i]) {
-        if (this.users[i].userId == this.myUserId) {
-          const user: Participant = this.users[i];
-          const message = {
-            roomId: this.currentRoomId,
-            user: user,
-            content: this.messageContent,
-            createdAt: new Date()
-          } as MessageEvent;
-          
-          this.chatService.sendMessage(message);
-          this.messageContent = '';
+        if (this.users[i].userId != this.myUserId) {
+          otherUserID = this.users[i].userId;
+          otherUsername = this.users[i].username;
         }
         i++;
       }
+      this.chatService.checkBlock(this.myUserId, otherUserID).subscribe((reponse) => {
+        if (reponse) {
+          alert("You have been blocked by : " + otherUsername);
+        } else {
+
+
+          this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
+            if (response) {
+              alert("you have been muted");
+            } else {
+              var i = 0;
+              while (this.users[i]) {
+                if (this.users[i].userId == this.myUserId) {
+                  const user: Participant = this.users[i];
+                  const message = {
+                    roomId: this.currentRoomId,
+                    user: user,
+                    content: this.messageContent,
+                    createdAt: new Date()
+                  } as MessageEvent;
+                  
+                  this.chatService.sendMessage(message);
+                  this.messageContent = '';
+                }
+                i++;
+              }
+            }
+          });
+        }
+      });
+
+
+    } else {
+
+
+      this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
+        if (response) {
+          alert("you have been muted");
+        } else {
+          var i = 0;
+          while (this.users[i]) {
+            if (this.users[i].userId == this.myUserId) {
+              const user: Participant = this.users[i];
+              const message = {
+                roomId: this.currentRoomId,
+                user: user,
+                content: this.messageContent,
+                createdAt: new Date()
+              } as MessageEvent;
+              
+              this.chatService.sendMessage(message);
+              this.messageContent = '';
+            }
+            i++;
+          }
+        }
+      });
+
+
     }
   });
-
 
  }
 
@@ -962,10 +1007,7 @@ export class ChatComponent {
 
           this.chatService.setBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
             if (response) {
-              console.log("GOOD BLOCK : ", response);
               users.boutonVisible = response;
-            } else {
-            console.log("DIFF BLOCK : ", response);
             }
           });
           alert(name + " : is block !");
@@ -986,10 +1028,7 @@ export class ChatComponent {
 
         this.chatService.setUnBlockUserVisibleButton(nameId, this.myUserId).subscribe((response: any) =>{
           if (response) {
-            console.log("GOOD UNBLOCK : ", response);
             users.boutonVisible = response;
-          } else {
-            console.log("DIFF UNBLOCK : ", response);
           }
         });
         alert(name + " : he is no longer blocked !");
@@ -1001,8 +1040,16 @@ export class ChatComponent {
 
   sendClassicGame(user: Participant) {
     if (user.userId != this.myUserId) {
-      this.chatService.privateClassicGame(user.userId, this.myUserId);
-      alert("You have sent a private request for a classic game to " + user.username + "!");
+      
+      this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
+        if (reponse) {
+          alert("You have been blocked by : " + user.username);
+        } else {
+          this.chatService.privateClassicGame(user.userId, this.myUserId);
+          alert("You have sent a private request for a classic game to " + user.username + "!");
+        }
+      });
+    
     } else {
       alert("You cannot send yourself a private request for a classic game.");
     }
@@ -1010,8 +1057,16 @@ export class ChatComponent {
 
   sendPortalGame(user: Participant) {
     if (user.userId != this.myUserId) {
-      this.chatService.privatePortalGame(user.userId, this.myUserId);
-      alert("You have sent a private request for a portal game to " + user.username + "!");
+
+      this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
+        if (reponse) {
+          alert("You have been blocked by : " + user.username);
+        } else {
+          this.chatService.privatePortalGame(user.userId, this.myUserId);
+          alert("You have sent a private request for a portal game to " + user.username + "!");
+        }
+      });
+    
     } else {
       alert("You cannot send yourself a private request for a portal game.");
     }

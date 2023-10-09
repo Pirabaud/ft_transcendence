@@ -614,7 +614,6 @@ export class ChatService {
         while (user.blockUser[i]) {
 
             if (user.blockUser[i] == block) {
-                console.error('{blocker} : is already block !');
                 return true;
             }
             i++;
@@ -653,11 +652,6 @@ export class ChatService {
           return false;
         }
 
-        console.log(button);
-        console.log(userId);
-
-        // console.log(user.buttonVisible.userId);
-    
         var i = 0;
         while (user.buttonVisible[i]) {
             if (user.buttonVisible[i].userId == button) {
@@ -669,7 +663,6 @@ export class ChatService {
                 
                 await this.userRepository.save(user);
                 
-            console.log("SET BLOCK", user.buttonVisible[i]);
             return user.buttonVisible[i];
           }
           i++;
@@ -685,9 +678,6 @@ export class ChatService {
           return false;
         }
     
-        console.log(button);
-        console.log(userId);
-
         var i = 0;
         while (user.buttonVisible[i]) {
             if (user.buttonVisible[i].userId == button) {
@@ -699,7 +689,6 @@ export class ChatService {
                 
                 await this.userRepository.save(user);
                 
-            console.log("SET UNBLOCK", user.buttonVisible[i]);
             return user.buttonVisible[i];
           }
           i++;
@@ -718,7 +707,6 @@ export class ChatService {
         var i = 0;
         while (user.buttonVisible[i]) {
             if (user.buttonVisible[i].userId == button) {
-            console.log("GET : ",user.buttonVisible[i]);
             return user.buttonVisible[i];
           }
           i++;
