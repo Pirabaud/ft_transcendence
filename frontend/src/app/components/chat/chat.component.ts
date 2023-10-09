@@ -297,11 +297,27 @@ export class ChatComponent {
     });
     
   }
+
+  // Vérifie si le message a déjà été reçu
+  private isMessageAlreadyReceived(message: MessageEvent): boolean {
+    var i = 0;
+    while (this.messages[i]) {
+      i++;
+    }
+    if (i != 0) {
+      const PreventMessageDate = this.messages[i - 1].createdAt;
+      const CurrentMessageDate = message.createdAt;
+      if (PreventMessageDate == CurrentMessageDate) {
+        return true;
+      }
+    }
+    return false;
+  }
   
   private initConnection(roomID: string) {
    
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
-      if (message.roomId == this.currentRoomId) {
+      if (message.roomId == this.currentRoomId && !this.isMessageAlreadyReceived(message)) {
         this.messages.push(message);
         this.sleep(100);
       }
