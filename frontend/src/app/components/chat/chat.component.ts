@@ -625,13 +625,17 @@ export class ChatComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.name) {
-        const name = result.name;
-        const password = result.password;
-        this.chatService.createRoom(name, password).subscribe((response) => {
-          if (response) {
-            this.addRoom(name);
-          }
-        });
+        const name: string = result.name;
+        const password: string = result.password;
+        if (name.includes(" ") || name.includes("	") || password.includes(" ") || password.includes("	")) {
+          alert("The channel name and the password can't contain spaces or tabs");
+        } else {
+          this.chatService.createRoom(name, password).subscribe((response) => {
+            if (response) {
+              this.addRoom(name);
+            }
+          });
+        }
       }
       else
         alert("Channel can't be NULL");
