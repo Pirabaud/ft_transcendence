@@ -30,10 +30,6 @@ export class ChatComponent {
   public boutonsAdminVisible: any = false;
   public messageContent = '';
 
-  public boutonVisible: Visible[] = [
-    {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: true }
-  ];
-  
   constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
 
   ngOnInit() {
@@ -325,8 +321,13 @@ export class ChatComponent {
             this.chatService.getStatus(userID).subscribe((response3: any) => {
               if (response3) {
                 this.chatService.getVisibleButton(userID, this.myUserId).subscribe((response: any) =>{
+
+                  var boutonVisible: Visible[] = [
+                    {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: false }
+                  ];
+
                   if (response) {
-                    this.boutonVisible[0] = response;
+                    boutonVisible[0] = response;
                     console.log("CHANGE ROOM", response);
                   }
                   if (response3.Status == "online") {
@@ -335,7 +336,7 @@ export class ChatComponent {
                       username: username,
                       avatar: pic,
                       status: "../../../assets/images/Button-Blank-Green-icon.png",
-                      boutonVisible: this.boutonVisible[0],
+                      boutonVisible: boutonVisible[0],
                     });
                   } else {
                     this.users.push({
@@ -343,7 +344,7 @@ export class ChatComponent {
                       username: username,
                       avatar: pic,
                       status: "../../../assets/images/Button-Blank-Red-icon.png",
-                      boutonVisible: this.boutonVisible[0],
+                      boutonVisible: boutonVisible[0],
                     });
                   }
                 });
