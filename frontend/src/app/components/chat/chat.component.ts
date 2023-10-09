@@ -4,6 +4,8 @@ import { KickComponent } from '../chat/room_service/kick/kick.component';
 import { BanComponent } from '../chat/room_service/ban/ban.component';
 import { MuteComponent } from '../chat/room_service/mute/mute.component';
 import { UnmuteComponent } from './room_service/unmute/unmute.component';
+import { ClassicGameComponent } from './user_service/classic-game/classic-game.component'
+import { PortalGameComponent } from './user_service/portal-game/portal-game.component'
 import { SetPasswordComponent } from '../chat/room_service/set-password/set-password.component';
 import { ChatService, Participant, MessageEvent, Visible } from '../../services/chat.service';
 import { CreateRoomComponent } from "./room_service/create-room/create-room.component";
@@ -69,6 +71,47 @@ export class ChatComponent {
     this.chatService.receiveEvent(`receive-private-message`).subscribe((room: any) => {
       if (room.userID == this.myUserId) {
         this.addRoom(room.roomID);
+      }
+    });
+    this.chatService.receiveEvent(`receive-private-classic-game`).subscribe((room: any) => {
+      if (room.userID == this.myUserId) {
+        const dialogRef = this.dialog.open(ClassicGameComponent, {
+          width: '250px',
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          const data = result.YesOrNo;
+          const otherUserId = room.otherUserID;
+
+          if (data == true) {
+            // rediriger vers la private classic game
+          } else if (data == false) {
+            this.chatService.refusePrivateGame("classic", otherUserId);
+          }
+        });
+      }
+    });
+    this.chatService.receiveEvent(`receive-private-portal-game`).subscribe((room: any) => {
+      if (room.userID == this.myUserId) {
+        const dialogRef = this.dialog.open(PortalGameComponent, {
+          width: '250px',
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          const data = result.YesOrNo;
+          const otherUserId = room.otherUserID;
+
+          if (data == true) {
+            // rediriger vers la private portal game
+          } else if (data == false) {
+            this.chatService.refusePrivateGame("portal", otherUserId);
+          }
+        });
+      }
+    });
+    this.chatService.receiveEvent(`receive-refuse-private-game`).subscribe((room: any) => {
+      if (room.userID == this.myUserId) {
+        alert("Your private request for a " + room.type + " game has been declined");
       }
     });
     this.chatService.receiveEvent(`receive-kick`).subscribe((room: any) => {
@@ -585,6 +628,10 @@ export class ChatComponent {
     return;
   }
 
+  // this.chatService.IsPrivateRoom(this.currentRoomId).subscribe((Response2: any) => {
+  //   if (Response2) {}
+  // });
+
   this.chatService.checkMute(this.myUserId, this.currentRoomId).subscribe((response: any) =>{
     if (response) {
       alert("you have been muted");
@@ -611,17 +658,24 @@ export class ChatComponent {
 
  }
 
- sendPrivateMessage (id: number) {
-  if (id != this.myUserId) {
-    this.chatService.createPrivateRoom(id.toString(), "", id).subscribe((result2) => {
-      if (result2) {
-        this.addRoom(id.toString() + "/" + this.myUserId.toString());
-        this.chatService.privateMessage(id.toString() + "/" + this.myUserId.toString(), id);
+ sendPrivateMessage (id: number, username: string) {
+
+  this.chatService.checkBlock(this.myUserId, id).subscribe((reponse) => {
+    if (reponse) {
+      alert("You have been blocked by : " + username);
+    } else { 
+      if (id != this.myUserId) {
+        this.chatService.createPrivateRoom(id.toString(), "", id).subscribe((result2) => {
+          if (result2) {
+            this.addRoom(id.toString() + "/" + this.myUserId.toString());
+            this.chatService.privateMessage(id.toString() + "/" + this.myUserId.toString(), id);
+          }
+        });
+      } else {
+        alert("You can't send private messages to yourself!");
       }
-    });
-  } else {
-    alert("You cannot send private messages to yourself!");
-  }
+    }
+  });
  }
 
   viewProfilUser(id: number) {
@@ -943,7 +997,24 @@ export class ChatComponent {
         alert(name + " : is not blocked !");
       } 
     });
+  }
 
+  sendClassicGame(user: Participant) {
+    if (user.userId != this.myUserId) {
+      this.chatService.privateClassicGame(user.userId, this.myUserId);
+      alert("You have sent a private request for a classic game to " + user.username + "!");
+    } else {
+      alert("You cannot send yourself a private request for a classic game.");
+    }
+  }
+
+  sendPortalGame(user: Participant) {
+    if (user.userId != this.myUserId) {
+      this.chatService.privatePortalGame(user.userId, this.myUserId);
+      alert("You have sent a private request for a portal game to " + user.username + "!");
+    } else {
+      alert("You cannot send yourself a private request for a portal game.");
+    }
   }
 
   scrollToBottom() {

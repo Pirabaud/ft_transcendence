@@ -69,6 +69,30 @@ export class ChatService {
     this.socket.emit('private-message', room);
   }
 
+  privateClassicGame(otherUserId: number, userId: number) {
+    const room = {
+      otherUserID: userId,
+      userID: otherUserId,
+    }
+    this.socket.emit('private-classic-game', room);
+  }
+
+  privatePortalGame(otherUserId: number, userId: number) {
+    const room = {
+      otherUserID: userId,
+      userID: otherUserId,
+    }
+    this.socket.emit('private-portal-game', room);
+  }
+
+  refusePrivateGame(type: string, userId: number) {
+    const room = {
+      userID: userId,
+      type: type,
+    }
+    this.socket.emit('refuse-private-game', room);
+  }
+
   leave(roomId: string, userId: number) {
     const room = {
       roomID: roomId,
