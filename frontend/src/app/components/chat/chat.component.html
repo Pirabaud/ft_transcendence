@@ -84,11 +84,11 @@
                                                 <mat-icon>person_add</mat-icon>
                                                 <span>Send Private Message</span>
                                               </button>
-                                            <button mat-menu-item (click)="sendClassicGame(user)">
+                                            <button mat-menu-item (click)="sendClassicGame(user)" *ngIf="user.boutonVisible.classicGame">
                                                 <mat-icon>sports_esports</mat-icon>
                                                 <span>Classic Game</span>
                                               </button>
-                                            <button mat-menu-item (click)="sendPortalGame(user)">
+                                            <button mat-menu-item (click)="sendPortalGame(user)" *ngIf="user.boutonVisible.portalGame">
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
