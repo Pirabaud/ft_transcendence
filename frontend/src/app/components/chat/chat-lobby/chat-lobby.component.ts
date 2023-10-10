@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-// import {HttpClient} from "@angular/common/http";
-// import {Socket} from 'ngx-socket-io';
-
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateRoomComponent } from "../room_service/create-room/create-room.component";
@@ -9,6 +6,7 @@ import { JoinRoomComponent } from "../room_service/join-room/join-room.component
 import { ChatService, Participant } from '../../../services/chat.service';
 import {Observable, of} from 'rxjs';
 import { HttpService } from '../../../http.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-chat-lobby',
@@ -17,7 +15,12 @@ import { HttpService } from '../../../http.service';
 })
 export class ChatLobbyComponent {
 
-  constructor(private chatService: ChatService, private httpService: HttpService, private dialog: MatDialog, private router: Router) {}
+  constructor(private chatService: ChatService, private httpService: HttpService, private dialog: MatDialog, private jwtHelper: JwtHelperService, private router: Router) {}
+
+  ngOnInit() {
+	if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+    	this.router.navigate(['/login']);
+  }
 
   getMyUser(userID: number): Observable<Participant> {
     return new Observable<Participant>(observer => {

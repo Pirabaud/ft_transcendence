@@ -2,7 +2,7 @@ import { Injectable, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
-import { User } from 'src/user/user.entity';
+import { User, Visible} from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import * as speakeasy from 'speakeasy';
 import * as qrCode from 'qrcode';
@@ -63,7 +63,17 @@ export class AuthService {
           friendList: null,
           friendRequestsNb: 0,
           status: 'offline',
-          // blockUser: null,
+          blockUser: [],
+          buttonVisible: [
+            {
+              userId: response.data.id,
+              privateMessage: true,
+              classicGame: true,
+              portalGame: true,
+              block: true,
+              unblock: false
+            }
+          ],
           gameStatus: false,
           currentGameId: '',
           currentOpponentId: 0,

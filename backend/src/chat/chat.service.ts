@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoomData } from './chat.entity';
+import { User, Visible } from 'src/user/user.entity';
 import { MessageEvent, Participant } from './chat.dto';
 import * as bcrypt from 'bcrypt';
 
@@ -10,6 +11,8 @@ export class ChatService {
     constructor(
         @InjectRepository(RoomData)
         private roomRepository: Repository<RoomData>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
     ) {}
 
     async getAllRoom() {
@@ -17,7 +20,7 @@ export class ChatService {
         try {
             result = await this.roomRepository.find();
         } catch (error) {
-            console.log("Error while retrieving rooms");
+            console.error("Error while retrieving rooms");
             return null;
         }
         return result;
@@ -90,8 +93,36 @@ export class ChatService {
             const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
             if (!room)
                 return false;
+            // if (room.private)
+            //     return false;
         } catch {
             ("Error while retrieving the room");
+            return false;
+        }
+        return true;
+    }
+
+
+    async IsPrivateRoom(id: string) {
+        try {
+            const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
+            if (!room) {
+                return true;
+            }
+            if (room.private) {
+                return true;
+            }
+        } catch {
+            ("Error while retrieving the room");
+                return false;
+        }
+        return false;
+    }
+
+    async lenghtRoom(id: string) {
+        var len = id.length;
+
+        if (len > 12) {
             return false;
         }
         return true;
@@ -130,7 +161,6 @@ export class ChatService {
             console.error('Room with ID ${id} not found');
             return null;
         }
-        console.log("New Password : " + password);
         if (password == "\0") {
             room.password = false;
             room.setPassword = "";
@@ -205,7 +235,6 @@ export class ChatService {
 
     async kickParticipant(id: string, User: number): Promise<any> {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
-        
         if (!room) {
             console.error('Room with ID ${id} not found');
             return null;
@@ -383,17 +412,13 @@ export class ChatService {
     async checkBan(roomId: string, user: number) {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
-        console.log("WTffffff");
         if (!room) {
-            console.log("ERROR");
             console.error('Room with ID ${id} not found');
             return false;
         }
 
         var i = 0;
-        console.log(user);
         while (room.ban[i]) {
-            console.log(room.ban[i]);
             if (room.ban[i] == user) {
                 console.error('{user} : is ban !');
                 return false;
@@ -488,7 +513,7 @@ export class ChatService {
         return 4;
     }
 
-    async checkMute(roomId: string, user: number) {
+    async checkMute(user: number, roomId: string) {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
@@ -500,11 +525,11 @@ export class ChatService {
         while (room.mute[i]) {
             if (room.mute[i] == user) {
                 console.error('{user} : is mute !');
-                return false;
+                return true;
             }
             i++;
         }
-        return true;
+        return false;
     }
 
     async unMuteUser(mute: number, roomId: string) {
@@ -548,4 +573,146 @@ export class ChatService {
         }
         return 3;
     }
+
+    async blockUser(block: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId, }, });
+        if (!user) {
+            console.error('User with ID ${id} not found');
+            return 0;
+        }
+
+        var i = 0;
+        while (user.blockUser[i]) {
+
+            if (user.blockUser[i] == block) {
+                console.error('{blocker} : is already block !');
+                return 1;
+            }
+            i++;
+        }
+
+        var bntVisible: Visible[] = [
+            { userId: block, privateMessage: false, classicGame: false, portalGame: false, block: false, unblock: true }
+        ];
+        
+        await user.buttonVisible.push(bntVisible[0]);
+        await user.blockUser.push(block);
+          
+        await this.userRepository.save(user);
+        return 2;
+    }
+
+    async checkBlock(block: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId, }, });
+
+        if (!user) {
+            console.error('User with ID ${id} not found');
+            return false;
+        }
+
+        var i = 0;
+        while (user.blockUser[i]) {
+
+            if (user.blockUser[i] == block) {
+                return true;
+            }
+            i++;
+        }
+        return false;
+    }
+
+    async unBlockUser(block: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId, }, });
+
+        if (!user) {
+            console.error('User with ID ${id} not found');
+            return 0;
+        }
+
+        var i = 0;
+        while (user.blockUser[i]) {
+
+            if (user.blockUser[i] == block) {
+                user.blockUser.splice(i, 1);
+                user.buttonVisible.splice(i, 1);
+                await this.userRepository.save(user);
+                return 1;
+            }
+            i++;
+        }
+
+        return 2;
+    }
+
+    async setBlockUserVisibleButton(button: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+          console.error(`User with ID ${userId} not found`);
+          return false;
+        }
+
+        var i = 0;
+        while (user.buttonVisible[i]) {
+            if (user.buttonVisible[i].userId == button) {
+                user.buttonVisible[i].privateMessage = false;
+                user.buttonVisible[i].classicGame = false;
+                user.buttonVisible[i].portalGame = false;
+                user.buttonVisible[i].block = false;
+                user.buttonVisible[i].unblock = true;
+                
+                await this.userRepository.save(user);
+                
+            return user.buttonVisible[i];
+          }
+          i++;
+        }
+        return false;
+      }
+    
+      async setUnBlockUserVisibleButton(button: number, userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+          console.error(`User with ID ${userId} not found`);
+          return false;
+        }
+    
+        var i = 0;
+        while (user.buttonVisible[i]) {
+            if (user.buttonVisible[i].userId == button) {
+                user.buttonVisible[i].privateMessage = true;
+                user.buttonVisible[i].classicGame = true;
+                user.buttonVisible[i].portalGame = true;
+                user.buttonVisible[i].block = true;
+                user.buttonVisible[i].unblock = false;
+                
+                await this.userRepository.save(user);
+                
+            return user.buttonVisible[i];
+          }
+          i++;
+        }
+        return false;
+      }
+
+    async getVisibleButton(button: number, userId: number): Promise<Visible | false> {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        
+        if (!user) {
+            console.error(`User with ID ${userId} not found`);
+            return false;
+        }
+        
+        var i = 0;
+        while (user.buttonVisible[i]) {
+            if (user.buttonVisible[i].userId == button) {
+            return user.buttonVisible[i];
+          }
+          i++;
+        }
+        
+        return false;
+    }
+      
 }

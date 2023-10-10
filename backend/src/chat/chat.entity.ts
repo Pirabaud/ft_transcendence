@@ -48,6 +48,9 @@ export class RoomData {
 
   @Column('simple-array', {nullable: true })
   mute: Array<number>; // id of Users
+
+  @Column({ nullable: true })
+  private?: boolean;
   
   // @Column()
   // createdDate: Date;

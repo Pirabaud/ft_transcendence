@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -25,7 +24,8 @@ import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { TwoFactorFirstCoComponent } from './components/two-factor-first-co/two-factor-first-co.component';
 import {MaterialModule} from "./material/material.module";
 import { InvalidComponent } from './components/invalid/invalid.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -35,19 +35,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-
 import { CreateRoomComponent } from './components/chat/room_service/create-room/create-room.component';
 import { JoinRoomComponent } from './components/chat/room_service/join-room/join-room.component';
 import { KickComponent } from './components/chat/room_service/kick/kick.component';
 import { BanComponent } from './components/chat/room_service/ban/ban.component';
 import { MuteComponent } from './components/chat/room_service/mute/mute.component';
 import { SetPasswordComponent } from './components/chat/room_service/set-password/set-password.component';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { BlockComponent } from './components/chat/user_service/block/block.component';
-import { ProfilComponent } from './components/chat/user_service/profil/profil.component';
-import { PrivateMessageComponent } from './components/chat/user_service/private-message/private-message.component';
 import { ClassicGameComponent } from './components/chat/user_service/classic-game/classic-game.component';
 import { PortalGameComponent } from './components/chat/user_service/portal-game/portal-game.component';
 import { AddAdminComponent } from './components/chat/room_service/add-admin/add-admin.component';
@@ -83,9 +76,6 @@ const config: SocketIoConfig = {url: 'http://localhost:3000/', options: {}};
     MuteComponent,
     SetPasswordComponent,
     InvalidComponent,
-    BlockComponent,
-    ProfilComponent,
-    PrivateMessageComponent,
     ClassicGameComponent,
     PortalGameComponent,
     AddAdminComponent,
