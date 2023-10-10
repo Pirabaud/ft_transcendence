@@ -28,15 +28,15 @@ export class HomepageComponent {
       (response: any) => {
         if(this.statsWinsElement)
         {
-          this.statsWinsElement.nativeElement.innerHTML = response.win;
+          this.statsWinsElement.nativeElement.innerHTML = response.win + 'W';
         }
         if(this.statsLosesElement)
         {
-          this.statsLosesElement.nativeElement.innerHTML = response.lose;
+          this.statsLosesElement.nativeElement.innerHTML = response.lose + 'L';
         }
         if(this.statsEloElement)
         {
-          this.statsEloElement.nativeElement.innerHTML = response.elo;
+          this.statsEloElement.nativeElement.innerHTML = response.elo + ' pts';
         }
         if (this.usernameElement) {
            this.usernameElement.nativeElement.innerHTML = response.username;

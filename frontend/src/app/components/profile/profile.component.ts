@@ -67,15 +67,15 @@ export class ProfileComponent {
       (response: any) => {
         if(this.statsWinElement)
         {
-          this.statsWinElement.nativeElement.innerHTML = response.win;
+          this.statsWinElement.nativeElement.innerHTML = response.win + 'W';
         }
         if(this.statsLoseElement)
         {
-          this.statsLoseElement.nativeElement.innerHTML = response.lose;
+          this.statsLoseElement.nativeElement.innerHTML = response.lose + 'L';
         }
         if(this.statsEloElement)
         {
-          this.statsEloElement.nativeElement.innerHTML = response.elo;
+          this.statsEloElement.nativeElement.innerHTML = response.elo + ' pts';
         }
         if (this.usernameElement) {
           this.usernameElement.nativeElement.innerHTML = response.username;

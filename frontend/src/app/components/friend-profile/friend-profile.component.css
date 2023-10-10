@@ -18,6 +18,12 @@
 
 .login, .elo, .rank
 {
+  flex-grow: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px;
   margin: 0;
 }
 
@@ -31,6 +37,7 @@
   font-size: large;
   top: 50%;
   visibility: hidden;
+  font-family: 'Oswald', sans-serif;
 }
 
 #match-history-list-container
