@@ -87,6 +87,14 @@ export class ChatService {
     this.socket.emit('private-portal-game', room);
   }
 
+  acceptPrivateGame(type: string, userId: number) {
+    const room = {
+      userID: userId,
+      type: type,
+    }
+    this.socket.emit('accept-private-game', room);
+  }
+
   refusePrivateGame(type: string, userId: number) {
     const room = {
       userID: userId,
@@ -147,7 +155,7 @@ export class ChatService {
       });
     });
   }
-  
+
   createRoom(channel: string, password: string): Observable<boolean> {
     return new Observable<boolean>(observer => {
       this.httpService.getUserId().subscribe((response: any) => {
@@ -164,7 +172,7 @@ export class ChatService {
             observer.complete();
           } else if (response == -2) {
             alert("Room must be 12 characters or less !");
-          } 
+          }
           else if (response == 42) {
             observer.next(true);
             observer.complete();
@@ -188,7 +196,7 @@ export class ChatService {
             password: password,
             user: response.UserId,
           };
-  
+
           this.socket.emit('joinRoom', room, (response: any) => {
             if (response == 1) {
               window.alert("This room doesn't exist!");
@@ -254,7 +262,7 @@ export class ChatService {
       });
     });
   }
-  
+
   getAdmin(admin: number, roomId: string): Observable<any> {
     const room = {
       user: admin,
@@ -440,7 +448,7 @@ export class ChatService {
   getAllParticipants(channel: string): Observable<Array<number>> {
     return new Observable<number[]>(observer => {
       const room = { channel: channel };
-      
+
       this.socket.emit('getAllParticipants', room, (response: number[]) => {
         observer.next(response); // Émettez la réponse lorsque les données sont disponibles
         observer.complete(); // Indiquez que l'observable est terminé
@@ -451,7 +459,7 @@ export class ChatService {
   getAllMessages(channel: string): Observable<MessageEvent[]> {
     return new Observable<MessageEvent[]>(observer => {
       const room = { channel: channel };
-      
+
       this.socket.emit('getAllMessages', room, (response: MessageEvent[]) => {
         observer.next(response); // Émettez la réponse lorsque les données sont disponibles
         observer.complete(); // Indiquez que l'observable est terminé

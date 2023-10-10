@@ -609,7 +609,6 @@ export class ChatService {
             console.error('User with ID ${id} not found');
             return false;
         }
-
         var i = 0;
         while (user.blockUser[i]) {
 

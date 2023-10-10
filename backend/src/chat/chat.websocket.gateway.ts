@@ -66,6 +66,12 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         this.server.emit(`receive-private-portal-game`, room);
     }
 
+    @SubscribeMessage('accept-private-game')
+    async onAcceptPrivateGame(socket: Socket, room: any) {
+        const socketId = socket.id;
+        this.server.emit(`receive-accept-private-game`, room);
+    }
+
     @SubscribeMessage('refuse-private-game')
     async onRefusePrivateGame(socket: Socket, room: any) {
         const socketId = socket.id;

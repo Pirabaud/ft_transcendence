@@ -132,7 +132,7 @@ export class GameService {
 
     const waitRoomLength: number =
       gameMode === 0 ? this.gameUtile.calculateRoomLengthWithoutPrivates(this.waitRoomNormal) : this.gameUtile.calculateRoomLengthWithoutPrivates(this.waitRoomPortal);
-    if (waitRoomLength === 0 || userWaiting.position === 1) {
+    if ((waitRoomLength === 0 && userWaiting.position === 0) || userWaiting.position === 1) {
       this.addNewClient(userWaiting.socket, userWaiting.gameId);
       if (gameMode === 0)
         this.waitRoomNormal.push(userWaiting);
@@ -150,10 +150,6 @@ export class GameService {
           clearInterval(gameReadyCheck);
         }
       }, 2000);
-      for (let i = 0; i < this.waitRoomNormal.length; ++i)
-      {
-        console.log(this.waitRoomNormal[i].hostname);
-      }
       return '0';
     }
     else {
@@ -179,12 +175,12 @@ export class GameService {
         this.runningGames.push(
           this.createGame(res.gameId, gameMode, res, userWaiting),
         );
-        this.waitRoomNormal = [];
+        this.waitRoomNormal = this.gameUtile.removeUserFromWaitRoom(this.waitRoomNormal, res);
       } else {
         this.runningGames.push(
           this.createGame(res.gameId, gameMode, res, userWaiting),
         );
-        this.waitRoomPortal = [];
+        this.waitRoomPortal = this.gameUtile.removeUserFromWaitRoom(this.waitRoomPortal, res);
       }
       if (!res)
         return ("");

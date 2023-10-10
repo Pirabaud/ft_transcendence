@@ -95,7 +95,8 @@ export class ChatComponent {
           const otherUserId = room.otherUserID;
 
           if (data == true) {
-            // rediriger vers la private classic game
+            this.createPrivateGame(0, otherUserId, 1);
+            this.chatService.acceptPrivateGame("classic", otherUserId);
           } else if (data == false) {
             this.chatService.refusePrivateGame("classic", otherUserId);
           }
@@ -113,7 +114,8 @@ export class ChatComponent {
           const otherUserId = room.otherUserID;
 
           if (data == true) {
-            // rediriger vers la private portal game
+            this.createPrivateGame(1, otherUserId, 1);
+            this.chatService.acceptPrivateGame("portal", otherUserId);
           } else if (data == false) {
             this.chatService.refusePrivateGame("portal", otherUserId);
           }
@@ -123,6 +125,19 @@ export class ChatComponent {
     this.chatService.receiveEvent(`receive-refuse-private-game`).subscribe((room: any) => {
       if (room.userID == this.myUserId) {
         alert("Your private request for a " + room.type + " game has been declined");
+      }
+    });
+    this.chatService.receiveEvent(`receive-accept-private-game`).subscribe((room: any) => {
+      if (room.userID == this.myUserId) {
+        if (room.type == "classic") {
+          setTimeout(() => {
+            this.createPrivateGame(0, this.myUserId, 2);
+          }, 100);
+        } else if (room.type == "portal") {
+          setTimeout(() => {
+            this.createPrivateGame(1, this.myUserId, 2);
+          }, 100);
+        }
       }
     });
     this.chatService.receiveEvent(`receive-kick`).subscribe((room: any) => {
@@ -230,7 +245,7 @@ export class ChatComponent {
         newDiv.style.backgroundColor = 'red';
       }
       newDiv.classList.add('room-item');
-      
+
       newDiv.addEventListener('click', () => {
         this.currentRoomId = roomId;
         this.messages = [];
@@ -272,7 +287,7 @@ export class ChatComponent {
           }
         });
       });
-      
+
       const allRoomName = document.querySelector('.all_room_name');
       if (allRoomName) {
         allRoomName.appendChild(newDiv);
@@ -284,7 +299,7 @@ export class ChatComponent {
   addRoom(roomId: string) {
       var roomName = "";
       var p: boolean = false;
-      
+
       this.chatService.IsPrivateRoom(roomId).subscribe((Response2: any) => {
       if (Response2) {
         p = true;
@@ -323,7 +338,7 @@ export class ChatComponent {
     }
     return false;
   }
-  
+
   private initConnection(roomID: string) {
 
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
@@ -436,7 +451,7 @@ export class ChatComponent {
     });
 
     this.removeAllUser();
-    
+
     const divChannelName = document.querySelector(".channel_name");
 
     if (divChannelName) {
@@ -690,7 +705,7 @@ export class ChatComponent {
                     content: this.messageContent,
                     createdAt: new Date()
                   } as MessageEvent;
-                  
+
                   this.chatService.sendMessage(message);
                   this.messageContent = '';
                 }
@@ -719,7 +734,7 @@ export class ChatComponent {
                 content: this.messageContent,
                 createdAt: new Date()
               } as MessageEvent;
-              
+
               this.chatService.sendMessage(message);
               this.messageContent = '';
             }
@@ -739,7 +754,7 @@ export class ChatComponent {
   this.chatService.checkBlock(this.myUserId, id).subscribe((reponse) => {
     if (reponse) {
       alert("You have been blocked by : " + username);
-    } else { 
+    } else {
       if (id != this.myUserId) {
         this.chatService.createPrivateRoom(id.toString(), "", id).subscribe((result2) => {
           if (result2) {
@@ -1021,11 +1036,10 @@ export class ChatComponent {
       });
     });
   }
-  
-  createPrivateGame(gameMode: number, hostname: number) {
-    console.log('priv');
+
+  createPrivateGame(gameMode: number, hostname: number, position: number) {
     let gameId = uuidv4();
-    this.gameService.createGame(gameId, gameMode, hostname, 1);
+    this.gameService.createGame(gameId, gameMode, hostname, position);
     /*If it is the first player joining this game, it keeps its gameId, otherwise, it changes the gameId to the other player's gameId*/
     this.gameService.getCreateGame().subscribe((newGameId: string) => {
       if (newGameId === "") {
@@ -1039,7 +1053,6 @@ export class ChatComponent {
       this.router.navigate(['/game', gameId]);
     });
   }
-}
 
   openDataBlock(nameId: number, name: string, users: Participant) {
 
@@ -1083,13 +1096,13 @@ export class ChatComponent {
         alert(name + " : he is no longer blocked !");
       } else if (response == 2) {
         alert(name + " : is not blocked !");
-      } 
+      }
     });
   }
 
   sendClassicGame(user: Participant) {
     if (user.userId != this.myUserId) {
-      
+
       this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
         if (reponse) {
           alert("You have been blocked by : " + user.username);
@@ -1098,7 +1111,7 @@ export class ChatComponent {
           alert("You have sent a private request for a classic game to " + user.username + "!");
         }
       });
-    
+
     } else {
       alert("You cannot send yourself a private request for a classic game.");
     }
@@ -1115,7 +1128,7 @@ export class ChatComponent {
           alert("You have sent a private request for a portal game to " + user.username + "!");
         }
       });
-    
+
     } else {
       alert("You cannot send yourself a private request for a portal game.");
     }

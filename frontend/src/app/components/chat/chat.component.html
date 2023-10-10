@@ -84,11 +84,11 @@
                                                 <mat-icon>person_add</mat-icon>
                                                 <span>Send Private Message</span>
                                               </button>
-                                            <button mat-menu-item (click)="createPrivateGame(0, myUserId)">
+                                            <button mat-menu-item (click)="sendClassicGame(user)">
                                                 <mat-icon>sports_esports</mat-icon>
                                                 <span>Classic Game</span>
                                               </button>
-                                            <button mat-menu-item (click)="createPrivateGame(1, myUserId)">
+                                            <button mat-menu-item (click)="sendPortalGame(user)">
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
@@ -169,7 +169,7 @@
                       </div>
 
                     <div class="content_msg" id="content_msg_id">
-  
+
                           <li class="message" *ngFor="let message of messages">
                             <div
                             *ngIf="
@@ -254,7 +254,7 @@
                               </div>
 
                             </ng-template>
-                            
+
                           </li>
 
                     </div>

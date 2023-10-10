@@ -44,6 +44,15 @@ export class GamesUtileService {
     }
     return null;
   }
+  removeUserFromWaitRoom(waitRoom: Array<UserWaiting>, user: UserWaiting)
+  {
+    for (let i = 0; i < waitRoom.length; ++i)
+    {
+      if (waitRoom[i] === user)
+        waitRoom.splice(i, 1);
+    }
+    return waitRoom;
+  }
   calculateRoomLengthWithoutPrivates(waitRoom: Array<UserWaiting>)
   {
     let len: number = 0;

@@ -8,6 +8,7 @@ body
 #navbar-container
 {
   position: relative;
+  top: 10px;
   background-color: white;
   border: solid 1px white;
   border-radius: 14px;
@@ -38,6 +39,7 @@ body
 #logout-container
 {
   position: absolute;
+  top: 10px;
   display: inline-block;
   background-color: white;
   border: solid 1px white;

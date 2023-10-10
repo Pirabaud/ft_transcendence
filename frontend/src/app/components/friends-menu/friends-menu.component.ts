@@ -55,7 +55,6 @@ export class FriendsMenuComponent {
   setIsOpened()
   {
     this.isOpened = !this.isOpened;
-    console.log(this.isOpened);
   }
   sendFriendRequest(keycode: KeyboardEvent)
   {
