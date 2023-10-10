@@ -91,14 +91,16 @@ export class ChatComponent {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-          const data = result.YesOrNo;
-          const otherUserId = room.otherUserID;
-
-          if (data == true) {
-            this.createPrivateGame(0, otherUserId, 1);
-            this.chatService.acceptPrivateGame("classic", otherUserId);
-          } else if (data == false) {
-            this.chatService.refusePrivateGame("classic", otherUserId);
+          if (result) {
+            const data = result.YesOrNo;
+            const otherUserId = room.otherUserID;
+            
+            if (data == true) {
+              this.createPrivateGame(0, otherUserId, 1);
+              this.chatService.acceptPrivateGame("classic", otherUserId);
+            } else if (data == false) {
+              this.chatService.refusePrivateGame("classic", otherUserId);
+            }
           }
         });
       }
@@ -110,14 +112,16 @@ export class ChatComponent {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-          const data = result.YesOrNo;
-          const otherUserId = room.otherUserID;
+          if (result) {
+            const data = result.YesOrNo;
+            const otherUserId = room.otherUserID;
 
-          if (data == true) {
-            this.createPrivateGame(1, otherUserId, 1);
-            this.chatService.acceptPrivateGame("portal", otherUserId);
-          } else if (data == false) {
-            this.chatService.refusePrivateGame("portal", otherUserId);
+            if (data == true) {
+              this.createPrivateGame(1, otherUserId, 1);
+              this.chatService.acceptPrivateGame("portal", otherUserId);
+            } else if (data == false) {
+              this.chatService.refusePrivateGame("portal", otherUserId);
+            }
           }
         });
       }
@@ -621,22 +625,24 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.name) {
-        const name = result.name;
-        const password = result.password;
-        this.chatService.joinRoom(name, password).subscribe((result2) => {
-          if (result2) {
-            this.addRoom(name);
+      if (result) {
+        if (result.name) {
+          const name = result.name;
+          const password = result.password;
+          this.chatService.joinRoom(name, password).subscribe((result2) => {
+            if (result2) {
+              this.addRoom(name);
 
-            this.getMyUser(this.myUserId).subscribe((result3) => {
-              if (result3) {
-                this.chatService.participate(name, result3);
-              }
-            });
-          }
-        });
-      } else {
-        alert("Channel can't be NULL");
+              this.getMyUser(this.myUserId).subscribe((result3) => {
+                if (result3) {
+                  this.chatService.participate(name, result3);
+                }
+              });
+            }
+          });
+        } else {
+          alert("Channel can't be NULL");
+        }
       }
     });
   }
@@ -647,21 +653,23 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.name) {
-        const name: string = result.name;
-        const password: string = result.password;
-        if (name.includes(" ") || name.includes("	") || password.includes(" ") || password.includes("	")) {
-          alert("The channel name and the password can't contain spaces or tabs");
-        } else {
-          this.chatService.createRoom(name, password).subscribe((response) => {
-            if (response) {
-              this.addRoom(name);
-            }
-          });
+      if (result) {
+        if (result.name) {
+          const name: string = result.name;
+          const password: string = result.password;
+          if (name.includes(" ") || name.includes("	") || password.includes(" ") || password.includes("	")) {
+            alert("The channel name and the password can't contain spaces or tabs");
+          } else {
+            this.chatService.createRoom(name, password).subscribe((response) => {
+              if (response) {
+                this.addRoom(name);
+              }
+            });
+          }
         }
+        else
+          alert("Channel can't be NULL");
       }
-      else
-        alert("Channel can't be NULL");
     });
   }
 
@@ -779,31 +787,33 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      const name = result.name;
+      if (result) {
+        const name = result.name;
 
-      this.chatService.getUserId(name).subscribe((response1: any) => {
-        if (response1) {
-          var UserId = response1.id;
-        }
-        if (UserId == this.myUserId) {
-          alert("impossible to remove the admin yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-          return ;
-        }
-        const nameId = UserId;
-        this.chatService.removeAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
-          if (response == 0) {
-            alert('Room not found');
-          } else if (response == 1) {
-            alert(name + " : is the channel owner !");
-          } else if (response == 2) {
-            alert(name + " : is not in the room !");
-          } else if (response == 3) {
-            alert(name + " : is not an admin !");
-          }else if (response == 4) {
-            alert(name + " : he is no longer an admin");
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            var UserId = response1.id;
           }
+          if (UserId == this.myUserId) {
+            alert("impossible to remove the admin yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            return ;
+          }
+          const nameId = UserId;
+          this.chatService.removeAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
+            if (response == 0) {
+              alert('Room not found');
+            } else if (response == 1) {
+              alert(name + " : is the channel owner !");
+            } else if (response == 2) {
+              alert(name + " : is not in the room !");
+            } else if (response == 3) {
+              alert(name + " : is not an admin !");
+            }else if (response == 4) {
+              alert(name + " : he is no longer an admin");
+            }
+          });
         });
-      });
+      }
     });
 
   }
@@ -814,32 +824,33 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const name = result.name;
 
-      const name = result.name;
-
-      this.chatService.getUserId(name).subscribe((response1: any) => {
-        if (response1) {
-          var UserId = response1.id;
-        }
-        if (UserId == this.myUserId) {
-          alert("You are already admin !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-          return ;
-        }
-        const nameId = UserId;
-        this.chatService.addAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
-          if (response == 0) {
-            alert('Room not found');
-          } else if (response == 1) {
-            alert(name + " : is already admin !");
-          } else if (response == 2) {
-            alert(name + " : is not in the room !");
-          } else if (response == 3) {
-            alert(name + " : is the channel owner !");
-          }else if (response == 4) {
-            alert(name + " : is admin !");
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            var UserId = response1.id;
           }
+          if (UserId == this.myUserId) {
+            alert("You are already admin !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            return ;
+          }
+          const nameId = UserId;
+          this.chatService.addAdmin(nameId, this.currentRoomId).subscribe((response: any) =>{
+            if (response == 0) {
+              alert('Room not found');
+            } else if (response == 1) {
+              alert(name + " : is already admin !");
+            } else if (response == 2) {
+              alert(name + " : is not in the room !");
+            } else if (response == 3) {
+              alert(name + " : is the channel owner !");
+            }else if (response == 4) {
+              alert(name + " : is admin !");
+            }
+          });
         });
-      });
+      }
     });
   }
 
@@ -849,49 +860,51 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      var oldPassword: string = result.oldPassword;
-      var newPassword: string = result.newPassword;
+      if (result) {
+        var oldPassword: string = result.oldPassword;
+        var newPassword: string = result.newPassword;
 
-      this.chatService.verifyPassword(this.currentRoomId, oldPassword).subscribe((reponse: any) => {
-        if (reponse) {
-          if (reponse.verify) {
-              if (newPassword == '\0') {
-                this.chatService.setPassword(this.currentRoomId, newPassword).subscribe((reponse1: any) => {
-                  if (reponse1) {
-                    alert("the channel is no longer protected by a password");
-                  } else {
-                    alert("Room not found");
-                  }
-                });
-              } else {
-                var message: string;
-                this.chatService.verifyPassword(this.currentRoomId, "").subscribe((reponse3: any) => {
-                  if (reponse3) {
-                    if (reponse3.verify) {
-                      message = "the channel changed its password";
+        this.chatService.verifyPassword(this.currentRoomId, oldPassword).subscribe((reponse: any) => {
+          if (reponse) {
+            if (reponse.verify) {
+                if (newPassword == '\0') {
+                  this.chatService.setPassword(this.currentRoomId, newPassword).subscribe((reponse1: any) => {
+                    if (reponse1) {
+                      alert("the channel is no longer protected by a password");
+                    } else {
+                      alert("Room not found");
                     }
-                    else {
-                      message = "the channel is protected by a password";
+                  });
+                } else {
+                  var message: string;
+                  this.chatService.verifyPassword(this.currentRoomId, "").subscribe((reponse3: any) => {
+                    if (reponse3) {
+                      if (reponse3.verify) {
+                        message = "the channel changed its password";
+                      }
+                      else {
+                        message = "the channel is protected by a password";
+                      }
+                    } else {
+                      alert("Room not found");
                     }
-                  } else {
-                    alert("Room not found");
-                  }
-                });
-                this.chatService.setPassword(this.currentRoomId, newPassword).subscribe((reponse2: any) => {
-                  if (reponse2) {
-                    alert(message);
-                  } else {
-                    alert("Room not found");
-                  }
-                });
-              }
+                  });
+                  this.chatService.setPassword(this.currentRoomId, newPassword).subscribe((reponse2: any) => {
+                    if (reponse2) {
+                      alert(message);
+                    } else {
+                      alert("Room not found");
+                    }
+                  });
+                }
+            } else {
+              alert(oldPassword + " : does not match the current password !");
+            }
           } else {
-            alert(oldPassword + " : does not match the current password !");
+            alert("Room not found");
           }
-        } else {
-          alert("Room not found");
-        }
-      });
+        });
+      }
     });
   }
 
@@ -901,36 +914,38 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      const name = result.name;
+      if (result) {
+        const name = result.name;
 
-      this.chatService.getUserId(name).subscribe((response1: any) => {
-        if (response1) {
-          var UserId = response1.id;
-        }
-        if (UserId == this.myUserId) {
-          alert("impossible to ban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-          return ;
-        }
-        const nameId = UserId;
-        this.chatService.banUser(nameId, this.currentRoomId).subscribe((response: any) =>{
-          if (response == 0) {
-            alert('Room not found');
-          } else if (response == 1) {
-            alert(name + " : is already ban !");
-          } else if (response == 2) {
-            alert(name + " : is not in the room !");
-          } else if (response == 3) {
-            alert(name + " : is the channel owner !");
-          }else if (response == 4) {
-            this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
-              if (response2) {
-                this.chatService.kick(this.currentRoomId, UserId);
-                alert(name + " : is ban !");
-              }
-            });
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            var UserId = response1.id;
           }
+          if (UserId == this.myUserId) {
+            alert("impossible to ban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            return ;
+          }
+          const nameId = UserId;
+          this.chatService.banUser(nameId, this.currentRoomId).subscribe((response: any) =>{
+            if (response == 0) {
+              alert('Room not found');
+            } else if (response == 1) {
+              alert(name + " : is already ban !");
+            } else if (response == 2) {
+              alert(name + " : is not in the room !");
+            } else if (response == 3) {
+              alert(name + " : is the channel owner !");
+            }else if (response == 4) {
+              this.chatService.kickRoom(this.currentRoomId, UserId).subscribe((response2: any) => {
+                if (response2) {
+                  this.chatService.kick(this.currentRoomId, UserId);
+                  alert(name + " : is ban !");
+                }
+              });
+            }
+          });
         });
-      });
+      }
     });
   }
 
@@ -940,31 +955,33 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      const name = result.name;
+      if (result) {
+        const name = result.name;
 
-      this.chatService.getUserId(name).subscribe((response1: any) => {
-        if (response1) {
-          var UserId = response1.id;
-        }
-        if (UserId == this.myUserId) {
-          alert("impossible to unban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-          return ;
-        }
-        const nameId = UserId;
-        this.chatService.unBanUser(nameId, this.currentRoomId).subscribe((response: any) =>{
-          if (response == 0) {
-            alert('Room not found');
-          } else if (response == 1) {
-            alert(name + " : is the channel owner !");
-          } else if (response == 2) {
-            alert(name + " : is not in the room !");
-          } else if (response == 3) {
-            alert(name + " : is not ban !");
-          }else if (response == 4) {
-            alert(name + " : he is no longer banned !");
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            var UserId = response1.id;
           }
+          if (UserId == this.myUserId) {
+            alert("impossible to unban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            return ;
+          }
+          const nameId = UserId;
+          this.chatService.unBanUser(nameId, this.currentRoomId).subscribe((response: any) =>{
+            if (response == 0) {
+              alert('Room not found');
+            } else if (response == 1) {
+              alert(name + " : is the channel owner !");
+            } else if (response == 2) {
+              alert(name + " : is not in the room !");
+            } else if (response == 3) {
+              alert(name + " : is not ban !");
+            }else if (response == 4) {
+              alert(name + " : he is no longer banned !");
+            }
+          });
         });
-      });
+      }
     });
   }
 
@@ -974,31 +991,33 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      const name = result.name;
+      if (result) {
+        const name = result.name;
 
-      this.chatService.getUserId(name).subscribe((response1: any) => {
-        if (response1) {
-          var UserId = response1.id;
-        }
-        if (UserId == this.myUserId) {
-          alert("impossible to ban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-          return ;
-        }
-        const nameId = UserId;
-        this.chatService.muteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
-          if (response == 0) {
-            alert('Room not found');
-          } else if (response == 1) {
-            alert(name + " : is already mute !");
-          } else if (response == 2) {
-            alert(name + " : is not in the room !");
-          } else if (response == 3) {
-            alert(name + " : is the channel owner !");
-          }else if (response == 4) {
-            alert(name + " : is mute !");
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            var UserId = response1.id;
           }
+          if (UserId == this.myUserId) {
+            alert("impossible to ban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            return ;
+          }
+          const nameId = UserId;
+          this.chatService.muteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
+            if (response == 0) {
+              alert('Room not found');
+            } else if (response == 1) {
+              alert(name + " : is already mute !");
+            } else if (response == 2) {
+              alert(name + " : is not in the room !");
+            } else if (response == 3) {
+              alert(name + " : is the channel owner !");
+            }else if (response == 4) {
+              alert(name + " : is mute !");
+            }
+          });
         });
-      });
+      }
     });
   }
 
@@ -1009,31 +1028,33 @@ export class ChatComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      const name = result.name;
-
-      this.chatService.getUserId(name).subscribe((response1: any) => {
-        if (response1) {
-          var UserId = response1.id;
-        }
-        if (UserId == this.myUserId) {
-          alert("impossible to unban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-          return ;
-        }
-        const nameId = UserId;
-        this.chatService.unMuteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
-          if (response == 0) {
-            alert('Room not found');
-          } else if (response == 1) {
-            alert(name + " : is the channel owner !");
-          } else if (response == 2) {
-            alert(name + " : is not in the room !");
-          } else if (response == 3) {
-            alert(name + " : is not mute !");
-          }else if (response == 4) {
-            alert(name + " : is no longer muted !");
+      if (result) {
+        const name = result.name;
+        
+        this.chatService.getUserId(name).subscribe((response1: any) => {
+          if (response1) {
+            var UserId = response1.id;
           }
+          if (UserId == this.myUserId) {
+            alert("impossible to unban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            return ;
+          }
+          const nameId = UserId;
+          this.chatService.unMuteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
+            if (response == 0) {
+              alert('Room not found');
+            } else if (response == 1) {
+              alert(name + " : is the channel owner !");
+            } else if (response == 2) {
+              alert(name + " : is not in the room !");
+            } else if (response == 3) {
+              alert(name + " : is not mute !");
+            }else if (response == 4) {
+              alert(name + " : is no longer muted !");
+            }
+          });
         });
-      });
+      }
     });
   }
 

@@ -70,29 +70,31 @@ export class ChatLobbyComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.name) {
-        const name = result.name;
-        const password = result.password;
-        
-        this.chatService.joinRoom(name, password).subscribe(result2 => {
-          if (result2) {
+      if (result) {
+        if (result.name) {
+          const name = result.name;
+          const password = result.password;
+          
+          this.chatService.joinRoom(name, password).subscribe(result2 => {
+            if (result2) {
 
-            this.httpService.getUserId().subscribe((response: any) => {
-              if (response) {
-                const myUserId = response.UserId;
-                
-                this.getMyUser(myUserId).subscribe((result3) => {
-                  if (result3) {
-                    this.chatService.participate(name, result3);
-                    this.router.navigate(['/chat']);
-                  }
-                });
-              }
-            });
-          } else {
-            console.error("Error while joining the room");
-          }
-        });
+              this.httpService.getUserId().subscribe((response: any) => {
+                if (response) {
+                  const myUserId = response.UserId;
+                  
+                  this.getMyUser(myUserId).subscribe((result3) => {
+                    if (result3) {
+                      this.chatService.participate(name, result3);
+                      this.router.navigate(['/chat']);
+                    }
+                  });
+                }
+              });
+            } else {
+              console.error("Error while joining the room");
+            }
+          });
+        }
       }
     });
   }
@@ -104,20 +106,22 @@ export class ChatLobbyComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result.name) {
-        const name = result.name;
-        const password = result.password;
-        this.chatService.createRoom(name, password).subscribe(result2 => {
-          if (result2) {
-            this.router.navigate(['/chat']);
-          } else {
-            console.error("Error while creating the room");
-          }
-        });
-       
+      if (result) {
+        if (result.name) {
+          const name = result.name;
+          const password = result.password;
+          this.chatService.createRoom(name, password).subscribe(result2 => {
+            if (result2) {
+              this.router.navigate(['/chat']);
+            } else {
+              console.error("Error while creating the room");
+            }
+          });
+        
+        }
+        else
+          alert("Channel can't be NULL");
       }
-      else
-        alert("Channel can't be NULL");
     });
   }
 }
