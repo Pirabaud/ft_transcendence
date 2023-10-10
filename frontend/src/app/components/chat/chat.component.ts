@@ -87,7 +87,7 @@ export class ChatComponent {
     this.chatService.receiveEvent(`receive-private-classic-game`).subscribe((room: any) => {
       if (room.userID == this.myUserId) {
         const dialogRef = this.dialog.open(ClassicGameComponent, {
-          width: '250px',
+          width: '400px',
         });
 
         dialogRef.afterClosed().subscribe((result) => {
@@ -108,7 +108,7 @@ export class ChatComponent {
     this.chatService.receiveEvent(`receive-private-portal-game`).subscribe((room: any) => {
       if (room.userID == this.myUserId) {
         const dialogRef = this.dialog.open(PortalGameComponent, {
-          width: '250px',
+          width: '400px',
         });
 
         dialogRef.afterClosed().subscribe((result) => {

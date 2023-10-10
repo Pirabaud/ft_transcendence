@@ -1,0 +1,43 @@
+.center {
+    justify-content: center;
+    text-align: center;
+}
+
+.accept {
+    width: 120px;
+    background-color: #27A64BFF;
+    border: solid 1px #27A64BFF;
+    margin-right: 5px;
+    font: 18px 'Oswald', sans-serif;
+    padding: 2px;
+    margin: 2px;
+    border-radius: 2px;
+    box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
+    color: white;
+
+}
+.refuse {
+    width: 120px;
+    background-color: red;
+    border: solid 1px red;
+    margin-left: 5px;
+    font: 18px 'Oswald', sans-serif;
+    padding: 2px;
+    margin: 2px;
+    border-radius: 2px;
+    box-shadow: 0 4px 8px 0 #00000016, 0 6px 15px 0 #00000016;
+    color: white;
+
+}
+
+.accept:hover
+{
+  background-color: #27A64BFF;
+  border: solid 3px #27A64BFF;
+}
+
+.refuse:hover
+{
+  background-color: red;
+  border: solid 3px red;
+}
