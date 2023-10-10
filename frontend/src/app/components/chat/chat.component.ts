@@ -16,6 +16,7 @@ import {Observable, of} from 'rxjs';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 import { UnbanComponent } from './room_service/unban/unban.component';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-chat',
@@ -32,9 +33,12 @@ export class ChatComponent {
   public boutonsAdminVisible: any = false;
   public messageContent = '';
 
-  constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private router: Router) {}
+  constructor(private dialog: MatDialog, private chatService: ChatService, private httpService: HttpService, private jwtHelper: JwtHelperService, private router: Router) {}
 
   ngOnInit() {
+	if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+    	this.router.navigate(['/login']);
+
     var ok: boolean;
 
     this.httpService.getUserId().subscribe((response: any) => {
@@ -645,6 +649,9 @@ export class ChatComponent {
  sendMessage(): void {
   if (this.messageContent.trim().length === 0) {
     return;
+  }
+  if (this.currentRoomId == "") {
+	return;
   }
 
   this.chatService.IsPrivateRoom(this.currentRoomId).subscribe((Response2: any) => {
