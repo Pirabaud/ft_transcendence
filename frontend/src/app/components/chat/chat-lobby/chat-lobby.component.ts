@@ -18,8 +18,10 @@ export class ChatLobbyComponent {
   constructor(private chatService: ChatService, private httpService: HttpService, private dialog: MatDialog, private jwtHelper: JwtHelperService, private router: Router) {}
 
   ngOnInit() {
-	if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-    	this.router.navigate(['/login']);
+	if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt'))) {
+    this.httpService.updateUserStatus('offline');
+    this.router.navigate(['/login']);
+  }
   }
 
   getMyUser(userID: number): Observable<Participant> {

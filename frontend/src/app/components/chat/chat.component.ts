@@ -12,7 +12,7 @@ import { CreateRoomComponent } from "./room_service/create-room/create-room.comp
 import { JoinRoomComponent } from "./room_service/join-room/join-room.component";
 import { Router } from '@angular/router';
 import { HttpService } from '../../http.service';
-import {Observable, of} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import { AddAdminComponent } from './room_service/add-admin/add-admin.component';
 import { RemoveAdminComponent } from './room_service/remove-admin/remove-admin.component';
 import { UnbanComponent } from './room_service/unban/unban.component';
@@ -27,13 +27,19 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class ChatComponent {
 
-  public myUserId: number = 0;
-  public users: Participant[] = [];
-  public messages: MessageEvent[] = [];
-  public currentRoomId: string = "";
-  public settingsVisible = false;
-  public boutonsAdminVisible: any = false;
-  public messageContent = '';
+  myUserId: number = 0;
+  users: Participant[] = [];
+  messages: MessageEvent[] = [];
+  currentRoomId: string = "";
+  settingsVisible = false;
+  boutonsAdminVisible: any = false;
+  messageContent = '';
+  ReceivePrivateClassicGameSubscription: Subscription;
+  ReceivePrivatePortalGameSubscription: Subscription;
+  ReceiveRefusePrivateGameSubscription: Subscription;
+  ReceiveAcceptPrivateGameSubscription: Subscription;
+  ReceiveKickSubscription: Subscription;
+  ReceivePrivateMessageSubscription: Subscription;
 
   constructor(private dialog: MatDialog,
               private chatService: ChatService,
@@ -43,8 +49,10 @@ export class ChatComponent {
               private gameService: GameService) {}
 
   ngOnInit() {
-	if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-    	this.router.navigate(['/login']);
+	if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt'))) {
+    this.httpService.updateUserStatus('offline');
+    this.router.navigate(['/login']);
+  }
 
     var ok: boolean;
 
@@ -78,75 +86,109 @@ export class ChatComponent {
     });
   }
 
+  ngOnDestroy() {
+    if (this.ReceivePrivateClassicGameSubscription) {
+      this.ReceivePrivateClassicGameSubscription.unsubscribe();
+    }
+    if (this.ReceivePrivatePortalGameSubscription) {
+      this.ReceivePrivatePortalGameSubscription.unsubscribe();
+    }
+    if (this.ReceiveRefusePrivateGameSubscription) {
+      this.ReceiveRefusePrivateGameSubscription.unsubscribe();
+    }
+    if (this.ReceiveAcceptPrivateGameSubscription) {
+      this.ReceiveAcceptPrivateGameSubscription.unsubscribe();
+    }
+    if (this.ReceiveKickSubscription) {
+      this.ReceiveKickSubscription.unsubscribe();
+    }
+    if (this.ReceivePrivateMessageSubscription) {
+      this.ReceivePrivateMessageSubscription.unsubscribe();
+    }
+  }
+
   private initConnection2() {
-    this.chatService.receiveEvent(`receive-private-message`).subscribe((room: any) => {
-      if (room.userID == this.myUserId) {
-        this.addRoom(room.roomID);
-      }
-    });
-    this.chatService.receiveEvent(`receive-private-classic-game`).subscribe((room: any) => {
-      if (room.userID == this.myUserId) {
-        const dialogRef = this.dialog.open(ClassicGameComponent, {
-          width: '400px',
-        });
+    this.ReceivePrivateMessageSubscription = this.chatService.receiveEvent(`receive-private-message`).subscribe((room: any) => this.ReceivePrivateMessage(room));
 
-        dialogRef.afterClosed().subscribe((result) => {
-          if (result) {
-            const data = result.YesOrNo;
-            const otherUserId = room.otherUserID;
-            
-            if (data == true) {
-              this.createPrivateGame(0, otherUserId, 1);
-              this.chatService.acceptPrivateGame("classic", otherUserId);
-            } else if (data == false) {
-              this.chatService.refusePrivateGame("classic", otherUserId);
-            }
+    this.ReceivePrivateClassicGameSubscription = this.chatService.receiveEvent(`receive-private-classic-game`).subscribe((room: any) => this.ReceivePrivateClassicGame(room));
+
+    this.ReceivePrivatePortalGameSubscription = this.chatService.receiveEvent(`receive-private-portal-game`).subscribe((room: any) => this.ReceivePrivatePortalGame(room));
+
+    this.ReceiveRefusePrivateGameSubscription = this.chatService.receiveEvent(`receive-refuse-private-game`).subscribe((room: any) => this.ReceiveRefusePrivateGame(room));
+
+    this.ReceiveAcceptPrivateGameSubscription = this.chatService.receiveEvent(`receive-accept-private-game`).subscribe((room: any) => this.ReceiveAcceptPrivateGame(room));
+
+    this.ReceiveKickSubscription = this.chatService.receiveEvent(`receive-kick`).subscribe((room: any) => this.receiveKick(room.roomID, room.userID));
+  }
+
+  ReceivePrivateMessage(room: any) {
+    if (room.userID == this.myUserId) {
+      this.addRoom(room.roomID);
+    }
+  }
+
+  ReceivePrivateClassicGame(room: any) {
+    if (room.userID == this.myUserId) {
+      const dialogRef = this.dialog.open(ClassicGameComponent, {
+        width: '400px',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          const data = result.YesOrNo;
+          const otherUserId = room.otherUserID;
+          
+          if (data == true) {
+            this.createPrivateGame(0, otherUserId, 1);
+            this.chatService.acceptPrivateGame("classic", otherUserId);
+          } else if (data == false) {
+            this.chatService.refusePrivateGame("classic", otherUserId);
           }
-        });
-      }
-    });
-    this.chatService.receiveEvent(`receive-private-portal-game`).subscribe((room: any) => {
-      if (room.userID == this.myUserId) {
-        const dialogRef = this.dialog.open(PortalGameComponent, {
-          width: '400px',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-          if (result) {
-            const data = result.YesOrNo;
-            const otherUserId = room.otherUserID;
-
-            if (data == true) {
-              this.createPrivateGame(1, otherUserId, 1);
-              this.chatService.acceptPrivateGame("portal", otherUserId);
-            } else if (data == false) {
-              this.chatService.refusePrivateGame("portal", otherUserId);
-            }
-          }
-        });
-      }
-    });
-    this.chatService.receiveEvent(`receive-refuse-private-game`).subscribe((room: any) => {
-      if (room.userID == this.myUserId) {
-        alert("Your private request for a " + room.type + " game has been declined");
-      }
-    });
-    this.chatService.receiveEvent(`receive-accept-private-game`).subscribe((room: any) => {
-      if (room.userID == this.myUserId) {
-        if (room.type == "classic") {
-          setTimeout(() => {
-            this.createPrivateGame(0, this.myUserId, 2);
-          }, 100);
-        } else if (room.type == "portal") {
-          setTimeout(() => {
-            this.createPrivateGame(1, this.myUserId, 2);
-          }, 100);
         }
+      });
+    }
+  }
+
+  ReceivePrivatePortalGame(room: any) {
+    if (room.userID == this.myUserId) {
+      const dialogRef = this.dialog.open(PortalGameComponent, {
+        width: '400px',
+      });
+      
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          const data = result.YesOrNo;
+          const otherUserId = room.otherUserID;
+          
+          if (data == true) {
+            this.createPrivateGame(1, otherUserId, 1);
+            this.chatService.acceptPrivateGame("portal", otherUserId);
+          } else if (data == false) {
+            this.chatService.refusePrivateGame("portal", otherUserId);
+          }
+        }
+      });
+    }
+  }
+
+  ReceiveRefusePrivateGame(room: any) {
+    if (room.userID == this.myUserId) {
+      alert("Your private request for a " + room.type + " game has been declined");
+    }
+  }
+
+  ReceiveAcceptPrivateGame(room: any) {
+    if (room.userID == this.myUserId) {
+      if (room.type == "classic") {
+        setTimeout(() => {
+          this.createPrivateGame(0, this.myUserId, 2);
+        }, 100);
+      } else if (room.type == "portal") {
+        setTimeout(() => {
+          this.createPrivateGame(1, this.myUserId, 2);
+        }, 100);
       }
-    });
-    this.chatService.receiveEvent(`receive-kick`).subscribe((room: any) => {
-      this.receiveKick(room.roomID, room.userID);
-    });
+    }
   }
 
   receiveKick(roomID: string, userId: number) {
