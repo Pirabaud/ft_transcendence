@@ -14,6 +14,7 @@ export class FriendsMenuComponent {
   nbRequests: number = 0;
   allFriends: FriendObject[] = [];
   allRequests: string[] = [];
+  isOpened: boolean = false;
   @ViewChild('friendsMenuButton') friendsMenuButtonElement: ElementRef;
   @ViewChild('drawer') drawerElement: ElementRef;
   @ViewChild('noRequests') noRequestsElement: ElementRef;
@@ -30,8 +31,10 @@ export class FriendsMenuComponent {
 
   ngOnInit()
   {
-    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-          this.router.navigate(['/login']);
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt'))) {
+      this.httpBackend.updateUserStatus('offline');
+      this.router.navigate(['/login']);
+    }
     this.activatedRoute.url.subscribe(
       (url: UrlSegment[]) =>
       {
@@ -48,6 +51,11 @@ export class FriendsMenuComponent {
           clearInterval(interval);
       }
     )
+  }
+  setIsOpened()
+  {
+    this.isOpened = !this.isOpened;
+    console.log(this.isOpened);
   }
   sendFriendRequest(keycode: KeyboardEvent)
   {

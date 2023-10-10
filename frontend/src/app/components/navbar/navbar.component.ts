@@ -15,10 +15,10 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class NavbarComponent {
   private joinGameSubscription: Subscription;
-  constructor(private router: Router, 
-    private activatedRoute: ActivatedRoute, 
-    private httpBackend: HttpService, 
-    private appService: AppComponent, 
+  constructor(private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private httpBackend: HttpService,
+    private appService: AppComponent,
     private gameService: GameService,
     private jwtHelper: JwtHelperService,
     private chatService: ChatService,) {
@@ -31,10 +31,10 @@ export class NavbarComponent {
       (url: UrlSegment[]) => {
         if (url[0].path !== 'login'){
           this.httpBackend.getCurrentGameId().subscribe(
-          (currentGameId: string ) => {
+          (currentGameId: { currentGameId: string }) => {
           this.joinGameSubscription = this.gameService.getJoinGame().subscribe(() => {
           this.gameService.setSimulateRecJoinedPlayers(true);
-          this.router.navigate(['/game', currentGameId]);
+          this.router.navigate(['/game', currentGameId.currentGameId]);
             });
           });
        }
@@ -43,8 +43,10 @@ export class NavbarComponent {
   }
   ngOnInit()
   {
-    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
-          this.router.navigate(['/login']);
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt'))) {
+      this.httpBackend.updateUserStatus('offline');
+      this.router.navigate(['/login']);
+    }
 
     this.activatedRoute.url.subscribe(
         (url: any) =>
@@ -66,8 +68,8 @@ export class NavbarComponent {
               setTimeout(() => {
                 if (gameStatus === true) {
                   this.httpBackend.getCurrentGameId().subscribe(
-                    (currentGameId: string ) => {
-                      this.gameService.cancelGame(currentGameId);
+                    (currentGameId: { currentGameId: string }) => {
+                      this.gameService.cancelGame(currentGameId.currentGameId);
                       this.httpBackend.setGameStatus(false).subscribe(() => {});
                     });
                 }
@@ -137,11 +139,11 @@ export class NavbarComponent {
 
   navToLobby() {
     this.httpBackend.getCurrentGameId().subscribe(
-      (currentGameId: string) => {
-      if (currentGameId === null)
+      (currentGameId: { currentGameId: string }) => {
+      if (currentGameId.currentGameId === null || currentGameId.currentGameId === '')
           this.router.navigate(['/lobby']);
-        else
-          this.router.navigate(['/game', currentGameId]);
+      else
+        this.router.navigate(['/game', currentGameId.currentGameId]);
       }
     )
   }
@@ -155,14 +157,14 @@ export class NavbarComponent {
       {
         setTimeout(() => {
             this.httpBackend.getCurrentGameId().subscribe(
-              ( currentGameId: string ) => {
+              ( currentGameId: { currentGameId: string }) => {
                 if (gameStatus === true){
-                  this.gameService.cancelGame(currentGameId);
+                  this.gameService.cancelGame(currentGameId.currentGameId);
                   this.httpBackend.setGameStatus(false).subscribe(() => {});
                   this.httpBackend.setCurrentGameId("").subscribe(() => {});
                 }
                 else {
-                  this.gameService.cancelMatchmaking(this.gameService.getGameMode(), currentGameId);
+                  this.gameService.cancelMatchmaking(this.gameService.getGameMode(), currentGameId.currentGameId);
                   this.gameService.setSimulateRecJoinedPlayers(false);
                   this.gameService.setJoinedViaMatchmaking(false);
                   this.httpBackend.setCurrentGameId('').subscribe(() => {});

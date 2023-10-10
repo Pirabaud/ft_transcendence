@@ -20,7 +20,7 @@
                 <div id="row_room_user">
 
                     <div id="column_room">
-                        
+
                         <div id="row_room_name_bnt">
 
                             <div class="all_room_name">
@@ -32,21 +32,21 @@
                               </div>
 
                             </div>
-    
-    
+
+
                             <div class="bnt_create_join">
-    
+
                                 <div class="bnt_create">
                                     <button class="button" id="buttonPortalGame" (click)="openDataCreateRoom()">Create Room</button>
                                 </div>
                                 <div class="bnt_join">
                                     <button class="button" id="buttonNormalGame" (click)="openDataJoinRoom()">Join Room</button>
                                 </div>
-        
+
                             </div>
 
                         </div>
- 
+
                     </div>
 
                     <div id="column_user">
@@ -68,7 +68,7 @@
                                     </div>
 
                                 </div>
-                                
+
                                 <div class="sidebar_user">
                                     <div class="triple_bnt">
 
@@ -84,11 +84,11 @@
                                                 <mat-icon>person_add</mat-icon>
                                                 <span>Send Private Message</span>
                                               </button>
-                                            <button mat-menu-item (click)="sendClassicGame(user)" *ngIf="user.boutonVisible.classicGame">
+                                            <button mat-menu-item (click)="createPrivateGame(0, myUserId)">
                                                 <mat-icon>sports_esports</mat-icon>
                                                 <span>Classic Game</span>
                                               </button>
-                                            <button mat-menu-item (click)="sendPortalGame(user)" *ngIf="user.boutonVisible.portalGame">
+                                            <button mat-menu-item (click)="createPrivateGame(1, myUserId)">
                                                 <mat-icon>gamepad</mat-icon>
                                                 <span>Portal Game</span>
                                               </button>
@@ -103,7 +103,7 @@
                                           </mat-menu>
                                     </div>
                                   </div>
-                            
+
                         </div>
                     </div>
 
@@ -116,13 +116,13 @@
             <div id="column_chat">
 
                     <div class="top_bar_msg">
- 
+
                         <div class="channel_name">
-                             <p></p> 
-                        </div> 
+                             <p></p>
+                        </div>
 
                         <div class="settings" *ngIf="settingsVisible">
-            
+
                             <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                                 <mat-icon>settings</mat-icon>
                             </button>
@@ -178,32 +178,32 @@
                             else incoming_msg
                             "
                             ></div>
-                            
+
                             <ng-template #incoming_msg>
-                              
+
                               <div class="right_incoming_msg">
-                                
-                                
-                                
-                                
+
+
+
+
                                 <div class="incoming_msg">
-                                  
+
                                   <div class="column_received_msg">
-                                    
+
                                     <div class="user_received_msg">
                                       <p><b>{{message.user.username}}</b></p>
                                     </div>
-                                    
+
                                   </div>
-                                  
+
                                   <div class="right_incoming_msg">
-                                    
+
                                     <div class="incoming_msg_img">
                                       <img class="img_incoming_msg_img" src="{{(message.user).avatar}}" alt="User avatar"/>
                                     </div>
-                                    
+
                                   </div>
-                                  
+
                                 </div>
                               </div>
                               <div class="right_incoming_msg">
@@ -213,7 +213,7 @@
                                   </div>
                                 </div>
                               </div>
-                                
+
 
                             </ng-template>
 
@@ -228,7 +228,7 @@
                             <ng-template #outgoing_msg>
 
                               <div class="outgoing_msg">
-                                
+
                                 <div class="left_outgoing_msg">
 
                                   <div class="outgoing_msg_img">
@@ -278,7 +278,7 @@
                       </div>
 
                 </div>
-                  
+
             </div>
 
     </div>

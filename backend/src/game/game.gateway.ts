@@ -37,7 +37,7 @@ export class GameGateway {
     );
   }
   @SubscribeMessage('createGame')
-  async handleCreateGame(socket: Socket, gameData: { gameId: string, gameMode: number }) {
+  async handleCreateGame(socket: Socket, gameData: { gameId: string, gameMode: number, hostname: number, position: number}) {
     const decodedToken = await this.authService.verifyJwt(
       socket.handshake.headers.authorization);
     const user = await this.userService.findById(decodedToken.sub);
@@ -45,6 +45,8 @@ export class GameGateway {
       socket: socket,
       gameId: gameData.gameId,
       user: user,
+      hostname: gameData.hostname,
+      position: gameData.position,
     };
     socket.emit(
       'recCreateGame',

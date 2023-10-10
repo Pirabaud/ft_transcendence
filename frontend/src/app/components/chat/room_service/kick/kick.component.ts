@@ -12,11 +12,10 @@ export class KickComponent {
   constructor(private dialogRef: MatDialogRef<KickComponent>) {}
 
   closeDialog() {
-    this.dialogRef.close(); //return rien au dialog opener
+    this.dialogRef.close();
   }
 
   saveData() {
-    // Ici ta logique pour sauvegarder la data, creer la room
-    this.dialogRef.close(this.data); //return this.data au dialog opener
+    this.dialogRef.close(this.data);
   }
 }

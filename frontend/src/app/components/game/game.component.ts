@@ -149,9 +149,9 @@ export class GameComponent implements AfterViewInit {
     this.resumeGameSubscription = this.gameService.getResumeGame().subscribe(() => this.receiveResumeGame());
     this.backLobbySubscription =   this.gameService.getBackLobby().subscribe(() => this.router.navigate(["/lobby"]));
     this.httpBackEnd.getCurrentGameId().subscribe(
-      (currentGameId: string) =>
+      (currentGameId: { currentGameId: string }) =>
     {
-      if (!this.gameService.getJoinedViaMatchmaking() || (currentGameId !== '' && currentGameId !== this.gameId))
+      if (!this.gameService.getJoinedViaMatchmaking() || ((currentGameId.currentGameId !== '' && currentGameId.currentGameId !== null) && currentGameId.currentGameId !== this.gameId))
       {
         this.httpBackEnd.updateUserStatus('offline').subscribe(() => {});
         this.router.navigate(["/login"]);

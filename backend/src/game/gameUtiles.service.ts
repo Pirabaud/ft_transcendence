@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GameId } from './interfaces/game.interface';
+import {UserWaiting} from "./interfaces/userWaiting.interface";
 
 @Injectable()
 export class GamesUtileService {
@@ -33,5 +34,24 @@ export class GamesUtileService {
       }
       return -1;
     }
+  }
+  findUserByHostname(waitRoom: Array<UserWaiting>, hostname: number)
+  {
+    for (let i = 0; i < waitRoom.length; ++i)
+    {
+      if (waitRoom[i].hostname === hostname)
+        return waitRoom[i];
+    }
+    return null;
+  }
+  calculateRoomLengthWithoutPrivates(waitRoom: Array<UserWaiting>)
+  {
+    let len: number = 0;
+    for (let i = 0; i < waitRoom.length; ++i)
+    {
+      if (waitRoom[i].hostname === -1)
+        ++len;
+    }
+    return len;
   }
 }

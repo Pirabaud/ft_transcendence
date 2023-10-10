@@ -290,7 +290,7 @@ async updateUserStatus(id: number, status: string) {
     if (!user) {
       return null;
     }
-    return user.currentGameId;
+    return { currentGameId: user.currentGameId };
   }
   async setCurrentGameId(gameId: string, id: number) {
     const user = await this.findById(id);

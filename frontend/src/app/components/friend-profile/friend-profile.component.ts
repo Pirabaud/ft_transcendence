@@ -30,8 +30,10 @@ export class FriendProfileComponent {
   }
   ngOnInit()
   {
-    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt')))
+    if (this.jwtHelper.isTokenExpired(localStorage.getItem('jwt'))) {
+      this.httpBackend.updateUserStatus('offline');
       this.router.navigate(['/login']);
+    }
     this.userId = this.route.snapshot.paramMap.get('id')!;
     this.httpBackend.checkIdExists(this.userId).subscribe(
       (response: boolean) =>
