@@ -339,7 +339,7 @@ export class GameComponent implements AfterViewInit {
     this.p1ScoreElement.nativeElement.innerHTML = "0";
     this.p2ScoreElement.nativeElement.innerHTML = "0";
 
-    this.p1VictoryMessageElement.nativeElement.innerHTML = player + 'wins';
+    this.p1VictoryMessageElement.nativeElement.innerHTML = player + ' wins !';
     this.overlayElement.nativeElement.style.visibility = "visible";
     this.p1VictoryMessageElement.nativeElement.style.visibility = "visible";
     setTimeout(() => {

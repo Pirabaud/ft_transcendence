@@ -170,6 +170,8 @@ export class GameService {
         else
           res = this.gameUtile.findUserByHostname(this.waitRoomPortal, userWaiting.hostname);
       }
+      if (!res)
+        return ("");
       this.addNewClient(userWaiting.socket, res.gameId);
       if (gameMode === 0) {
         this.runningGames.push(
@@ -182,8 +184,6 @@ export class GameService {
         );
         this.waitRoomPortal = this.gameUtile.removeUserFromWaitRoom(this.waitRoomPortal, res);
       }
-      if (!res)
-        return ("");
       return res.gameId;
     }
   }

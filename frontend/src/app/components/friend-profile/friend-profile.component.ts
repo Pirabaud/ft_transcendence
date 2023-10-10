@@ -1,4 +1,3 @@
-
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpService} from "../../http.service";
@@ -71,15 +70,15 @@ export class FriendProfileComponent {
             (profile: any) => {
               if(this.statsWinElement)
               {
-                this.statsWinElement.nativeElement.innerHTML = profile.win;
+                this.statsWinElement.nativeElement.innerHTML = profile.win + 'W';
               }
               if(this.statsLoseElement)
               {
-                this.statsLoseElement.nativeElement.innerHTML = profile.lose;
+                this.statsLoseElement.nativeElement.innerHTML = profile.lose + 'L';
               }
               if(this.statsEloElement)
               {
-                this.statsEloElement.nativeElement.innerHTML = profile.elo;
+                this.statsEloElement.nativeElement.innerHTML = profile.elo + ' pts';
               }
               if (this.usernameElement) {
                 this.usernameElement.nativeElement.innerHTML = profile.username;
