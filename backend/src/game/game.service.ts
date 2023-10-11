@@ -149,7 +149,7 @@ export class GameService {
           server.in(userWaiting.gameId).emit('recJoinGame');
           clearInterval(gameReadyCheck);
         }
-      }, 100);
+      }, 1);
       return '0';
     }
     else {

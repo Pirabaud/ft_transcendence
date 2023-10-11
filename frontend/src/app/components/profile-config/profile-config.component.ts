@@ -96,7 +96,7 @@ export class ProfileConfigComponent {
     );
   }
   isValidURL(url: string): boolean {
-    const imageUrlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i;
+    const imageUrlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*\.(jpg|jpeg|png|gif)$/i;
     return imageUrlPattern.test(url);
   }
 }
