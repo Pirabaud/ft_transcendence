@@ -21,6 +21,12 @@ url: 'http://localhost:3000', options: {
 export class GameSocketService extends Socket
 {
   constructor(){
-    super(config);
+    super({
+      url: 'http://localhost:3000', options: {
+            extraHeaders: {
+            authorization: (localStorage.getItem('jwt')!)
+            }
+          }
+        });
   }
  }
