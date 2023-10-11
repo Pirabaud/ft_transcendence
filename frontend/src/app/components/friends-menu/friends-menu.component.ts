@@ -36,19 +36,19 @@ export class FriendsMenuComponent {
       this.router.navigate(['/login']);
     }
     this.activatedRoute.url.subscribe(
-      (url: UrlSegment[]) =>
-      {
-        let interval;
-        if (url[0].path !== 'login') {
-          this.fetchAndUpdateFriendRequests();
-          this.fetchAndUpdateFriendlist();
-          interval = setInterval(() => {
-          this.fetchAndUpdateFriendRequests();
-          this.fetchAndUpdateFriendlist();
-          }, 5000);
+      (url: UrlSegment[]) => {
+        if (url) {
+          let interval;
+          if (url[0].path !== 'login') {
+            this.fetchAndUpdateFriendRequests();
+            this.fetchAndUpdateFriendlist();
+            interval = setInterval(() => {
+              this.fetchAndUpdateFriendRequests();
+              this.fetchAndUpdateFriendlist();
+            }, 5000);
+          } else
+            clearInterval(interval);
         }
-        else
-          clearInterval(interval);
       }
     )
   }
@@ -166,18 +166,22 @@ export class FriendsMenuComponent {
       })
     this.httpBackend.getProfile().subscribe(
       (response: {friendRequestsNb: number}) => {
-        this.nbRequests = response.friendRequestsNb
-        if (this.nbRequests !== 0) {
-          this.noRequestsElement.nativeElement.style.visibility = 'hidden';
-          this.noRequestsElement.nativeElement.style.maxHeight = 0;
-          this.noRequestsElement.nativeElement.style.margin = 0;
-        }
-        else {
-          this.noRequestsElement.nativeElement.style.visibility = 'visible';
-          this.noRequestsElement.nativeElement.style.maxHeight = 22 + 'px';
-          this.noRequestsElement.nativeElement.style.margin = 15 + 'px';
+        if (response)
+        {
+          this.nbRequests = response.friendRequestsNb
+          if (this.nbRequests !== 0) {
+            this.noRequestsElement.nativeElement.style.visibility = 'hidden';
+            this.noRequestsElement.nativeElement.style.maxHeight = 0;
+            this.noRequestsElement.nativeElement.style.margin = 0;
+          }
+          else {
+            this.noRequestsElement.nativeElement.style.visibility = 'visible';
+            this.noRequestsElement.nativeElement.style.maxHeight = 22 + 'px';
+            this.noRequestsElement.nativeElement.style.margin = 15 + 'px';
+          }
         }
       });
+
   }
 
   private fetchAndUpdateFriendlist()

@@ -137,7 +137,7 @@ export class ChatComponent {
         if (result) {
           const data = result.YesOrNo;
           const otherUserId = room.otherUserID;
-          
+
           if (data == true) {
             this.createPrivateGame(0, otherUserId, 1);
             this.chatService.acceptPrivateGame("classic", otherUserId);
@@ -154,12 +154,12 @@ export class ChatComponent {
       const dialogRef = this.dialog.open(PortalGameComponent, {
         width: '400px',
       });
-      
+
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           const data = result.YesOrNo;
           const otherUserId = room.otherUserID;
-          
+
           if (data == true) {
             this.createPrivateGame(1, otherUserId, 1);
             this.chatService.acceptPrivateGame("portal", otherUserId);
@@ -1072,7 +1072,7 @@ export class ChatComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const name = result.name;
-        
+
         this.chatService.getUserId(name).subscribe((response1: any) => {
           if (response1) {
             var UserId = response1.id;

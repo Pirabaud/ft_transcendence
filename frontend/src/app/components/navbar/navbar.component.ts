@@ -80,7 +80,7 @@ export class NavbarComponent {
           }
         }
     )
-    window.addEventListener('unload', () =>
+    window.addEventListener('beforeunload', () =>
     {
           this.httpBackend.updateUserStatus('offline').subscribe(() => {});
           this.httpBackend.setGameStatus(false).subscribe(() => {});

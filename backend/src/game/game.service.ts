@@ -149,7 +149,7 @@ export class GameService {
           server.in(userWaiting.gameId).emit('recJoinGame');
           clearInterval(gameReadyCheck);
         }
-      }, 2000);
+      }, 100);
       return '0';
     }
     else {
@@ -166,7 +166,7 @@ export class GameService {
       else
       {
         if (userWaiting.hostname === -1)
-          res = this.waitRoomNormal[0];
+          res = this.waitRoomPortal[0];
         else
           res = this.gameUtile.findUserByHostname(this.waitRoomPortal, userWaiting.hostname);
       }
