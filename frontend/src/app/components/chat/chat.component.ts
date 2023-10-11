@@ -40,6 +40,8 @@ export class ChatComponent {
   ReceiveAcceptPrivateGameSubscription: Subscription;
   ReceiveKickSubscription: Subscription;
   ReceivePrivateMessageSubscription: Subscription;
+  ReceiveParticipateSubscription: Subscription;
+  ReceiveLeaveSubscription: Subscription;
 
   constructor(private dialog: MatDialog,
               private chatService: ChatService,
@@ -104,6 +106,12 @@ export class ChatComponent {
     }
     if (this.ReceivePrivateMessageSubscription) {
       this.ReceivePrivateMessageSubscription.unsubscribe();
+    }
+    if (this.ReceiveParticipateSubscription) {
+      this.ReceiveParticipateSubscription.unsubscribe();
+    }
+    if (this.ReceiveLeaveSubscription) {
+      this.ReceiveLeaveSubscription.unsubscribe();
     }
   }
 
@@ -385,6 +393,38 @@ export class ChatComponent {
     return false;
   }
 
+  ReceiveParticipate(participant: Participant, roomID: string) {
+    if (participant.userId != this.myUserId && this.currentRoomId == roomID) {
+      if (!participant.boutonVisible) {
+        this.chatService.getVisibleButton(participant.userId, this.myUserId).subscribe((response: any) => {
+
+          var boutonVisible: Visible = {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: false };
+          
+          if (response) {
+            boutonVisible = response;
+          }
+          
+          participant.boutonVisible = boutonVisible;
+          this.users.push(participant);
+      });
+      } else {
+        this.users.push(participant);
+      }
+    }
+  }
+
+  ReceiveLeave(userId: number, roomID: string) {
+    if (userId != this.myUserId && this.currentRoomId == roomID) {
+      var i = 0;
+      while (this.users[i]) {
+        if (this.users[i].userId == userId) {
+          this.users.splice(i, 1);;
+        }
+        i++;
+      }
+    }
+  }
+
   private initConnection(roomID: string) {
 
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
@@ -393,22 +433,11 @@ export class ChatComponent {
         this.sleep(100);
       }
     });
-    this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => {
-      if (participant.userId != this.myUserId && this.currentRoomId == roomID) {
-        this.users.push(participant);
-      }
-    });
-    this.chatService.receiveEvent(`leave/${roomID}`).subscribe((userId: number) => {
-      if (userId != this.myUserId && this.currentRoomId == roomID) {
-        var i = 0;
-        while (this.users[i]) {
-          if (this.users[i].userId == userId) {
-            this.users.splice(i, 1);;
-          }
-          i++;
-        }
-      }
-    });
+
+    this.ReceiveParticipateSubscription = this.chatService.receiveEvent(`participant/${roomID}`).subscribe((participant: Participant) => this.ReceiveParticipate(participant, roomID));
+
+    this.ReceiveLeaveSubscription = this.chatService.receiveEvent(`leave/${roomID}`).subscribe((userId: number) => this.ReceiveLeave(userId, roomID));
+
   }
 
   removeAllUser() {
@@ -450,14 +479,12 @@ export class ChatComponent {
 
             this.chatService.getStatus(userID).subscribe((response3: any) => {
               if (response3) {
-                this.chatService.getVisibleButton(userID, this.myUserId).subscribe((response: any) =>{
+                this.chatService.getVisibleButton(userID, this.myUserId).subscribe((response: any) => {
 
-                  var boutonVisible: Visible[] = [
-                    {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: false }
-                  ];
-
+                  var boutonVisible: Visible = {userId: 0, privateMessage: true, classicGame: true, portalGame: true, block: true, unblock: false };
+                  
                   if (response) {
-                    boutonVisible[0] = response;
+                    boutonVisible = response;
                   }
                   if (response3.Status == "online") {
                     this.users.push({
@@ -465,7 +492,7 @@ export class ChatComponent {
                       username: username,
                       avatar: pic,
                       status: "../../../assets/images/Button-Blank-Green-icon.png",
-                      boutonVisible: boutonVisible[0],
+                      boutonVisible: boutonVisible,
                     });
                   } else {
                     this.users.push({
@@ -473,7 +500,7 @@ export class ChatComponent {
                       username: username,
                       avatar: pic,
                       status: "../../../assets/images/Button-Blank-Red-icon.png",
-                      boutonVisible: boutonVisible[0],
+                      boutonVisible: boutonVisible,
                     });
                   }
                 });
