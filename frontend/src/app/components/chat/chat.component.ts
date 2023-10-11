@@ -494,6 +494,14 @@ export class ChatComponent {
                       status: "../../../assets/images/Button-Blank-Green-icon.png",
                       boutonVisible: boutonVisible,
                     });
+                  } else if (response3.Status == "in game") {
+                    this.users.push({
+                      userId: userID,
+                      username: username,
+                      avatar: pic,
+                      status: "../../../assets/images/Button-Blank-Blue-icon.png",
+                      boutonVisible: boutonVisible,
+                    });
                   } else {
                     this.users.push({
                       userId: userID,
