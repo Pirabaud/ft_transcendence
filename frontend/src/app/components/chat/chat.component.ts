@@ -39,6 +39,8 @@ export class ChatComponent {
   ReceiveRefusePrivateGameSubscription: Subscription;
   ReceiveAcceptPrivateGameSubscription: Subscription;
   ReceiveKickSubscription: Subscription;
+  ReceiveMuteSubscription: Subscription;
+  ReceiveUnMuteSubscription: Subscription;
   ReceivePrivateMessageSubscription: Subscription;
   ReceiveParticipateSubscription: Subscription;
   ReceiveLeaveSubscription: Subscription;
@@ -102,6 +104,12 @@ export class ChatComponent {
     if (this.ReceiveKickSubscription) {
       this.ReceiveKickSubscription.unsubscribe();
     }
+    if (this.ReceiveMuteSubscription) {
+      this.ReceiveMuteSubscription.unsubscribe();
+    }
+    if (this.ReceiveUnMuteSubscription) {
+      this.ReceiveUnMuteSubscription.unsubscribe();
+    }
     if (this.ReceivePrivateMessageSubscription) {
       this.ReceivePrivateMessageSubscription.unsubscribe();
     }
@@ -125,6 +133,24 @@ export class ChatComponent {
     this.ReceiveAcceptPrivateGameSubscription = this.chatService.receiveEvent(`receive-accept-private-game`).subscribe((room: any) => this.ReceiveAcceptPrivateGame(room));
 
     this.ReceiveKickSubscription = this.chatService.receiveEvent(`receive-kick`).subscribe((room: any) => this.receiveKick(room.roomID, room.userID));
+    
+    this.ReceiveMuteSubscription = this.chatService.receiveEvent(`receive-mute`).subscribe((room: any) => this.receiveMute(room.roomID, room.userID));
+    
+    this.ReceiveUnMuteSubscription = this.chatService.receiveEvent(`receive-unmute`).subscribe((room: any) => this.receiveUnMute(room.roomID, room.userID));
+  }
+
+  receiveMute(roomID: string, userId: number) {
+    if (userId == this.myUserId) {
+      alert("You have been muted for 30 secondes from the room " + roomID);
+      
+    }
+  }
+
+  receiveUnMute(roomID: string, userId: number) {
+    if (userId == this.myUserId) {
+      alert("You are no longer muted from the room " + roomID);
+      
+    }
   }
 
   ReceivePrivateMessage(room: any) {
@@ -1062,7 +1088,7 @@ export class ChatComponent {
             var UserId = response1.id;
           }
           if (UserId == this.myUserId) {
-            alert("impossible to ban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
+            alert("impossible to mute yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
             return ;
           }
           const nameId = UserId;
@@ -1076,44 +1102,16 @@ export class ChatComponent {
             } else if (response == 3) {
               alert(name + " : is the channel owner !");
             }else if (response == 4) {
-              alert(name + " : is mute !");
-            }
-          });
-        });
-      }
-    });
-  }
-
-  openDataUnMute() {
-    const dialogRef = this.dialog.open(UnmuteComponent, {
-      /*Ouvre le dialog et definit la taille*/
-      width: '250px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const name = result.name;
-
-        this.chatService.getUserId(name).subscribe((response1: any) => {
-          if (response1) {
-            var UserId = response1.id;
-          }
-          if (UserId == this.myUserId) {
-            alert("impossible to unban yourself !\nAre u Dumb !!!!!!!!!!!!!!!!!!!");
-            return ;
-          }
-          const nameId = UserId;
-          this.chatService.unMuteUser(nameId, this.currentRoomId).subscribe((response: any) =>{
-            if (response == 0) {
-              alert('Room not found');
-            } else if (response == 1) {
-              alert(name + " : is the channel owner !");
-            } else if (response == 2) {
-              alert(name + " : is not in the room !");
-            } else if (response == 3) {
-              alert(name + " : is not mute !");
-            }else if (response == 4) {
-              alert(name + " : is no longer muted !");
+              this.chatService.mute(this.currentRoomId, UserId);
+              alert(name + " : is mute for 30 secondes !");
+              setTimeout(() => {
+                this.chatService.unMuteUser(UserId, this.currentRoomId).subscribe((response: any) =>{
+                  if (response == 4) {
+                    this.chatService.unMute(this.currentRoomId, UserId);
+                    alert(name + " : is no longer muted !");
+                  }
+                });
+              }, 30000);
             }
           });
         });
