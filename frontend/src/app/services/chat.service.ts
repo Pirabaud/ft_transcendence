@@ -464,6 +464,20 @@ export class ChatService {
     });
   }
 
+  setInviteGame(myUser: number) {
+    this.socket.emit('setInviteGame', myUser);
+  }
+
+  getInviteGame(myUser: number) {
+
+    return new Observable<any>((observer) => {
+      this.socket.emit('getInviteGame', myUser, (response: any) => {
+        observer.next(response);
+        observer.complete();
+      });
+    });
+  }
+
   getUserId(username: string): Observable<any> {
     return this.http.post<any>("http://localhost:3000/user/getUserIdfromUsername", {username});
   }

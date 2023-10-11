@@ -147,8 +147,10 @@ export class ChatComponent {
           if (data == true) {
             this.createPrivateGame(0, otherUserId, 1);
             this.chatService.acceptPrivateGame("classic", otherUserId);
+            this.chatService.setInviteGame(room.userID);
           } else if (data == false) {
             this.chatService.refusePrivateGame("classic", otherUserId);
+            this.chatService.setInviteGame(room.userID);
           }
         }
       });
@@ -415,8 +417,12 @@ export class ChatComponent {
 
     this.chatService.receiveEvent(roomID).subscribe((message: MessageEvent) => {
       if (message.roomId == this.currentRoomId && !this.isMessageAlreadyReceived(message)) {
-        this.messages.push(message);
-        this.sleep(100);
+        this.chatService.checkBlock(message.user.userId, this.myUserId).subscribe((response: any) => {
+          if (response == false) {
+            this.messages.push(message);
+            this.sleep(100);
+          }
+        });
       }
     });
 
@@ -1031,8 +1037,6 @@ export class ChatComponent {
               alert('Room not found');
             } else if (response == 1) {
               alert(name + " : is the channel owner !");
-            } else if (response == 2) {
-              alert(name + " : is not in the room !");
             } else if (response == 3) {
               alert(name + " : is not ban !");
             }else if (response == 4) {
@@ -1183,14 +1187,22 @@ export class ChatComponent {
   sendClassicGame(user: Participant) {
     if (user.userId != this.myUserId) {
 
-      this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
-        if (reponse) {
-          alert("You have been blocked by : " + user.username);
+      this.chatService.getInviteGame(user.userId).subscribe((reponse1) => {
+        if (reponse1 == 2) {
+          this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
+            if (reponse) {
+              alert("You have been blocked by : " + user.username);
+            } else {
+              this.chatService.setInviteGame(user.userId);
+              this.chatService.privateClassicGame(user.userId, this.myUserId);
+              alert("You have sent a private request for a classic game to " + user.username + "!");
+            }
+          });
         } else {
-          this.chatService.privateClassicGame(user.userId, this.myUserId);
-          alert("You have sent a private request for a classic game to " + user.username + "!");
+          alert("This user have already a request for a game.");
         }
       });
+
 
     } else {
       alert("You cannot send yourself a private request for a classic game.");
@@ -1200,12 +1212,19 @@ export class ChatComponent {
   sendPortalGame(user: Participant) {
     if (user.userId != this.myUserId) {
 
-      this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
-        if (reponse) {
-          alert("You have been blocked by : " + user.username);
+      this.chatService.getInviteGame(user.userId).subscribe((reponse1) => {
+        if (reponse1 == 2) {
+          this.chatService.checkBlock(this.myUserId, user.userId).subscribe((reponse) => {
+            if (reponse) {
+              alert("You have been blocked by : " + user.username);
+            } else {
+              this.chatService.setInviteGame(user.userId);
+              this.chatService.privatePortalGame(user.userId, this.myUserId);
+              alert("You have sent a private request for a portal game to " + user.username + "!");
+            }
+          });
         } else {
-          this.chatService.privatePortalGame(user.userId, this.myUserId);
-          alert("You have sent a private request for a portal game to " + user.username + "!");
+          alert("This user have already a request for a game.");
         }
       });
 

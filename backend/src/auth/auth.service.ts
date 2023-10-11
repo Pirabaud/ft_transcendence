@@ -74,6 +74,7 @@ export class AuthService {
               unblock: false
             }
           ],
+          alreadyInvite: false,
           gameStatus: false,
           currentGameId: '',
           currentOpponentId: 0,

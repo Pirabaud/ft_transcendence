@@ -373,21 +373,6 @@ export class ChatService {
         if (banner == room.createdBy) {
             return 1;
         }
-        
-        var i = 0;
-        var inRoom: boolean = false;
-        while (room.participants[i]) {
-            
-            if (room.participants[i] == banner) {
-                inRoom = true;
-                break;
-            }
-            i++;
-        }
-
-        if (inRoom == false) {
-            return 2;
-        }
 
         var i = 0;
         while (room.ban[i]) {
@@ -611,6 +596,37 @@ export class ChatService {
         }
         return false;
       }
+
+      async setInviteGame(userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+          return null;
+        }
+        if (user.alreadyInvite == true) {
+            user.alreadyInvite = false;
+        } else {
+            user.alreadyInvite = true;
+        }
+        await this.userRepository.save(user);
+        return true;
+      }
+
+      async getInviteGame(userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+          return null;
+        }
+        
+        if (user.alreadyInvite == true) {
+            return 1;
+        } else {
+            return 2;
+        }
+      }
+
+
 
     async getVisibleButton(button: number, userId: number): Promise<Visible | false> {
         const user = await this.userRepository.findOne({ where: { id: userId } });

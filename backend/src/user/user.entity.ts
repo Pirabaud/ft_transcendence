@@ -50,6 +50,16 @@ export class User {
   @Column({ nullable: true })
   status: string;
 
+  
+  @Column({ nullable: true })
+  gameStatus: boolean;
+  
+  @Column({ nullable: true })
+  currentGameId: string;
+  
+  @Column({ nullable: true })
+  currentOpponentId: number;
+
   // Chat
   @Column('simple-array', { nullable: true })
   blockUser: Array<number>;
@@ -63,11 +73,5 @@ export class User {
   buttonVisible: Array<Visible>;
 
   @Column({ nullable: true })
-  gameStatus: boolean;
-
-  @Column({ nullable: true })
-  currentGameId: string;
-
-  @Column({ nullable: true })
-  currentOpponentId: number;
+  alreadyInvite: boolean;
 }
