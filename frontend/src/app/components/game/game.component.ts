@@ -21,8 +21,6 @@ export class GameComponent implements AfterViewInit {
   @ViewChild('matchmaking_message') matchmakingMsgElement: ElementRef;
   @ViewChild('disconnection_message') disconnectionMsgElement: ElementRef;
   @ViewChild('countdown') countdownElement: ElementRef;
-  @ViewChild('p1_score') p1ScoreElement: ElementRef;
-  @ViewChild('p2_score') p2ScoreElement: ElementRef;
   @ViewChild('p1_victory_message') p1VictoryMessageElement: ElementRef;
   @ViewChild('p2_victory_message') p2VictoryMessageElement: ElementRef;
   @ViewChild('paddle1') paddle1Element: ElementRef;
@@ -336,8 +334,6 @@ export class GameComponent implements AfterViewInit {
     this.gameService.setJoinedViaMatchmaking(false);
     this.gameStarted = false;
     this.ballElement.nativeElement.style.visibility = "hidden";
-    this.p1ScoreElement.nativeElement.innerHTML = "0";
-    this.p2ScoreElement.nativeElement.innerHTML = "0";
 
     this.p1VictoryMessageElement.nativeElement.innerHTML = player + ' wins !';
     this.overlayElement.nativeElement.style.visibility = "visible";
@@ -371,11 +367,8 @@ export class GameComponent implements AfterViewInit {
         this.paddle1Element.nativeElement.style.top = ((this.paddleObj1.posY + this.fieldRect.height / 2) - this.paddleObj1.height / 2) * 100 / this.fieldRect.height + "%";
       }
   }
-  /*Change score when a goal is scored*/
   receiveGoalScored(score: {p1_score: number, p2_score: number})
   {
-      this.p1ScoreElement.nativeElement.innerHTML = score.p1_score;
-      this.p2ScoreElement.nativeElement.innerHTML = score.p2_score;
       this.ballElement.nativeElement.style.visibility = "hidden";
   }
   /*Backend sends a new ball position 60 times per second, this function changes the current position to the new
@@ -414,12 +407,6 @@ export class GameComponent implements AfterViewInit {
     this.matchmakingMsgElement.nativeElement.style.visibility = 'hidden';
     this.disconnectionMsgElement.nativeElement.style.visibility = 'hidden';
     this.overlayElement.nativeElement.style.visibility = "hidden";
-    if ((this.p1ScoreElement.nativeElement.innerHTML !== "8" &&
-        this.p2ScoreElement.nativeElement.innerHTML !== "8") ||
-        (this.p2ScoreElement.nativeElement.innerHTML !== "8" &&
-         this.p1ScoreElement.nativeElement.innerHTML !== "8")) {
-      this.ballElement.nativeElement.style.visibility = "visible";
-    }
   }
 
   /*This method spawns and remove portals when needed*/
