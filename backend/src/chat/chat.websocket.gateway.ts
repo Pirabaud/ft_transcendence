@@ -301,6 +301,18 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         return await this.chatService.getVisibleButton(room.userId, room.userData);
     }
 
+    @SubscribeMessage('setInviteGame')
+    async setInviteGame(socket: Socket, myUser: any) {
+        return await this.chatService.setInviteGame(myUser);
+    }
+
+    @SubscribeMessage('getInviteGame')
+    async getInviteGame(socket: Socket, myUser: any) {
+        return await this.chatService.getInviteGame(myUser);
+    }
+
+
+
     @SubscribeMessage('getAllParticipants')
     async getAllParticipants(channel: any, room: any): Promise<Array<number>> {
         
