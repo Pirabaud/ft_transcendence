@@ -89,6 +89,18 @@ export class ChatWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
         const socketId = socket.id;
         this.server.emit(`receive-kick`, room);
     }
+    
+    @SubscribeMessage('mute')
+    async onMute(socket: Socket, room: any) {
+        const socketId = socket.id;
+        this.server.emit(`receive-mute`, room);
+    }
+
+    @SubscribeMessage('unMute')
+    async onUnMute(socket: Socket, room: any) {
+        const socketId = socket.id;
+        this.server.emit(`receive-unmute`, room);
+    }
 
     @SubscribeMessage('exchanges')
     async onMessage(socket: Socket, message: MessageEvent) {

@@ -119,6 +119,22 @@ export class ChatService {
     this.socket.emit('kick', room);
   }
 
+  mute(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('mute', room);
+  }
+
+  unMute(roomId: string, userId: number) {
+    const room = {
+      roomID: roomId,
+      userID: userId,
+    }
+    this.socket.emit('unMute', room);
+  }
+
   receiveEvent(eventId: string): Observable<any> {
     return this.socket.fromEvent(eventId);
   }
