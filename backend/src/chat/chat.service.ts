@@ -20,7 +20,6 @@ export class ChatService {
         try {
             result = await this.roomRepository.find();
         } catch (error) {
-            console.error("Error while retrieving rooms");
             return null;
         }
         return result;
@@ -34,7 +33,6 @@ export class ChatService {
         try {
           await this.roomRepository.save(room);
         } catch (error) {
-          console.error('Error while saving a room', error);
         }
     }
     
@@ -42,7 +40,6 @@ export class ChatService {
         const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
 
@@ -91,7 +88,6 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
 
@@ -102,7 +98,6 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
 
@@ -117,7 +112,6 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
         if (password == "\0") {
@@ -139,7 +133,6 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
 
@@ -153,7 +146,6 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
 
@@ -164,7 +156,6 @@ export class ChatService {
         const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
         
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
         await this.roomRepository.delete(id);
@@ -177,7 +168,6 @@ export class ChatService {
         const room: RoomData = await this.roomRepository.findOne({ where: { roomId: id, }, });
         
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
        
@@ -195,7 +185,6 @@ export class ChatService {
     async kickParticipant(id: string, User: number): Promise<any> {
         const room = await this.roomRepository.findOne({ where: { roomId: id, }, });
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return null;
         }
 
@@ -222,12 +211,10 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return 0;
         }
         
         if (admin == room.createdBy) {
-            console.error('{admin} : is the channel owner');
             return 3;
         }
 
@@ -235,7 +222,6 @@ export class ChatService {
         while (room.admin[i]) {
 
             if (room.admin[i] == admin) {
-                console.error('{admin} : is already admin !');
                 return 1;
             }
             i++;
@@ -252,7 +238,6 @@ export class ChatService {
             i++;
         }
         if (inRoom == false) {
-            console.error('{admin} : is not in the room');
             return 2;
         }
 
@@ -265,12 +250,10 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return 0;
         }
 
         if (admin == room.createdBy) {
-            console.error('{admin} : is the channel owner');
             return 1;
         }
         
@@ -286,7 +269,6 @@ export class ChatService {
         }
 
         if (inRoom == false) {
-            console.error('{admin} : is not in the room');
             return 2;
         }
 
@@ -329,12 +311,10 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return 0;
         }
         
         if (banner == room.createdBy) {
-            console.error('{banner} : is the channel owner');
             return 3;
         }
 
@@ -342,7 +322,6 @@ export class ChatService {
         while (room.ban[i]) {
 
             if (room.ban[i] == banner) {
-                console.error('{banner} : is already ban !');
                 return 1;
             }
             i++;
@@ -359,7 +338,6 @@ export class ChatService {
             i++;
         }
         if (inRoom == false) {
-            console.error('{banner} : is not in the room');
             return 2;
         }
 
@@ -372,14 +350,12 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return false;
         }
 
         var i = 0;
         while (room.ban[i]) {
             if (room.ban[i] == user) {
-                console.error('{user} : is ban !');
                 return false;
             }
             i++;
@@ -391,12 +367,10 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return 0;
         }
 
         if (banner == room.createdBy) {
-            console.error('{banner} : is the channel owner');
             return 1;
         }
         
@@ -412,7 +386,6 @@ export class ChatService {
         }
 
         if (inRoom == false) {
-            console.error('{banner} : is not in the room');
             return 2;
         }
 
@@ -433,12 +406,10 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return 0;
         }
         
         if (mute == room.createdBy) {
-            console.error('{mutter} : is the channel owner');
             return 3;
         }
 
@@ -446,7 +417,6 @@ export class ChatService {
         while (room.mute[i]) {
 
             if (room.mute[i] == mute) {
-                console.error('{mutter} : is already mute !');
                 return 1;
             }
             i++;
@@ -463,7 +433,6 @@ export class ChatService {
             i++;
         }
         if (inRoom == false) {
-            console.error('{mutter} : is not in the room');
             return 2;
         }
 
@@ -476,14 +445,12 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return false;
         }
         
         var i = 0;
         while (room.mute[i]) {
             if (room.mute[i] == user) {
-                console.error('{user} : is mute !');
                 return true;
             }
             i++;
@@ -495,12 +462,10 @@ export class ChatService {
         const room = await this.roomRepository.findOne({ where: { roomId: roomId, }, });
 
         if (!room) {
-            console.error('Room with ID ${id} not found');
             return 0;
         }
 
         if (mute == room.createdBy) {
-            console.error('{mutter} : is the channel owner');
             return 1;
         }
         
@@ -516,7 +481,6 @@ export class ChatService {
         }
 
         if (inRoom == false) {
-            console.error('{mutter} : is not in the room');
             return 2;
         }
 
@@ -536,7 +500,6 @@ export class ChatService {
     async blockUser(block: number, userId: number) {
         const user = await this.userRepository.findOne({ where: { id: userId, }, });
         if (!user) {
-            console.error('User with ID ${id} not found');
             return 0;
         }
 
@@ -544,7 +507,6 @@ export class ChatService {
         while (user.blockUser[i]) {
 
             if (user.blockUser[i] == block) {
-                console.error('{blocker} : is already block !');
                 return 1;
             }
             i++;
@@ -565,7 +527,6 @@ export class ChatService {
         const user = await this.userRepository.findOne({ where: { id: userId, }, });
 
         if (!user) {
-            console.error('User with ID ${id} not found');
             return false;
         }
         var i = 0;
@@ -583,7 +544,6 @@ export class ChatService {
         const user = await this.userRepository.findOne({ where: { id: userId, }, });
 
         if (!user) {
-            console.error('User with ID ${id} not found');
             return 0;
         }
 
@@ -606,7 +566,6 @@ export class ChatService {
         const user = await this.userRepository.findOne({ where: { id: userId } });
     
         if (!user) {
-          console.error(`User with ID ${userId} not found`);
           return false;
         }
 
@@ -632,7 +591,6 @@ export class ChatService {
         const user = await this.userRepository.findOne({ where: { id: userId } });
     
         if (!user) {
-          console.error(`User with ID ${userId} not found`);
           return false;
         }
     
@@ -658,7 +616,6 @@ export class ChatService {
         const user = await this.userRepository.findOne({ where: { id: userId } });
         
         if (!user) {
-            console.error(`User with ID ${userId} not found`);
             return false;
         }
         

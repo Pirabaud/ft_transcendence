@@ -82,8 +82,6 @@ export class ChatComponent {
           i++;
         }
         this.initConnection2();
-      } else {
-        console.error("Error while retreiving all Rooms");
       }
     });
   }
@@ -237,11 +235,7 @@ export class ChatComponent {
                 const paragraphe = divChannelName.querySelector("p");
                 if (paragraphe) {
                   paragraphe.textContent = "";
-                } else {
-                  console.error("Paragraphe introuvable dans le div.");
                 }
-              } else {
-                console.error("Div avec la classe 'channel_name' introuvable.");
               }
               this.currentRoomId = "";
               this.settingsVisible = false;
@@ -267,11 +261,7 @@ export class ChatComponent {
             const paragraphe = divChannelName.querySelector("p");
             if (paragraphe) {
               paragraphe.textContent = "";
-            } else {
-              console.error("Paragraphe introuvable dans le div.");
             }
-          } else {
-            console.error("Div avec la classe 'channel_name' introuvable.");
           }
           this.currentRoomId = "";
           this.settingsVisible = false;
@@ -309,11 +299,7 @@ export class ChatComponent {
           const paragraphe = divChannelName.querySelector("p");
           if (paragraphe) {
             paragraphe.textContent = roomName;
-          } else {
-            console.error("Paragraphe introuvable dans le div.");
           }
-        } else {
-          console.error("Div avec la classe 'channel_name' introuvable.");
         }
         this.removeAllUser();
         this.chatService.getAllParticipants(roomId).subscribe((Response: Array<number>) => {
@@ -540,12 +526,8 @@ export class ChatComponent {
 
       if (paragraphe) {
         paragraphe.textContent = "";
-      } else {
-        console.error("Paragraphe introuvable dans le div.");
       }
 
-    } else {
-      console.error("Div avec la classe 'channel_name' introuvable.");
     }
     this.currentRoomId = "";
     this.settingsVisible = false;

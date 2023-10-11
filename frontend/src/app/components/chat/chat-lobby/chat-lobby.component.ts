@@ -92,8 +92,6 @@ export class ChatLobbyComponent {
                   });
                 }
               });
-            } else {
-              console.error("Error while joining the room");
             }
           });
         }
@@ -115,8 +113,6 @@ export class ChatLobbyComponent {
           this.chatService.createRoom(name, password).subscribe(result2 => {
             if (result2) {
               this.router.navigate(['/chat']);
-            } else {
-              console.error("Error while creating the room");
             }
           });
         

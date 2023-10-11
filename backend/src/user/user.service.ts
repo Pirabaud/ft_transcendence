@@ -32,7 +32,6 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { username: username, }, });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -43,7 +42,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
 
@@ -54,7 +52,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
     
@@ -65,7 +62,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.error('User with ID ${id} not found');
       return null;
     }
     

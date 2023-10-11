@@ -130,8 +130,6 @@ export class NavbarComponent {
         } else {
           this.router.navigate(['/chat-lobby']);
         }
-      } else {
-        console.error("Error while retreiving all Rooms");
       }
     });
 

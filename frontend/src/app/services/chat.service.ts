@@ -148,7 +148,6 @@ export class ChatService {
             }
           });
         } else {
-          console.error("Error receiving username");
           observer.next(false);
           observer.complete();
         }
@@ -179,7 +178,6 @@ export class ChatService {
             }
           });
         } else {
-          console.error("Error receiving username");
           observer.next(false);
           observer.complete();
         }
@@ -216,7 +214,6 @@ export class ChatService {
             observer.complete();
           });
         } else {
-          console.error("Error receiving username");
           observer.next(false);
           observer.complete();
         }

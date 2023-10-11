@@ -82,7 +82,7 @@ export class GameService {
         directionY: Math.random() < 0.5 ? -1 : 1,
         height: 60,
         width: 30,
-        speed: (field.width - field.height) / 200,
+        speed: (field.width - field.height) / 120,
       },
 
       paddle1: {
